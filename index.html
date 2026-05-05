@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuizSpark ⚡ Learn & Have Fun!</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #7F77DD;
+    --purple-light: #EEEDFE;
+    --purple-dark: #3C3489;
+    --teal: #1D9E75;
+    --teal-light: #E1F5EE;
+    --coral: #D85A30;
+    --coral-light: #FAECE7;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --pink: #D4537E;
+    --pink-light: #FBEAF0;
+    --blue: #378ADD;
+    --blue-light: #E6F1FB;
+    --green: #639922;
+    --green-light: #EAF3DE;
+    --bg: #FFF9F0;
+    --card-bg: #FFFFFF;
+    --text: #2C2C2A;
+    --text-muted: #888780;
+    --radius: 20px;
+    --radius-sm: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: white;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid #F0EBE0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .logo {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: var(--purple);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    text-decoration: none;
+  }
+  .logo span { color: var(--coral); }
+
+  .nav-links { display: flex; gap: 1rem; align-items: center; }
+  .nav-links a {
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    transition: background 0.2s, color 0.2s;
+    font-size: 0.95rem;
+  }
+  .nav-links a:hover { background: var(--purple-light); color: var(--purple-dark); }
+  .nav-btn {
+    background: var(--purple) !important;
+    color: white !important;
+    font-weight: 800 !important;
+  }
+  .nav-btn:hover { background: var(--purple-dark) !important; color: white !important; }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 5rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: -80px;
+    width: 300px; height: 300px;
+    background: var(--purple-light);
+    border-radius: 50%;
+    opacity: 0.6;
+    z-index: 0;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; right: -60px;
+    width: 250px; height: 250px;
+    background: var(--teal-light);
+    border-radius: 50%;
+    opacity: 0.6;
+    z-index: 0;
+  }
+
+  .hero-content { position: relative; z-index: 1; }
+
+  .hero-badge {
+    display: inline-block;
+    background: var(--amber-light);
+    color: var(--amber);
+    font-weight: 800;
+    font-size: 0.85rem;
+    padding: 0.4rem 1.2rem;
+    border-radius: 50px;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .hero h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    line-height: 1.05;
+    margin-bottom: 1rem;
+    color: var(--text);
+  }
+
+  .hero h1 .highlight-purple { color: var(--purple); }
+  .hero h1 .highlight-coral { color: var(--coral); }
+
+  .hero p {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    font-weight: 600;
+    line-height: 1.6;
+  }
+
+  .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: var(--purple);
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 0 var(--purple-dark);
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--purple-dark); }
+  .btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--purple-dark); }
+
+  .btn-secondary {
+    background: white;
+    color: var(--purple);
+    border: 3px solid var(--purple);
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-secondary:hover { transform: translateY(-2px); background: var(--purple-light); }
+
+  .hero-stats {
+    display: flex;
+    gap: 2.5rem;
+    justify-content: center;
+    margin-top: 3.5rem;
+    flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.2rem;
+    color: var(--purple);
+    display: block;
+  }
+  .stat-label { font-size: 0.9rem; font-weight: 700; color: var(--text-muted); }
+
+  /* ── SECTION TITLES ── */
+  .section { padding: 4rem 2rem; max-width: 1100px; margin: 0 auto; }
+  .section-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  .section-sub {
+    text-align: center;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-bottom: 3rem;
+  }
+
+  /* ── QUIZ CATEGORIES ── */
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .category-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 3px solid transparent;
+    text-decoration: none;
+    display: block;
+    color: var(--text);
+  }
+  .category-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+  }
+
+  .cat-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1rem;
+  }
+  .cat-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    margin-bottom: 0.4rem;
+  }
+  .cat-count {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+  .cat-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.2rem 0.8rem;
+    border-radius: 50px;
+    margin-top: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .cat-science { border-color: #9FE1CB; background: linear-gradient(135deg, white 60%, var(--teal-light)); }
+  .cat-science .cat-title { color: var(--teal); }
+  .cat-science .cat-badge { background: var(--teal-light); color: var(--teal); }
+
+  .cat-maths { border-color: #AFA9EC; background: linear-gradient(135deg, white 60%, var(--purple-light)); }
+  .cat-maths .cat-title { color: var(--purple); }
+  .cat-maths .cat-badge { background: var(--purple-light); color: var(--purple-dark); }
+
+  .cat-history { border-color: #FAC775; background: linear-gradient(135deg, white 60%, var(--amber-light)); }
+  .cat-history .cat-title { color: var(--amber); }
+  .cat-history .cat-badge { background: var(--amber-light); color: var(--amber); }
+
+  .cat-english { border-color: #F4C0D1; background: linear-gradient(135deg, white 60%, var(--pink-light)); }
+  .cat-english .cat-title { color: var(--pink); }
+  .cat-english .cat-badge { background: var(--pink-light); color: var(--pink); }
+
+  .cat-geography { border-color: #B5D4F4; background: linear-gradient(135deg, white 60%, var(--blue-light)); }
+  .cat-geography .cat-title { color: var(--blue); }
+  .cat-geography .cat-badge { background: var(--blue-light); color: #185FA5; }
+
+  .cat-coding { border-color: #C0DD97; background: linear-gradient(135deg, white 60%, var(--green-light)); }
+  .cat-coding .cat-title { color: var(--green); }
+  .cat-coding .cat-badge { background: var(--green-light); color: var(--green); }
+
+  /* ── FEATURED QUIZ ── */
+  .quiz-section { background: white; padding: 4rem 0; }
+  .quiz-inner { max-width: 800px; margin: 0 auto; padding: 0 2rem; }
+
+  #quiz-container {
+    background: var(--bg);
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    border: 3px solid #F0EBE0;
+  }
+
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .quiz-topic {
+    background: var(--purple-light);
+    color: var(--purple-dark);
+    font-weight: 800;
+    font-size: 0.85rem;
+    padding: 0.3rem 1rem;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .quiz-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  .progress-bar {
+    width: 120px;
+    height: 8px;
+    background: #E8E4DC;
+    border-radius: 50px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--purple);
+    border-radius: 50px;
+    transition: width 0.4s ease;
+  }
+
+  .quiz-question {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.6rem;
+    line-height: 1.3;
+    margin-bottom: 2rem;
+    color: var(--text);
+  }
+
+  .quiz-options { display: flex; flex-direction: column; gap: 0.8rem; }
+
+  .option-btn {
+    background: white;
+    border: 2.5px solid #E8E4DC;
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--purple);
+    background: var(--purple-light);
+    transform: translateX(4px);
+  }
+
+  .option-letter {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #F0EBE0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .option-btn.correct { border-color: var(--teal); background: var(--teal-light); }
+  .option-btn.correct .option-letter { background: var(--teal); color: white; }
+  .option-btn.wrong { border-color: var(--coral); background: var(--coral-light); }
+  .option-btn.wrong .option-letter { background: var(--coral); color: white; }
+
+  .quiz-feedback {
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: 1rem;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: var(--teal-light); color: #085041; }
+  .quiz-feedback.wrong { background: var(--coral-light); color: #4A1B0C; }
+
+  .quiz-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .score-badge {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    color: var(--purple);
+  }
+
+  .btn-next {
+    background: var(--purple);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--purple-dark);
+    transition: transform 0.15s, box-shadow 0.15s;
+    display: none;
+  }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--purple-dark); }
+  .btn-next.show { display: block; }
+
+  /* Result screen */
+  .result-screen {
+    text-align: center;
+    padding: 2rem;
+    display: none;
+  }
+  .result-screen.show { display: block; }
+  .result-emoji { font-size: 5rem; display: block; margin-bottom: 1rem; }
+  .result-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .result-score {
+    font-family: 'Fredoka One', cursive;
+    font-size: 4rem;
+    color: var(--purple);
+  }
+  .result-msg { color: var(--text-muted); font-weight: 600; margin-bottom: 2rem; font-size: 1.05rem; }
+  .btn-restart {
+    background: var(--coral);
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #4A1B0C;
+    transition: transform 0.15s;
+  }
+  .btn-restart:hover { transform: translateY(-2px); }
+
+  /* ── HOW IT WORKS ── */
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    counter-reset: steps;
+  }
+  .how-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 2rem;
+    text-align: center;
+    border: 2.5px solid #F0EBE0;
+    position: relative;
+  }
+  .how-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 0.8rem;
+  }
+  .how-card:nth-child(1) .how-num { color: var(--purple); }
+  .how-card:nth-child(2) .how-num { color: var(--coral); }
+  .how-card:nth-child(3) .how-num { color: var(--teal); }
+  .how-card:nth-child(4) .how-num { color: var(--amber); }
+
+  .how-icon { font-size: 2.5rem; display: block; margin-bottom: 0.8rem; }
+  .how-title { font-family: 'Fredoka One', cursive; font-size: 1.3rem; margin-bottom: 0.5rem; }
+  .how-desc { font-size: 0.95rem; color: var(--text-muted); font-weight: 600; line-height: 1.5; }
+
+  /* ── LEADERBOARD ── */
+  .leaderboard { background: white; padding: 4rem 0; }
+  .lb-inner { max-width: 600px; margin: 0 auto; padding: 0 2rem; }
+  .lb-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+    transition: transform 0.2s;
+  }
+  .lb-row:hover { transform: translateX(4px); }
+  .lb-row:nth-child(1) { background: #FAEEDA; border-left: 4px solid var(--amber); }
+  .lb-row:nth-child(2) { background: #F1EFE8; border-left: 4px solid #888780; }
+  .lb-row:nth-child(3) { background: var(--coral-light); border-left: 4px solid var(--coral); }
+  .lb-row:nth-child(n+4) { background: #F8F5F0; border-left: 4px solid #D3D1C7; }
+  .lb-rank { font-family: 'Fredoka One', cursive; font-size: 1.4rem; width: 36px; text-align: center; }
+  .lb-name { flex: 1; font-size: 1rem; }
+  .lb-score { font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: var(--purple); }
+  .lb-cat { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--text);
+    color: white;
+    text-align: center;
+    padding: 3rem 2rem;
+  }
+  .footer-logo {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+  .footer-logo span { color: #F0997B; }
+  footer p { color: rgba(255,255,255,0.5); font-size: 0.9rem; font-weight: 600; margin-top: 0.5rem; }
+
+  /* ── FLOATING SHAPES ── */
+  .shape {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.12;
+    z-index: -1;
+    animation: float 6s ease-in-out infinite;
+  }
+  .shape-1 { width: 200px; height: 200px; background: var(--purple); top: 10%; right: 5%; animation-delay: 0s; }
+  .shape-2 { width: 150px; height: 150px; background: var(--coral); bottom: 20%; left: 3%; animation-delay: 2s; }
+  .shape-3 { width: 100px; height: 100px; background: var(--teal); top: 50%; right: 10%; animation-delay: 4s; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+
+  @media (max-width: 600px) {
+    .nav-links { gap: 0.5rem; }
+    .nav-links a { padding: 0.4rem 0.6rem; font-size: 0.85rem; }
+    .hero { padding: 3rem 1rem 2.5rem; }
+    .hero-stats { gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="shape shape-1"></div>
+<div class="shape shape-2"></div>
+<div class="shape shape-3"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Quiz<span>Spark</span> ⚡</a>
+  <div class="nav-links">
+    <a href="#categories">Subjects</a>
+    <a href="#how">How it Works</a>
+    <a href="#leaderboard">Top Players</a>
+    <a href="#quiz" class="nav-btn">Play Now!</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🎓 Free for all students</div>
+    <h1>
+      Learn. <span class="highlight-purple">Play.</span><br>
+      <span class="highlight-coral">Spark!</span> ⚡
+    </h1>
+    <p>Test your knowledge across Science, Maths, History and more — totally free, totally fun!</p>
+    <div class="hero-buttons">
+      <a href="#quiz" class="btn-primary">Start a Quiz!</a>
+      <a href="#categories" class="btn-secondary">Browse Subjects</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">500+</span><span class="stat-label">Questions</span></div>
+      <div class="stat"><span class="stat-num">6</span><span class="stat-label">Subjects</span></div>
+      <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Free</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="section" id="categories">
+  <div class="section-title">Pick a Subject ✏️</div>
+  <div class="section-sub">Choose your favourite topic and test yourself!</div>
+  <div class="categories-grid">
+    <a href="#quiz" class="category-card cat-science" onclick="loadQuiz('science')">
+      <span class="cat-icon">🔬</span>
+      <div class="cat-title">Science</div>
+      <div class="cat-count">80+ questions</div>
+      <span class="cat-badge">Popular</span>
+    </a>
+    <a href="#quiz" class="category-card cat-maths" onclick="loadQuiz('maths')">
+      <span class="cat-icon">🔢</span>
+      <div class="cat-title">Maths</div>
+      <div class="cat-count">100+ questions</div>
+      <span class="cat-badge">Try it!</span>
+    </a>
+    <a href="#quiz" class="category-card cat-history" onclick="loadQuiz('history')">
+      <span class="cat-icon">🏛️</span>
+      <div class="cat-title">History</div>
+      <div class="cat-count">70+ questions</div>
+      <span class="cat-badge">Fascinating</span>
+    </a>
+    <a href="#quiz" class="category-card cat-english" onclick="loadQuiz('english')">
+      <span class="cat-icon">📚</span>
+      <div class="cat-title">English</div>
+      <div class="cat-count">60+ questions</div>
+      <span class="cat-badge">Words!</span>
+    </a>
+    <a href="#quiz" class="category-card cat-geography" onclick="loadQuiz('geography')">
+      <span class="cat-icon">🌍</span>
+      <div class="cat-title">Geography</div>
+      <div class="cat-count">75+ questions</div>
+      <span class="cat-badge">Explore</span>
+    </a>
+    <a href="#quiz" class="category-card cat-coding" onclick="loadQuiz('coding')">
+      <span class="cat-icon">💻</span>
+      <div class="cat-title">Coding</div>
+      <div class="cat-count">50+ questions</div>
+      <span class="cat-badge">New!</span>
+    </a>
+  </div>
+</section>
+
+<!-- FEATURED QUIZ -->
+<div class="quiz-section" id="quiz">
+  <div class="quiz-inner">
+    <div class="section-title">⚡ Quick Fire Quiz</div>
+    <div class="section-sub">Answer 5 questions — how many can you get right?</div>
+    <div id="quiz-container">
+      <div id="quiz-play">
+        <div class="quiz-header">
+          <div class="quiz-topic" id="quiz-topic">Science</div>
+          <div class="quiz-progress">
+            <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+            <span id="q-counter">1 / 5</span>
+          </div>
+        </div>
+        <div class="quiz-question" id="quiz-q">Loading question...</div>
+        <div class="quiz-options" id="quiz-options"></div>
+        <div class="quiz-feedback" id="quiz-feedback"></div>
+        <div class="quiz-nav">
+          <div class="score-badge">⚡ Score: <span id="score-display">0</span></div>
+          <button class="btn-next" id="btn-next" onclick="nextQuestion()">Next →</button>
+        </div>
+      </div>
+      <div class="result-screen" id="result-screen">
+        <span class="result-emoji" id="result-emoji">🎉</span>
+        <div class="result-title" id="result-title">Brilliant!</div>
+        <div class="result-score" id="result-score">5/5</div>
+        <div class="result-msg" id="result-msg">You got a perfect score! Amazing!</div>
+        <button class="btn-restart" onclick="restartQuiz()">Play Again! 🔄</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="section-title">How QuizSpark Works 🚀</div>
+  <div class="section-sub">It's super simple — get started in seconds!</div>
+  <div class="how-grid">
+    <div class="how-card">
+      <span class="how-num">1</span>
+      <span class="how-icon">📖</span>
+      <div class="how-title">Pick a Subject</div>
+      <div class="how-desc">Choose from Science, Maths, History, English, Geography or Coding.</div>
+    </div>
+    <div class="how-card">
+      <span class="how-num">2</span>
+      <span class="how-icon">🎯</span>
+      <div class="how-title">Answer Questions</div>
+      <div class="how-desc">Read each question carefully and tap the answer you think is correct.</div>
+    </div>
+    <div class="how-card">
+      <span class="how-num">3</span>
+      <span class="how-icon">⚡</span>
+      <div class="how-title">Get Instant Feedback</div>
+      <div class="how-desc">Find out right away if you're correct — and learn why!</div>
+    </div>
+    <div class="how-card">
+      <span class="how-num">4</span>
+      <span class="how-icon">🏆</span>
+      <div class="how-title">Beat Your Score</div>
+      <div class="how-desc">Track your progress, climb the leaderboard, and keep improving!</div>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERBOARD -->
+<div class="leaderboard" id="leaderboard">
+  <div class="lb-inner">
+    <div class="section-title">🏆 Top Players</div>
+    <div class="section-sub" style="margin-bottom:2rem">Can you make it to the top?</div>
+    <div id="lb-list">
+      <div class="lb-row"><span class="lb-rank">🥇</span><div><div class="lb-name">Sarah M.</div><div class="lb-cat">Science</div></div><span class="lb-score">98pts</span></div>
+      <div class="lb-row"><span class="lb-rank">🥈</span><div><div class="lb-name">James T.</div><div class="lb-cat">Maths</div></div><span class="lb-score">95pts</span></div>
+      <div class="lb-row"><span class="lb-rank">🥉</span><div><div class="lb-name">Priya K.</div><div class="lb-cat">History</div></div><span class="lb-score">92pts</span></div>
+      <div class="lb-row"><span class="lb-rank">4</span><div><div class="lb-name">Leo B.</div><div class="lb-cat">Geography</div></div><span class="lb-score">89pts</span></div>
+      <div class="lb-row"><span class="lb-rank">5</span><div><div class="lb-name">Amara D.</div><div class="lb-cat">English</div></div><span class="lb-score">87pts</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Quiz<span>Spark</span> ⚡</div>
+  <p>Free educational quizzes for school students everywhere 🌍</p>
+  <p style="margin-top:1rem">Made with ❤️ for curious minds</p>
+</footer>
+
+<script>
+const quizData = {
+  science: [
+    { q: "What is the closest star to Earth?", opts: ["The Moon", "The Sun", "Alpha Centauri", "Sirius"], ans: 1, exp: "The Sun is our closest star — about 150 million km away!" },
+    { q: "What gas do plants absorb from the air?", opts: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"], ans: 2, exp: "Plants absorb CO₂ and release oxygen through photosynthesis." },
+    { q: "How many bones are in the adult human body?", opts: ["206", "305", "186", "250"], ans: 0, exp: "Adults have 206 bones. Babies are born with around 270!" },
+    { q: "What is the chemical symbol for water?", opts: ["WO", "H₂O", "HO₂", "W₂O"], ans: 1, exp: "Water is H₂O — two hydrogen atoms and one oxygen atom." },
+    { q: "What organ pumps blood around the body?", opts: ["Brain", "Lungs", "Liver", "Heart"], ans: 3, exp: "The heart pumps about 5 litres of blood every minute!" }
+  ],
+  maths: [
+    { q: "What is 7 × 8?", opts: ["54", "56", "64", "48"], ans: 1, exp: "7 × 8 = 56. A classic one to memorise!" },
+    { q: "What is the square root of 144?", opts: ["11", "14", "12", "13"], ans: 2, exp: "√144 = 12, because 12 × 12 = 144." },
+    { q: "What is 25% of 200?", opts: ["25", "75", "50", "40"], ans: 2, exp: "25% means one quarter. 200 ÷ 4 = 50!" },
+    { q: "How many sides does a hexagon have?", opts: ["5", "7", "8", "6"], ans: 3, exp: "Hexa means 6 in Greek — so a hexagon has 6 sides." },
+    { q: "What is 3³ (3 cubed)?", opts: ["9", "27", "18", "33"], ans: 1, exp: "3³ = 3 × 3 × 3 = 27." }
+  ],
+  history: [
+    { q: "In which year did World War II end?", opts: ["1943", "1944", "1945", "1946"], ans: 2, exp: "World War II ended in 1945 — in Europe in May and in Asia in September." },
+    { q: "Who was the first person to walk on the Moon?", opts: ["Buzz Aldrin", "Yuri Gagarin", "Neil Armstrong", "John Glenn"], ans: 2, exp: "Neil Armstrong stepped on the Moon on 20 July 1969." },
+    { q: "Which ancient wonder was located in Egypt?", opts: ["Colosseum", "Great Pyramid of Giza", "Parthenon", "Stonehenge"], ans: 1, exp: "The Great Pyramid of Giza is the only ancient wonder still standing!" },
+    { q: "Who was the first Queen of England?", opts: ["Elizabeth I", "Mary I", "Victoria", "Anne"], ans: 1, exp: "Mary I became the first Queen of England in 1553." },
+    { q: "What empire did Julius Caesar belong to?", opts: ["Greek", "Ottoman", "Roman", "Byzantine"], ans: 2, exp: "Julius Caesar was a Roman leader — one of history's most famous." }
+  ],
+  english: [
+    { q: "What is a word that describes a noun?", opts: ["Verb", "Adverb", "Adjective", "Pronoun"], ans: 2, exp: "Adjectives describe nouns — like 'big', 'red', or 'happy'." },
+    { q: "Which of these is a simile?", opts: ["The stars danced", "She was a lion", "He ran like the wind", "The moon smiled"], ans: 2, exp: "A simile compares using 'like' or 'as'. He ran like the wind!" },
+    { q: "What is the plural of 'mouse'?", opts: ["Mouses", "Mousies", "Mice", "Mouse"], ans: 2, exp: "The plural of mouse is mice — an irregular plural!" },
+    { q: "Who wrote 'Romeo and Juliet'?", opts: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Roald Dahl"], ans: 1, exp: "William Shakespeare wrote Romeo and Juliet around 1594–1596." },
+    { q: "What punctuation mark ends a question?", opts: ["Full stop", "Comma", "Exclamation mark", "Question mark"], ans: 3, exp: "A question mark (?) always ends a question sentence." }
+  ],
+  geography: [
+    { q: "What is the largest continent?", opts: ["Africa", "North America", "Asia", "Europe"], ans: 2, exp: "Asia is the largest continent — covering about 44 million km²!" },
+    { q: "What is the capital city of Australia?", opts: ["Sydney", "Melbourne", "Brisbane", "Canberra"], ans: 3, exp: "Canberra is the capital of Australia — many people guess Sydney!" },
+    { q: "Which is the world's longest river?", opts: ["Amazon", "Nile", "Congo", "Yangtze"], ans: 1, exp: "The Nile in Africa is considered the world's longest river at 6,650 km." },
+    { q: "On which continent is the Sahara Desert?", opts: ["Asia", "South America", "Australia", "Africa"], ans: 3, exp: "The Sahara is in northern Africa — the world's largest hot desert!" },
+    { q: "What is the capital of Japan?", opts: ["Beijing", "Seoul", "Tokyo", "Osaka"], ans: 2, exp: "Tokyo is Japan's capital — and one of the world's biggest cities." }
+  ],
+  coding: [
+    { q: "What does HTML stand for?", opts: ["High Text Making Language", "HyperText Markup Language", "Home Tool Markup Language", "Hyper Transfer Making Links"], ans: 1, exp: "HTML = HyperText Markup Language — the language of web pages!" },
+    { q: "Which symbol is used for comments in Python?", opts: ["//", "/*", "#", "<!--"], ans: 2, exp: "In Python, the # symbol starts a comment that the computer ignores." },
+    { q: "What does CSS stand for?", opts: ["Creative Style Sheets", "Cascading Style Sheets", "Computer Style Sheets", "Colourful Style Sheets"], ans: 1, exp: "CSS = Cascading Style Sheets — it makes web pages look nice!" },
+    { q: "Which of these is NOT a programming language?", opts: ["Python", "Java", "HTML", "Ruby"], ans: 2, exp: "HTML is a markup language, not a programming language — it describes structure, not logic." },
+    { q: "What is a 'bug' in coding?", opts: ["An insect in the computer", "A slow internet connection", "An error in the code", "A type of variable"], ans: 2, exp: "A bug is an error or mistake in code — 'debugging' means fixing it!" }
+  ]
+};
+
+let currentSubject = 'science';
+let currentQ = 0;
+let score = 0;
+let answered = false;
+let questions = [];
+
+function loadQuiz(subject) {
+  currentSubject = subject || 'science';
+  currentQ = 0;
+  score = 0;
+  answered = false;
+  questions = [...quizData[currentSubject]];
+  shuffle(questions);
+  questions = questions.slice(0, 5);
+  document.getElementById('result-screen').classList.remove('show');
+  document.getElementById('quiz-play').style.display = 'block';
+  document.getElementById('score-display').textContent = '0';
+  document.getElementById('quiz-topic').textContent = currentSubject.charAt(0).toUpperCase() + currentSubject.slice(1);
+  renderQuestion();
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  answered = false;
+  document.getElementById('quiz-q').textContent = q.q;
+  document.getElementById('q-counter').textContent = (currentQ + 1) + ' / 5';
+  document.getElementById('progress-fill').style.width = (currentQ / 5 * 100) + '%';
+  const fb = document.getElementById('quiz-feedback');
+  fb.className = 'quiz-feedback';
+  fb.textContent = '';
+  document.getElementById('btn-next').classList.remove('show');
+
+  const opts = document.getElementById('quiz-options');
+  opts.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span>${opt}`;
+    btn.onclick = () => selectAnswer(i);
+    opts.appendChild(btn);
+  });
+}
+
+function selectAnswer(chosen) {
+  if (answered) return;
+  answered = true;
+  const q = questions[currentQ];
+  const btns = document.querySelectorAll('.option-btn');
+  const fb = document.getElementById('quiz-feedback');
+
+  btns.forEach(b => b.disabled = true);
+  btns[q.ans].classList.add('correct');
+
+  if (chosen === q.ans) {
+    score++;
+    document.getElementById('score-display').textContent = score;
+    fb.textContent = '🎉 Correct! ' + q.exp;
+    fb.className = 'quiz-feedback correct show';
+  } else {
+    btns[chosen].classList.add('wrong');
+    fb.textContent = '❌ Not quite! ' + q.exp;
+    fb.className = 'quiz-feedback wrong show';
+  }
+  document.getElementById('btn-next').classList.add('show');
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= 5) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('quiz-play').style.display = 'none';
+  const rs = document.getElementById('result-screen');
+  rs.classList.add('show');
+  document.getElementById('result-score').textContent = score + '/5';
+  document.getElementById('progress-fill').style.width = '100%';
+
+  const emojis = ['😢', '😅', '🙂', '😊', '🌟', '🎉'];
+  const titles = ['Keep Trying!', 'Getting There!', 'Good Effort!', 'Well Done!', 'Brilliant!', 'Perfect Score!'];
+  const msgs = [
+    'Don\'t give up — try again and you\'ll do better!',
+    'A bit more practice and you\'ll nail it!',
+    'Not bad at all — keep going!',
+    'Great job! Can you get all 5 next time?',
+    'Almost perfect — amazing work!',
+    'You got every single one right! Outstanding!'
+  ];
+
+  document.getElementById('result-emoji').textContent = emojis[score];
+  document.getElementById('result-title').textContent = titles[score];
+  document.getElementById('result-msg').textContent = msgs[score];
+}
+
+function restartQuiz() {
+  loadQuiz(currentSubject);
+  document.getElementById('quiz-play').style.display = 'block';
+}
+
+// Init
+loadQuiz('science');
+</script>
+</body>
+</html>
