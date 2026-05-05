@@ -1,9 +1,9 @@
 // ═══════════════════════════════════════════════
-//  QuizSpark India — Shared State & Curriculum Data
+//  SmartSpark India — Shared State & Curriculum Data
 // ═══════════════════════════════════════════════
 
 // ── State (persisted in sessionStorage) ──
-const STATE_KEY = 'qs_state';
+const STATE_KEY = 'ss_state';
 
 function getState() {
   try { return JSON.parse(sessionStorage.getItem(STATE_KEY)) || {}; }
@@ -17,7 +17,7 @@ function setState(patch) {
 }
 
 // ── Score persistence (localStorage for cross-session) ──
-const SCORE_KEY = 'qs_scores';
+const SCORE_KEY = 'ss_scores';
 
 function getScores() {
   try { return JSON.parse(localStorage.getItem(SCORE_KEY)) || {}; }
