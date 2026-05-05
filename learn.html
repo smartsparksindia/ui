@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>SmartSpark ⚡ Learn</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+<!-- Background shapes -->
+<div class="shape shape-1"></div>
+<div class="shape shape-2"></div>
+<div class="shape shape-3"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">Smart<span>Spark</span> ⚡</a>
+
+  <div class="nav-links">
+    <a href="subjects.html">Subjects</a>
+    <a href="chapters.html">Chapters</a>
+    <a href="#" onclick="goBack()">Back</a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<section class="section">
+  <div class="section-title" id="chapter-title">
+    Chapter Name
+  </div>
+
+  <div class="section-sub" id="chapter-subtitle">
+    Learn with flashcards + quiz 🚀
+  </div>
+</section>
+
+<!-- MODE SWITCH -->
+<section class="section">
+  <div class="mode-switch">
+    <button id="flashcard-btn" class="btn-primary">📘 Flashcards</button>
+    <button id="quiz-btn" class="btn-secondary">🧠 Quiz</button>
+  </div>
+</section>
+
+<!-- LEARN CONTAINER -->
+<section class="section">
+
+  <div id="learn-container">
+
+    <!-- FLASHCARD MODE -->
+    <div id="flashcard-mode">
+
+      <div class="flashcard">
+        <div id="flashcard-content">
+          Loading flashcards...
+        </div>
+      </div>
+
+      <div class="flashcard-controls">
+        <button onclick="prevCard()" class="btn-secondary">← Prev</button>
+
+        <div class="card-progress">
+          <span id="card-counter">1 / 10</span>
+        </div>
+
+        <button onclick="nextCard()" class="btn-primary">Next →</button>
+      </div>
+
+    </div>
+
+    <!-- QUIZ MODE -->
+    <div id="quiz-mode" style="display:none">
+
+      <div id="quiz-box">
+
+        <div class="quiz-header">
+          <div class="quiz-topic" id="quiz-topic">Chapter Quiz</div>
+          <div class="quiz-progress">
+            <span id="quiz-counter">1 / 5</span>
+          </div>
+        </div>
+
+        <div class="quiz-question" id="quiz-question">
+          Question loading...
+        </div>
+
+        <div class="quiz-options" id="quiz-options"></div>
+
+        <div id="quiz-feedback" class="quiz-feedback"></div>
+
+        <div class="quiz-nav">
+          <div class="score-badge">
+            ⚡ Score: <span id="quiz-score">0</span>
+          </div>
+
+          <button id="next-btn" class="btn-next" onclick="nextQuizQuestion()">
+            Next →
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- XP / PROGRESS BAR -->
+<section class="section">
+  <div class="xp-bar">
+    <div class="xp-label">XP Progress</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="xp-fill" style="width:0%"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Smart<span>Spark</span> ⚡</div>
+  <p>Learn. Practice. Master. 🚀</p>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="js/state.js"></script>
+<script src="js/curriculum.js"></script>
+<script src="js/router.js"></script>
+<script src="js/learn.js"></script>
+
+</body>
+</html>

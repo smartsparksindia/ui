@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>SmartSpark ⚡ Subjects</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+<!-- Floating background shapes -->
+<div class="shape shape-1"></div>
+<div class="shape shape-2"></div>
+<div class="shape shape-3"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">Smart<span>Spark</span> ⚡</a>
+
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="#" onclick="goBack()">Back</a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<section class="section">
+  <div class="section-title" id="page-title">
+    Subjects
+  </div>
+
+  <div class="section-sub" id="page-subtitle">
+    Choose your subject 📚
+  </div>
+</section>
+
+<!-- SUBJECT GRID -->
+<section class="section">
+  <div id="subjects-container" class="subjects-grid">
+    <!-- filled by subjects.js -->
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Smart<span>Spark</span> ⚡</div>
+  <p>Learn. Play. Improve. 🚀</p>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="js/state.js"></script>
+<script src="js/curriculum.js"></script>
+<script src="js/router.js"></script>
+<script src="js/subjects.js"></script>
+
+</body>
+</html>
