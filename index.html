@@ -3,232 +3,385 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuizSpark India ⚡ — Choose Your Year</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --yellow: #F5C518;
+  --orange: #F07733;
+  --purple: #6C4EE4;
+  --teal: #15A585;
+  --pink: #E8437F;
+  --blue: #2176FF;
+  --bg: #0F0E17;
+  --bg2: #1A1929;
+  --card: #211F35;
+  --border: rgba(255,255,255,0.08);
+  --text: #F2EFE9;
+  --muted: rgba(242,239,233,0.5);
+  --r: 18px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-<title>SmartSpark India⚡ Learn & Have Fun!</title>
+/* ── GRID BG ── */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(108,78,228,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(108,78,228,0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events:none; z-index:0;
+}
 
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+/* ── NAV ── */
+nav {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1.2rem 3rem;
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(12px);
+  position:sticky; top:0; z-index:100;
+  background:rgba(15,14,23,0.8);
+}
+.logo {
+  font-family:'Baloo 2', cursive;
+  font-size:1.7rem; font-weight:800;
+  color:var(--text); text-decoration:none;
+  display:flex; align-items:center; gap:0.3rem;
+}
+.logo em { color:var(--yellow); font-style:normal; }
+.logo .bolt { font-size:1.5rem; }
 
-<link rel="stylesheet" href="css/styles.css">
+.nav-right { display:flex; align-items:center; gap:1.2rem; }
+.score-pill {
+  background:rgba(245,197,24,0.12);
+  border:1px solid rgba(245,197,24,0.25);
+  color:var(--yellow);
+  padding:0.4rem 1rem; border-radius:50px;
+  font-weight:800; font-size:0.9rem;
+  display:flex; align-items:center; gap:0.4rem;
+}
+
+/* ── HERO ── */
+.hero {
+  text-align:center; padding:5rem 2rem 3rem;
+  position:relative; z-index:1;
+}
+.hero-badge {
+  display:inline-flex; align-items:center; gap:0.5rem;
+  background:rgba(108,78,228,0.15);
+  border:1px solid rgba(108,78,228,0.35);
+  color:#A48EFF;
+  padding:0.4rem 1.2rem; border-radius:50px;
+  font-size:0.85rem; font-weight:700;
+  margin-bottom:1.8rem;
+  letter-spacing:0.08em; text-transform:uppercase;
+}
+.hero h1 {
+  font-family:'Baloo 2', cursive;
+  font-size:clamp(2.8rem,8vw,5rem);
+  font-weight:800;
+  line-height:1.05;
+  margin-bottom:1.2rem;
+}
+.hero h1 .g1 { color:var(--yellow); }
+.hero h1 .g2 { color:var(--orange); }
+.hero p {
+  font-size:1.15rem; color:var(--muted);
+  max-width:480px; margin:0 auto 1rem;
+  font-weight:600; line-height:1.6;
+}
+.hero .tagline {
+  font-size:0.9rem; color:rgba(255,255,255,0.3);
+  font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+  margin-bottom:4rem;
+}
+
+/* ── YEAR SELECTION ── */
+.year-section {
+  max-width:900px; margin:0 auto;
+  padding:0 2rem 5rem;
+  position:relative; z-index:1;
+}
+.year-label {
+  text-align:center;
+  font-family:'Baloo 2', cursive;
+  font-size:1.1rem; font-weight:700;
+  color:var(--muted);
+  text-transform:uppercase; letter-spacing:0.12em;
+  margin-bottom:1.5rem;
+}
+.years-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:1rem;
+}
+.year-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:2rem 1.5rem;
+  text-align:center;
+  cursor:pointer;
+  transition:transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  text-decoration:none; color:var(--text);
+  display:block;
+  position:relative; overflow:hidden;
+}
+.year-card::before {
+  content:'';
+  position:absolute; inset:0;
+  opacity:0; transition:opacity 0.3s;
+}
+.year-card:hover { transform:translateY(-6px); }
+.year-card:hover::before { opacity:1; }
+
+.yr6 { --accent:#F5C518; }
+.yr6::before { background:radial-gradient(circle at top,rgba(245,197,24,0.12),transparent 70%); }
+.yr6:hover { border-color:rgba(245,197,24,0.4); box-shadow:0 12px 40px rgba(245,197,24,0.15); }
+
+.yr7 { --accent:#F07733; }
+.yr7::before { background:radial-gradient(circle at top,rgba(240,119,51,0.12),transparent 70%); }
+.yr7:hover { border-color:rgba(240,119,51,0.4); box-shadow:0 12px 40px rgba(240,119,51,0.15); }
+
+.yr8 { --accent:#E8437F; }
+.yr8::before { background:radial-gradient(circle at top,rgba(232,67,127,0.12),transparent 70%); }
+.yr8:hover { border-color:rgba(232,67,127,0.4); box-shadow:0 12px 40px rgba(232,67,127,0.15); }
+
+.yr9 { --accent:#2176FF; }
+.yr9::before { background:radial-gradient(circle at top,rgba(33,118,255,0.12),transparent 70%); }
+.yr9:hover { border-color:rgba(33,118,255,0.4); box-shadow:0 12px 40px rgba(33,118,255,0.15); }
+
+.yr10 { --accent:#6C4EE4; }
+.yr10::before { background:radial-gradient(circle at top,rgba(108,78,228,0.15),transparent 70%); }
+.yr10:hover { border-color:rgba(108,78,228,0.4); box-shadow:0 12px 40px rgba(108,78,228,0.15); }
+
+.yr11 { --accent:#15A585; }
+.yr11::before { background:radial-gradient(circle at top,rgba(21,165,133,0.12),transparent 70%); }
+.yr11:hover { border-color:rgba(21,165,133,0.4); box-shadow:0 12px 40px rgba(21,165,133,0.15); }
+
+.yr12 { --accent:#E8437F; }
+.yr12::before { background:radial-gradient(circle at top,rgba(240,60,60,0.12),transparent 70%); }
+.yr12:hover { border-color:rgba(220,50,50,0.4); box-shadow:0 12px 40px rgba(220,50,50,0.15); }
+
+.year-emoji { font-size:2.5rem; display:block; margin-bottom:0.8rem; }
+.year-num {
+  font-family:'Baloo 2', cursive;
+  font-size:2rem; font-weight:800;
+  color:var(--accent);
+  display:block; margin-bottom:0.3rem;
+}
+.year-sub {
+  font-size:0.8rem; font-weight:700;
+  color:var(--muted); text-transform:uppercase; letter-spacing:0.08em;
+}
+.year-topics {
+  display:flex; gap:0.4rem; flex-wrap:wrap; justify-content:center;
+  margin-top:1rem;
+}
+.topic-pill {
+  font-size:0.7rem; font-weight:700;
+  padding:0.2rem 0.6rem; border-radius:50px;
+  background:rgba(255,255,255,0.07);
+  color:rgba(255,255,255,0.5);
+}
+
+/* ── FEATURES ── */
+.features {
+  max-width:900px; margin:0 auto 5rem;
+  padding:0 2rem;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:1rem;
+  position:relative; z-index:1;
+}
+.feature-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:1.5rem;
+}
+.f-icon { font-size:1.8rem; margin-bottom:0.8rem; display:block; }
+.f-title {
+  font-family:'Baloo 2',cursive;
+  font-size:1.1rem; font-weight:700;
+  margin-bottom:0.4rem;
+}
+.f-desc { font-size:0.88rem; color:var(--muted); line-height:1.5; font-weight:600; }
+
+/* ── FOOTER ── */
+footer {
+  text-align:center; padding:2.5rem;
+  border-top:1px solid var(--border);
+  color:var(--muted); font-size:0.9rem; font-weight:600;
+  position:relative; z-index:1;
+}
+footer strong { color:var(--yellow); font-weight:800; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(24px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.hero-content { animation:fadeUp 0.6s ease both; }
+.year-section  { animation:fadeUp 0.6s 0.15s ease both; }
+.features      { animation:fadeUp 0.6s 0.25s ease both; }
+
+@media (max-width:600px) {
+  nav { padding:1rem 1.2rem; }
+  .years-grid { grid-template-columns:repeat(2,1fr); }
+}
+</style>
 </head>
-
 <body>
 
-<!-- FLOATING BACKGROUND SHAPES (KEEP YOUR STYLE) -->
-<div class="shape shape-1"></div>
-<div class="shape shape-2"></div>
-<div class="shape shape-3"></div>
-
-<!-- NAV -->
 <nav>
-  <a href="index.html" class="logo">Smart<span>Spark</span> ⚡</a>
-
-  <div class="nav-links">
-    <a href="#categories">Subjects</a>
-    <a href="#how">How it Works</a>
-    <a href="#leaderboard">Top Players</a>
-    <a href="#quiz" class="nav-btn">Play Now!</a>
+  <a href="index.html" class="logo">Quiz<em>Spark</em><span class="bolt">⚡</span></a>
+  <div class="nav-right">
+    <div class="score-pill">⭐ <span id="total-score">0</span> pts</div>
   </div>
 </nav>
 
-<!-- HERO (UNCHANGED STYLE INTENT) -->
 <section class="hero">
   <div class="hero-content">
+    <div class="hero-badge">🇮🇳 Made for Indian School Students</div>
+    <h1>Learn Smarter.<br><span class="g1">Score</span> <span class="g2">Higher.</span></h1>
+    <p>A complete learning journey — flashcards, quizzes, and points — mapped to the Indian curriculum.</p>
+    <div class="tagline">Year 6 → Year 12 · All subjects · Free forever</div>
+  </div>
+</section>
 
-    <div class="hero-badge">🎓 Free for all students</div>
+<div class="year-section">
+  <div class="year-label">— Choose your school year —</div>
+  <div class="years-grid">
 
-    <h1>
-      Learn. <span class="highlight-purple">Play.</span><br>
-      <span class="highlight-coral">Spark!</span> ⚡
-    </h1>
-
-    <p>
-      Test your knowledge across Science, Maths, History and more — build confidence while having fun.
-    </p>
-
-    <div class="hero-buttons">
-      <a href="#categories" class="btn-primary">Start Learning</a>
-      <a href="#how" class="btn-secondary">How it Works</a>
-    </div>
-
-    <div class="hero-stats">
-      <div class="stat">
-        <span class="stat-num">500+</span>
-        <span class="stat-label">Questions</span>
+    <a class="year-card yr6" href="subjects.html" onclick="selectYear(6)">
+      <span class="year-emoji">🌱</span>
+      <span class="year-num">Year 6</span>
+      <span class="year-sub">Middle School Begins</span>
+      <div class="year-topics">
+        <span class="topic-pill">Science</span>
+        <span class="topic-pill">Maths</span>
+        <span class="topic-pill">Social Sc.</span>
+        <span class="topic-pill">English</span>
       </div>
+    </a>
 
-      <div class="stat">
-        <span class="stat-num">6</span>
-        <span class="stat-label">Subjects</span>
+    <a class="year-card yr7" href="subjects.html" onclick="selectYear(7)">
+      <span class="year-emoji">🔭</span>
+      <span class="year-num">Year 7</span>
+      <span class="year-sub">Exploring Deeper</span>
+      <div class="year-topics">
+        <span class="topic-pill">Science</span>
+        <span class="topic-pill">Maths</span>
+        <span class="topic-pill">Social Sc.</span>
+        <span class="topic-pill">English</span>
       </div>
+    </a>
 
-      <div class="stat">
-        <span class="stat-num">FREE</span>
-        <span class="stat-label">Forever</span>
+    <a class="year-card yr8" href="subjects.html" onclick="selectYear(8)">
+      <span class="year-emoji">⚗️</span>
+      <span class="year-num">Year 8</span>
+      <span class="year-sub">Building Foundations</span>
+      <div class="year-topics">
+        <span class="topic-pill">Science</span>
+        <span class="topic-pill">Maths</span>
+        <span class="topic-pill">Social Sc.</span>
+        <span class="topic-pill">English</span>
       </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- SUBJECTS (UNCHANGED LOOK, FIXED LINKS ONLY) -->
-<section class="section" id="categories">
-
-  <div class="section-title">Pick a Subject ✏️</div>
-  <div class="section-sub">Choose your favourite topic and begin your journey!</div>
-
-  <div class="categories-grid">
-
-    <a href="subjects.html?subject=science" class="category-card cat-science">
-      <span class="cat-icon">🔬</span>
-      <div class="cat-title">Science</div>
-      <div class="cat-count">Physics • Chemistry • Biology</div>
-      <span class="cat-badge">Popular</span>
     </a>
 
-    <a href="subjects.html?subject=maths" class="category-card cat-maths">
-      <span class="cat-icon">🔢</span>
-      <div class="cat-title">Maths</div>
-      <div class="cat-count">Algebra • Geometry • Arithmetic</div>
-      <span class="cat-badge">Practice</span>
-    </a>
-
-    <a href="subjects.html?subject=english" class="category-card cat-english">
-      <span class="cat-icon">📚</span>
-      <div class="cat-title">English</div>
-      <div class="cat-count">Grammar • Comprehension</div>
-      <span class="cat-badge">Words</span>
-    </a>
-
-    <a href="subjects.html?subject=history" class="category-card cat-history">
-      <span class="cat-icon">🏛️</span>
-      <div class="cat-title">History</div>
-      <div class="cat-count">India • World History</div>
-      <span class="cat-badge">Explore</span>
-    </a>
-
-    <a href="subjects.html?subject=geography" class="category-card cat-geography">
-      <span class="cat-icon">🌍</span>
-      <div class="cat-title">Geography</div>
-      <div class="cat-count">Earth • Maps • Climate</div>
-      <span class="cat-badge">Discover</span>
-    </a>
-
-    <a href="subjects.html?subject=coding" class="category-card cat-coding">
-      <span class="cat-icon">💻</span>
-      <div class="cat-title">Coding</div>
-      <div class="cat-count">HTML • Python • Logic</div>
-      <span class="cat-badge">New</span>
-    </a>
-
-  </div>
-</section>
-
-<!-- HOW IT WORKS (THIS WAS “LOST” BEFORE — NOW RESTORED FULL STYLE) -->
-<section class="section" id="how">
-
-  <div class="section-title">How SmartSpark Works 🚀</div>
-  <div class="section-sub">Simple steps to start learning instantly</div>
-
-  <div class="how-grid">
-
-    <div class="how-card">
-      <span class="how-num">1</span>
-      <span class="how-icon">📖</span>
-      <div class="how-title">Choose Subject</div>
-      <div class="how-desc">Pick from Science, Maths, English and more.</div>
-    </div>
-
-    <div class="how-card">
-      <span class="how-num">2</span>
-      <span class="how-icon">📘</span>
-      <div class="how-title">Pick Chapter</div>
-      <div class="how-desc">Each subject is broken into simple chapters.</div>
-    </div>
-
-    <div class="how-card">
-      <span class="how-num">3</span>
-      <span class="how-icon">⚡</span>
-      <div class="how-title">Learn + Quiz</div>
-      <div class="how-desc">Use flashcards and test yourself instantly.</div>
-    </div>
-
-    <div class="how-card">
-      <span class="how-num">4</span>
-      <span class="how-icon">🏆</span>
-      <div class="how-title">Earn Points</div>
-      <div class="how-desc">Track progress and improve your score.</div>
-    </div>
-
-  </div>
-</section>
-
-<!-- QUIZ PREVIEW (KEPT YOUR ORIGINAL FEEL, NOT DUMBED DOWN) -->
-<section class="section" id="quiz">
-
-  <div class="section-title">⚡ Try a Quick Quiz</div>
-  <div class="section-sub">Full experience continues in Learn mode</div>
-
-  <div id="quiz-container">
-
-    <div class="quiz-header">
-      <div class="quiz-topic">Science Demo</div>
-
-      <div class="quiz-progress">
-        <div class="progress-bar">
-          <div class="progress-fill" style="width: 30%"></div>
-        </div>
-        <span>1 / 5</span>
+    <a class="year-card yr9" href="subjects.html" onclick="selectYear(9)">
+      <span class="year-emoji">📐</span>
+      <span class="year-num">Year 9</span>
+      <span class="year-sub">Senior Secondary</span>
+      <div class="year-topics">
+        <span class="topic-pill">Physics</span>
+        <span class="topic-pill">Chemistry</span>
+        <span class="topic-pill">Algebra</span>
+        <span class="topic-pill">Trig</span>
       </div>
-    </div>
+    </a>
 
-    <div class="quiz-question">
-      What is the Sun?
-    </div>
+    <a class="year-card yr10" href="subjects.html" onclick="selectYear(10)">
+      <span class="year-emoji">🏆</span>
+      <span class="year-num">Year 10</span>
+      <span class="year-sub">Board Prep Begins</span>
+      <div class="year-topics">
+        <span class="topic-pill">Physics</span>
+        <span class="topic-pill">Chemistry</span>
+        <span class="topic-pill">Maths</span>
+        <span class="topic-pill">History</span>
+      </div>
+    </a>
 
-    <div class="quiz-options">
-      <button class="option-btn">A star</button>
-      <button class="option-btn">A planet</button>
-      <button class="option-btn">A moon</button>
-      <button class="option-btn">A galaxy</button>
-    </div>
+    <a class="year-card yr11" href="subjects.html" onclick="selectYear(11)">
+      <span class="year-emoji">🧪</span>
+      <span class="year-num">Year 11</span>
+      <span class="year-sub">Advanced Learning</span>
+      <div class="year-topics">
+        <span class="topic-pill">Physics</span>
+        <span class="topic-pill">Chem</span>
+        <span class="topic-pill">Maths</span>
+        <span class="topic-pill">Poly Sc.</span>
+      </div>
+    </a>
 
-  </div>
-</section>
-
-<!-- LEADERBOARD (UNCHANGED STYLE) -->
-<section class="leaderboard" id="leaderboard">
-
-  <div class="lb-inner">
-
-    <div class="section-title">🏆 Top Players</div>
-    <div class="section-sub">Compete and climb the leaderboard</div>
-
-    <div class="lb-row">
-      <span class="lb-rank">🥇</span>
-      <div class="lb-name">Kiara M.</div>
-      <div class="lb-score">98</div>
-    </div>
-
-    <div class="lb-row">
-      <span class="lb-rank">🥈</span>
-      <div class="lb-name">Amit N.</div>
-      <div class="lb-score">95</div>
-    </div>
-
-    <div class="lb-row">
-      <span class="lb-rank">🥉</span>
-      <div class="lb-name">Kanishka K.</div>
-      <div class="lb-score">92</div>
-    </div>
+    <a class="year-card yr12" href="subjects.html" onclick="selectYear(12)">
+      <span class="year-emoji">🚀</span>
+      <span class="year-num">Year 12</span>
+      <span class="year-sub">Final Board Year</span>
+      <div class="year-topics">
+        <span class="topic-pill">Physics</span>
+        <span class="topic-pill">Chem</span>
+        <span class="topic-pill">Maths</span>
+        <span class="topic-pill">English</span>
+      </div>
+    </a>
 
   </div>
-</section>
+</div>
 
-<!-- FOOTER -->
+<div class="features">
+  <div class="feature-card">
+    <span class="f-icon">🃏</span>
+    <div class="f-title">Flashcard Learning</div>
+    <div class="f-desc">Learn key concepts with interactive flashcards before attempting any quiz. No cramming — just understanding.</div>
+  </div>
+  <div class="feature-card">
+    <span class="f-icon">⚡</span>
+    <div class="f-title">Instant Feedback</div>
+    <div class="f-desc">Every quiz answer shows you exactly why you're right or wrong — so you actually learn, not just guess.</div>
+  </div>
+  <div class="feature-card">
+    <span class="f-icon">⭐</span>
+    <div class="f-title">Points & Progress</div>
+    <div class="f-desc">Earn points for every correct answer. Your score is saved locally — future login system coming soon!</div>
+  </div>
+  <div class="feature-card">
+    <span class="f-icon">📚</span>
+    <div class="f-title">Indian Curriculum</div>
+    <div class="f-desc">Content mapped to NCERT topics for Years 6–12. Science, Maths, English, Social Science and more.</div>
+  </div>
+</div>
+
 <footer>
-  <div class="footer-logo">Smart<span>Spark</span> ⚡</div>
-  <p>Built for curious students across India 🇮🇳</p>
+  Built with ❤️ for <strong>Indian students</strong> · Free forever · <strong>QuizSpark ⚡</strong>
 </footer>
 
+<script src="curriculum.js"></script>
+<script>
+  document.getElementById('total-score').textContent = getTotalScore();
+
+  function selectYear(y) {
+    setState({ year: y, subject: null, chapter: null });
+  }
+</script>
 </body>
 </html>
