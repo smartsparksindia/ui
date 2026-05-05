@@ -1,5 +1,5 @@
 /* =========================
-   ROOT VARIABLES
+   ROOT THEME
 ========================= */
 :root {
   --purple: #7F77DD;
@@ -35,7 +35,7 @@
 }
 
 /* =========================
-   GLOBAL RESET
+   BASE
 ========================= */
 * {
   box-sizing: border-box;
@@ -52,18 +52,18 @@ body {
 }
 
 /* =========================
-   NAVBAR
+   NAV
 ========================= */
 nav {
   background: white;
   padding: 1rem 2rem;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  border-bottom: 3px solid #F0EBE0;
+  align-items: center;
   position: sticky;
   top: 0;
   z-index: 100;
+  border-bottom: 3px solid #F0EBE0;
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 
@@ -71,11 +71,11 @@ nav {
   font-family: 'Fredoka One', cursive;
   font-size: 2rem;
   color: var(--purple);
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
   text-decoration: none;
+  display: flex;
+  gap: 0.3rem;
 }
+
 .logo span {
   color: var(--coral);
 }
@@ -83,17 +83,14 @@ nav {
 .nav-links {
   display: flex;
   gap: 1rem;
-  align-items: center;
 }
 
 .nav-links a {
+  text-decoration: none;
   font-weight: 700;
   color: var(--text);
-  text-decoration: none;
   padding: 0.4rem 1rem;
   border-radius: 50px;
-  transition: 0.2s;
-  font-size: 0.95rem;
 }
 
 .nav-links a:hover {
@@ -102,17 +99,12 @@ nav {
 }
 
 .nav-btn {
-  background: var(--purple) !important;
+  background: var(--purple);
   color: white !important;
-  font-weight: 800 !important;
-}
-
-.nav-btn:hover {
-  background: var(--purple-dark) !important;
 }
 
 /* =========================
-   HERO SECTION
+   HERO
 ========================= */
 .hero {
   text-align: center;
@@ -123,7 +115,7 @@ nav {
 
 .hero::before,
 .hero::after {
-  content: '';
+  content: "";
   position: absolute;
   border-radius: 50%;
   opacity: 0.6;
@@ -131,19 +123,19 @@ nav {
 }
 
 .hero::before {
-  top: -80px;
-  left: -80px;
   width: 300px;
   height: 300px;
   background: var(--purple-light);
+  top: -80px;
+  left: -80px;
 }
 
 .hero::after {
-  bottom: -60px;
-  right: -60px;
   width: 250px;
   height: 250px;
   background: var(--teal-light);
+  bottom: -60px;
+  right: -60px;
 }
 
 .hero-content {
@@ -156,7 +148,6 @@ nav {
   background: var(--amber-light);
   color: var(--amber);
   font-weight: 800;
-  font-size: 0.85rem;
   padding: 0.4rem 1.2rem;
   border-radius: 50px;
   margin-bottom: 1.5rem;
@@ -164,16 +155,13 @@ nav {
 
 .hero h1 {
   font-family: 'Fredoka One', cursive;
-  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-size: clamp(3rem, 8vw, 5.5rem);
 }
 
-.highlight-purple { color: var(--purple); }
-.highlight-coral { color: var(--coral); }
-
 .hero p {
-  color: var(--text-muted);
   max-width: 520px;
-  margin: 1rem auto 2rem;
+  margin: 0 auto 2rem;
+  color: var(--text-muted);
   font-weight: 600;
 }
 
@@ -188,7 +176,6 @@ nav {
   font-weight: 800;
   text-decoration: none;
   box-shadow: 0 4px 0 var(--purple-dark);
-  display: inline-block;
 }
 
 .btn-secondary {
@@ -223,7 +210,7 @@ nav {
 }
 
 /* =========================
-   CATEGORY GRID (SUBJECTS)
+   CATEGORIES
 ========================= */
 .categories-grid {
   display: grid;
@@ -233,11 +220,10 @@ nav {
 
 .category-card {
   background: white;
-  padding: 2rem;
   border-radius: var(--radius);
+  padding: 2rem;
   text-align: center;
   text-decoration: none;
-  color: var(--text);
   transition: 0.2s;
 }
 
@@ -245,69 +231,17 @@ nav {
   transform: translateY(-6px);
 }
 
-/* subject colors */
-.cat-science { background: linear-gradient(135deg, white 60%, var(--teal-light)); }
-.cat-maths { background: linear-gradient(135deg, white 60%, var(--purple-light)); }
-.cat-history { background: linear-gradient(135deg, white 60%, var(--amber-light)); }
-.cat-english { background: linear-gradient(135deg, white 60%, var(--pink-light)); }
-.cat-geography { background: linear-gradient(135deg, white 60%, var(--blue-light)); }
-.cat-coding { background: linear-gradient(135deg, white 60%, var(--green-light)); }
-
-/* =========================
-   QUIZ SYSTEM
-========================= */
-.quiz-section {
-  background: white;
-  padding: 4rem 0;
+.cat-icon {
+  font-size: 3rem;
 }
 
-.quiz-inner {
-  max-width: 800px;
-  margin: auto;
-  padding: 0 2rem;
-}
-
-#quiz-container {
-  background: var(--bg);
-  border-radius: var(--radius);
-  padding: 2rem;
-  border: 3px solid #F0EBE0;
-}
-
-.quiz-question {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.quiz-options {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-}
-
-.option-btn {
-  background: white;
-  border: 2px solid #E8E4DC;
-  padding: 1rem;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
+.cat-title {
+  font-family: 'Fredoka One';
+  font-size: 1.4rem;
 }
 
 /* =========================
-   RESULT SCREEN
-========================= */
-.result-screen {
-  text-align: center;
-  display: none;
-}
-
-.result-screen.show {
-  display: block;
-}
-
-/* =========================
-   HOW IT WORKS
+   HOW IT WORKS (RESTORED)
 ========================= */
 .how-grid {
   display: grid;
@@ -317,9 +251,58 @@ nav {
 
 .how-card {
   background: white;
-  padding: 2rem;
   border-radius: var(--radius);
+  padding: 2rem;
   text-align: center;
+  border: 2.5px solid #F0EBE0;
+}
+
+.how-num {
+  font-family: 'Fredoka One';
+  font-size: 3rem;
+  display: block;
+}
+
+/* =========================
+   QUIZ
+========================= */
+#quiz-container {
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 2rem;
+  border: 3px solid #F0EBE0;
+}
+
+.quiz-question {
+  font-family: 'Fredoka One';
+  font-size: 1.6rem;
+  margin-bottom: 2rem;
+}
+
+.option-btn {
+  background: white;
+  border: 2px solid #E8E4DC;
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.8rem;
+  cursor: pointer;
+}
+
+/* =========================
+   RESULT SCREEN (RESTORED)
+========================= */
+.result-screen {
+  text-align: center;
+  display: none;
+  padding: 2rem;
+}
+
+.result-screen.show {
+  display: block;
+}
+
+.result-emoji {
+  font-size: 5rem;
 }
 
 /* =========================
@@ -330,17 +313,10 @@ nav {
   padding: 4rem 0;
 }
 
-.lb-inner {
-  max-width: 600px;
-  margin: auto;
-  padding: 0 2rem;
-}
-
 .lb-row {
   display: flex;
   justify-content: space-between;
   padding: 1rem;
-  border-radius: var(--radius-sm);
 }
 
 /* =========================
@@ -350,11 +326,11 @@ footer {
   background: var(--text);
   color: white;
   text-align: center;
-  padding: 3rem 2rem;
+  padding: 3rem;
 }
 
 /* =========================
-   ANIMATIONS
+   FLOATING SHAPES
 ========================= */
 .shape {
   position: fixed;
@@ -365,7 +341,7 @@ footer {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
+  0%,100% { transform: translateY(0); }
   50% { transform: translateY(-20px); }
 }
 
@@ -373,7 +349,12 @@ footer {
    MOBILE
 ========================= */
 @media (max-width: 600px) {
-  .nav-links {
+  nav {
+    flex-direction: column;
     gap: 0.5rem;
+  }
+
+  .hero {
+    padding: 3rem 1rem;
   }
 }

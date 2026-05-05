@@ -8,12 +8,13 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
+<!-- GLOBAL STYLES -->
 <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
 
-<!-- Floating background shapes -->
+<!-- FLOATING SHAPES -->
 <div class="shape shape-1"></div>
 <div class="shape shape-2"></div>
 <div class="shape shape-3"></div>
@@ -23,133 +24,188 @@
   <a href="index.html" class="logo">Smart<span>Spark</span> ⚡</a>
 
   <div class="nav-links">
-    <a href="#years">Start Learning</a>
+    <a href="#categories">Subjects</a>
     <a href="#how">How it Works</a>
+    <a href="#leaderboard">Top Players</a>
+    <a href="#quiz" class="nav-btn">Play Now!</a>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-
   <div class="hero-content">
 
-    <div class="hero-badge">🎓 Free Learning Platform</div>
+    <div class="hero-badge">🎓 Free for all students</div>
 
     <h1>
       Learn. <span class="highlight-purple">Play.</span><br>
-      <span class="highlight-coral">Grow!</span> ⚡
+      <span class="highlight-coral">Spark!</span> ⚡
     </h1>
 
     <p>
-      Master Science, Maths, English & more with flashcards, quizzes and XP rewards.
+      Master and revise your knowledge across Science, Social Studies, EEnglish, Maths and more — totally free, totally fun!
     </p>
 
     <div class="hero-buttons">
-      <a href="#years" class="btn-primary">Start Learning</a>
-      <a href="subjects.html" class="btn-secondary">Browse Subjects</a>
+      <a href="#categories" class="btn-primary">Start Learning</a>
+      <a href="#categories" class="btn-secondary">Browse Subjects</a>
     </div>
 
   </div>
-
 </section>
 
-<!-- YEAR SELECTION -->
-<section class="section" id="years">
+<!-- SUBJECTS -->
+<section class="section" id="categories">
 
-  <div class="section-title">Choose Your Class 📚</div>
-  <div class="section-sub">Select your grade to begin learning</div>
+  <div class="section-title">Pick a Subject ✏️</div>
+  <div class="section-sub">Choose your favourite topic and start learning!</div>
 
   <div class="categories-grid">
 
-    <div class="category-card cat-science" onclick="selectYear(6)">
-      <span class="cat-icon">🎒</span>
-      <div class="cat-title">Year 6</div>
-      <div class="cat-count">Beginner Foundation</div>
-    </div>
+    <a href="subjects.html?subject=science" class="category-card cat-science">
+      <span class="cat-icon">🔬</span>
+      <div class="cat-title">Science</div>
+      <div class="cat-count">Year 6–12</div>
+    </a>
 
-    <div class="category-card cat-maths" onclick="selectYear(7)">
-      <span class="cat-icon">📘</span>
-      <div class="cat-title">Year 7</div>
-      <div class="cat-count">Junior Level</div>
-    </div>
+    <a href="subjects.html?subject=maths" class="category-card cat-maths">
+      <span class="cat-icon">🔢</span>
+      <div class="cat-title">Maths</div>
+      <div class="cat-count">Year 6–12</div>
+    </a>
 
-    <div class="category-card cat-history" onclick="selectYear(8)">
-      <span class="cat-icon">📗</span>
-      <div class="cat-title">Year 8</div>
-      <div class="cat-count">Intermediate</div>
-    </div>
+    <a href="subjects.html?subject=english" class="category-card cat-english">
+      <span class="cat-icon">📚</span>
+      <div class="cat-title">English</div>
+      <div class="cat-count">Year 6–12</div>
+    </a>
 
-    <div class="category-card cat-english" onclick="selectYear(9)">
-      <span class="cat-icon">📕</span>
-      <div class="cat-title">Year 9</div>
-      <div class="cat-count">Advanced Basics</div>
-    </div>
+    <a href="subjects.html?subject=history" class="category-card cat-history">
+      <span class="cat-icon">🏛️</span>
+      <div class="cat-title">History</div>
+      <div class="cat-count">Year 6–12</div>
+    </a>
 
-    <div class="category-card cat-geography" onclick="selectYear(10)">
+    <a href="subjects.html?subject=geography" class="category-card cat-geography">
       <span class="cat-icon">🌍</span>
-      <div class="cat-title">Year 10</div>
-      <div class="cat-count">Board Prep Begins</div>
-    </div>
+      <div class="cat-title">Geography</div>
+      <div class="cat-count">Year 6–12</div>
+    </a>
 
-    <div class="category-card cat-coding" onclick="selectYear(11)">
+    <a href="subjects.html?subject=coding" class="category-card cat-coding">
       <span class="cat-icon">💻</span>
-      <div class="cat-title">Year 11</div>
-      <div class="cat-count">Advanced Learning</div>
-    </div>
+      <div class="cat-title">Coding</div>
+      <div class="cat-count">Year 6–12</div>
+    </a>
 
   </div>
-
 </section>
 
 <!-- HOW IT WORKS -->
 <section class="section" id="how">
 
-  <div class="section-title">How It Works 🚀</div>
-  <div class="section-sub">Simple 3-step learning system</div>
+  <div class="section-title">How SmartSpark Works 🚀</div>
+  <div class="section-sub">It's super simple — get started in seconds!</div>
 
   <div class="how-grid">
 
     <div class="how-card">
       <span class="how-num">1</span>
-      <span class="how-icon">📚</span>
-      <div class="how-title">Pick Your Year</div>
-      <div class="how-desc">Choose your school grade to get relevant content.</div>
+      <span class="how-icon">📖</span>
+      <div class="how-title">Pick a Subject</div>
+      <div class="how-desc">Choose Science,Social Studies, Maths, English or more.</div>
     </div>
 
     <div class="how-card">
       <span class="how-num">2</span>
-      <span class="how-icon">📖</span>
-      <div class="how-title">Select Subject</div>
-      <div class="how-desc">Science, Maths, English and more subjects.</div>
+      <span class="how-icon">📘</span>
+      <div class="how-title">Choose Chapter</div>
+      <div class="how-desc">Each subject has structured chapters.</div>
     </div>
 
     <div class="how-card">
       <span class="how-num">3</span>
       <span class="how-icon">⚡</span>
-      <div class="how-title">Learn & Play</div>
-      <div class="how-desc">Use flashcards + quizzes to earn XP.</div>
+      <div class="how-title">Learn + Quiz</div>
+      <div class="how-desc">Flashcards + quizzes in one place.</div>
+    </div>
+
+    <div class="how-card">
+      <span class="how-num">4</span>
+      <span class="how-icon">🏆</span>
+      <div class="how-title">Earn Points</div>
+      <div class="how-desc">Track progress and improve daily.</div>
     </div>
 
   </div>
+</section>
 
+<!-- QUIZ PREVIEW (OPTIONAL LANDING DEMO) -->
+<section class="section" id="quiz">
+
+  <div class="section-title">⚡ Quick Quiz Preview</div>
+  <div class="section-sub">Full learning happens in Learn page</div>
+
+  <div id="quiz-container">
+
+    <div class="quiz-header">
+      <div class="quiz-topic">Demo Mode</div>
+      <div class="quiz-progress">
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 40%"></div>
+        </div>
+        <span>1 / 5</span>
+      </div>
+    </div>
+
+    <div class="quiz-question">
+      What is the Sun?
+    </div>
+
+    <div class="quiz-options">
+      <button class="option-btn">A star</button>
+      <button class="option-btn">A planet</button>
+      <button class="option-btn">A moon</button>
+      <button class="option-btn">A galaxy</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- LEADERBOARD -->
+<section class="leaderboard" id="leaderboard">
+
+  <div class="lb-inner">
+
+    <div class="section-title">🏆 Top Players</div>
+    <div class="section-sub">Can you reach the top?</div>
+
+    <div class="lb-row">
+      <span class="lb-rank">🥇</span>
+      <div class="lb-name">Kiara M.</div>
+      <div class="lb-score">98</div>
+    </div>
+
+    <div class="lb-row">
+      <span class="lb-rank">🥈</span>
+      <div class="lb-name">Amit N.</div>
+      <div class="lb-score">95</div>
+    </div>
+
+    <div class="lb-row">
+      <span class="lb-rank">🥉</span>
+      <div class="lb-name">Kanishka K.</div>
+      <div class="lb-score">92</div>
+    </div>
+
+  </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">Smart<span>Spark</span> ⚡</div>
-  <p>Built for curious students across India 🇮🇳</p>
+  <p>Free learning platform for school students</p>
 </footer>
-
-<!-- SCRIPTS -->
-<script src="js/state.js"></script>
-<script src="js/router.js"></script>
-
-<script>
-function selectYear(year) {
-  AppState.set("year", year);
-  window.location.href = "subjects.html";
-}
-</script>
 
 </body>
 </html>
