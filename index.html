@@ -3,385 +3,280 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SmartSpark India ⚡ — Choose Your Year</title>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>SmartSpark India ⚡ — Learn & Improve</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --yellow: #F5C518;
-  --orange: #F07733;
-  --purple: #6C4EE4;
-  --teal: #15A585;
-  --pink: #E8437F;
-  --blue: #2176FF;
-  --bg: #0F0E17;
-  --bg2: #1A1929;
-  --card: #211F35;
-  --border: rgba(255,255,255,0.08);
-  --text: #F2EFE9;
-  --muted: rgba(242,239,233,0.5);
-  --r: 18px;
+  --purple: #7F77DD; --purple-light: #EEEDFE; --purple-dark: #3C3489;
+  --teal: #1D9E75; --teal-light: #E1F5EE;
+  --coral: #D85A30; --coral-light: #FAECE7;
+  --amber: #BA7517; --amber-light: #FAEEDA;
+  --pink: #D4537E; --pink-light: #FBEAF0;
+  --blue: #378ADD; --blue-light: #E6F1FB;
+  --green: #639922; --green-light: #EAF3DE;
+  --bg: #FFF9F0; --card-bg: #FFFFFF;
+  --text: #2C2C2A; --text-muted: #888780;
+  --radius: 20px; --radius-sm: 12px;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-  font-family: 'Nunito', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* ── GRID BG ── */
-body::before {
-  content:'';
-  position:fixed; inset:0;
-  background-image:
-    linear-gradient(rgba(108,78,228,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(108,78,228,0.06) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events:none; z-index:0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
 
 /* ── NAV ── */
 nav {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:1.2rem 3rem;
-  border-bottom:1px solid var(--border);
-  backdrop-filter:blur(12px);
-  position:sticky; top:0; z-index:100;
-  background:rgba(15,14,23,0.8);
+  background: white; padding: 1rem 2.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 3px solid #F0EBE0;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 .logo {
-  font-family:'Baloo 2', cursive;
-  font-size:1.7rem; font-weight:800;
-  color:var(--text); text-decoration:none;
-  display:flex; align-items:center; gap:0.3rem;
+  font-family: 'Fredoka One', cursive; font-size: 2rem;
+  color: var(--purple); display: flex; align-items: center; gap: 0.3rem; text-decoration: none;
 }
-.logo em { color:var(--yellow); font-style:normal; }
-.logo .bolt { font-size:1.5rem; }
-
-.nav-right { display:flex; align-items:center; gap:1.2rem; }
+.logo span { color: var(--coral); }
+.nav-right { display: flex; align-items: center; gap: 1rem; }
 .score-pill {
-  background:rgba(245,197,24,0.12);
-  border:1px solid rgba(245,197,24,0.25);
-  color:var(--yellow);
-  padding:0.4rem 1rem; border-radius:50px;
-  font-weight:800; font-size:0.9rem;
-  display:flex; align-items:center; gap:0.4rem;
+  background: var(--amber-light); border: 2px solid #F5C84A;
+  color: var(--amber); padding: 0.4rem 1rem; border-radius: 50px;
+  font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem;
 }
+.nav-link {
+  color: var(--text); text-decoration: none; font-weight: 700; font-size: 0.9rem;
+  padding: 0.4rem 1rem; border-radius: 50px;
+  transition: background 0.2s;
+}
+.nav-link:hover { background: var(--purple-light); }
+.nav-cta {
+  background: var(--purple); color: white !important;
+  box-shadow: 0 3px 0 var(--purple-dark);
+}
+.nav-cta:hover { background: var(--purple-dark); }
 
 /* ── HERO ── */
-.hero {
-  text-align:center; padding:5rem 2rem 3rem;
-  position:relative; z-index:1;
+.hero { text-align: center; padding: 5rem 2rem 3.5rem; position: relative; overflow: hidden; }
+.hero::before {
+  content: ''; position: absolute; top: -80px; left: -80px;
+  width: 320px; height: 320px; background: var(--purple-light);
+  border-radius: 50%; opacity: 0.55; z-index: 0;
 }
+.hero::after {
+  content: ''; position: absolute; bottom: -60px; right: -60px;
+  width: 260px; height: 260px; background: var(--teal-light);
+  border-radius: 50%; opacity: 0.55; z-index: 0;
+}
+.hero-content { position: relative; z-index: 1; }
 .hero-badge {
-  display:inline-flex; align-items:center; gap:0.5rem;
-  background:rgba(108,78,228,0.15);
-  border:1px solid rgba(108,78,228,0.35);
-  color:#A48EFF;
-  padding:0.4rem 1.2rem; border-radius:50px;
-  font-size:0.85rem; font-weight:700;
-  margin-bottom:1.8rem;
-  letter-spacing:0.08em; text-transform:uppercase;
+  display: inline-block; background: var(--amber-light); color: var(--amber);
+  font-weight: 800; font-size: 0.85rem; padding: 0.4rem 1.2rem;
+  border-radius: 50px; margin-bottom: 1.5rem;
+  letter-spacing: 0.05em; text-transform: uppercase;
 }
 .hero h1 {
-  font-family:'Baloo 2', cursive;
-  font-size:clamp(2.8rem,8vw,5rem);
-  font-weight:800;
-  line-height:1.05;
-  margin-bottom:1.2rem;
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(2.8rem, 8vw, 5rem); line-height: 1.05; margin-bottom: 1rem;
 }
-.hero h1 .g1 { color:var(--yellow); }
-.hero h1 .g2 { color:var(--orange); }
+.hero h1 .c1 { color: var(--purple); }
+.hero h1 .c2 { color: var(--coral); }
 .hero p {
-  font-size:1.15rem; color:var(--muted);
-  max-width:480px; margin:0 auto 1rem;
-  font-weight:600; line-height:1.6;
+  font-size: 1.15rem; color: var(--text-muted);
+  max-width: 500px; margin: 0 auto 0.8rem;
+  font-weight: 600; line-height: 1.6;
 }
 .hero .tagline {
-  font-size:0.9rem; color:rgba(255,255,255,0.3);
-  font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
-  margin-bottom:4rem;
+  font-size: 0.85rem; color: var(--text-muted);
+  font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  margin-bottom: 3rem; opacity: 0.7;
 }
+.hero-stats { display: flex; gap: 2.5rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem; }
+.stat { text-align: center; }
+.stat-num { font-family: 'Fredoka One', cursive; font-size: 2.2rem; color: var(--purple); display: block; }
+.stat-label { font-size: 0.88rem; font-weight: 700; color: var(--text-muted); }
 
-/* ── YEAR SELECTION ── */
-.year-section {
-  max-width:900px; margin:0 auto;
-  padding:0 2rem 5rem;
-  position:relative; z-index:1;
-}
-.year-label {
-  text-align:center;
-  font-family:'Baloo 2', cursive;
-  font-size:1.1rem; font-weight:700;
-  color:var(--muted);
-  text-transform:uppercase; letter-spacing:0.12em;
-  margin-bottom:1.5rem;
-}
-.years-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:1rem;
-}
+/* ── SECTION ── */
+.section { padding: 3.5rem 2rem; max-width: 1050px; margin: 0 auto; }
+.section-title { font-family: 'Fredoka One', cursive; font-size: 2.3rem; text-align: center; margin-bottom: 0.4rem; }
+.section-sub { text-align: center; color: var(--text-muted); font-weight: 600; font-size: 1rem; margin-bottom: 2.5rem; }
+
+/* ── YEARS GRID ── */
+.years-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; }
+
 .year-card {
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  padding:2rem 1.5rem;
-  text-align:center;
-  cursor:pointer;
-  transition:transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-  text-decoration:none; color:var(--text);
-  display:block;
-  position:relative; overflow:hidden;
+  background: white; border-radius: var(--radius);
+  padding: 2rem 1.5rem; text-align: center;
+  cursor: pointer; text-decoration: none; color: var(--text);
+  display: block; border: 3px solid transparent;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  position: relative; overflow: hidden;
 }
-.year-card::before {
-  content:'';
-  position:absolute; inset:0;
-  opacity:0; transition:opacity 0.3s;
-}
-.year-card:hover { transform:translateY(-6px); }
-.year-card:hover::before { opacity:1; }
+.year-card:hover { transform: translateY(-6px); box-shadow: 0 14px 36px rgba(0,0,0,0.1); }
 
-.yr6 { --accent:#F5C518; }
-.yr6::before { background:radial-gradient(circle at top,rgba(245,197,24,0.12),transparent 70%); }
-.yr6:hover { border-color:rgba(245,197,24,0.4); box-shadow:0 12px 40px rgba(245,197,24,0.15); }
+.yr6  { border-color: #F5C84A; background: linear-gradient(135deg,white 55%,#FEFBE8); }
+.yr6:hover  { border-color: #E6A800; }
+.yr6  .yr-num { color: #BA8B00; }
 
-.yr7 { --accent:#F07733; }
-.yr7::before { background:radial-gradient(circle at top,rgba(240,119,51,0.12),transparent 70%); }
-.yr7:hover { border-color:rgba(240,119,51,0.4); box-shadow:0 12px 40px rgba(240,119,51,0.15); }
+.yr7  { border-color: #FFB085; background: linear-gradient(135deg,white 55%,var(--coral-light)); }
+.yr7:hover  { border-color: var(--coral); }
+.yr7  .yr-num { color: var(--coral); }
 
-.yr8 { --accent:#E8437F; }
-.yr8::before { background:radial-gradient(circle at top,rgba(232,67,127,0.12),transparent 70%); }
-.yr8:hover { border-color:rgba(232,67,127,0.4); box-shadow:0 12px 40px rgba(232,67,127,0.15); }
+.yr8  { border-color: #F4A0C0; background: linear-gradient(135deg,white 55%,var(--pink-light)); }
+.yr8:hover  { border-color: var(--pink); }
+.yr8  .yr-num { color: var(--pink); }
 
-.yr9 { --accent:#2176FF; }
-.yr9::before { background:radial-gradient(circle at top,rgba(33,118,255,0.12),transparent 70%); }
-.yr9:hover { border-color:rgba(33,118,255,0.4); box-shadow:0 12px 40px rgba(33,118,255,0.15); }
-
-.yr10 { --accent:#6C4EE4; }
-.yr10::before { background:radial-gradient(circle at top,rgba(108,78,228,0.15),transparent 70%); }
-.yr10:hover { border-color:rgba(108,78,228,0.4); box-shadow:0 12px 40px rgba(108,78,228,0.15); }
-
-.yr11 { --accent:#15A585; }
-.yr11::before { background:radial-gradient(circle at top,rgba(21,165,133,0.12),transparent 70%); }
-.yr11:hover { border-color:rgba(21,165,133,0.4); box-shadow:0 12px 40px rgba(21,165,133,0.15); }
-
-.yr12 { --accent:#E8437F; }
-.yr12::before { background:radial-gradient(circle at top,rgba(240,60,60,0.12),transparent 70%); }
-.yr12:hover { border-color:rgba(220,50,50,0.4); box-shadow:0 12px 40px rgba(220,50,50,0.15); }
-
-.year-emoji { font-size:2.5rem; display:block; margin-bottom:0.8rem; }
-.year-num {
-  font-family:'Baloo 2', cursive;
-  font-size:2rem; font-weight:800;
-  color:var(--accent);
-  display:block; margin-bottom:0.3rem;
-}
-.year-sub {
-  font-size:0.8rem; font-weight:700;
-  color:var(--muted); text-transform:uppercase; letter-spacing:0.08em;
-}
-.year-topics {
-  display:flex; gap:0.4rem; flex-wrap:wrap; justify-content:center;
-  margin-top:1rem;
-}
-.topic-pill {
-  font-size:0.7rem; font-weight:700;
-  padding:0.2rem 0.6rem; border-radius:50px;
-  background:rgba(255,255,255,0.07);
-  color:rgba(255,255,255,0.5);
-}
+.yr-emoji { font-size: 2.8rem; display: block; margin-bottom: 0.8rem; }
+.yr-num { font-family: 'Fredoka One', cursive; font-size: 2rem; display: block; margin-bottom: 0.3rem; }
+.yr-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.8rem; }
 
 /* ── FEATURES ── */
-.features {
-  max-width:900px; margin:0 auto 5rem;
-  padding:0 2rem;
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:1rem;
-  position:relative; z-index:1;
+.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 1.2rem; }
+.feat-card {
+  background: white; border-radius: var(--radius);
+  padding: 1.8rem 1.5rem; border: 2.5px solid #F0EBE0;
 }
-.feature-card {
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  padding:1.5rem;
-}
-.f-icon { font-size:1.8rem; margin-bottom:0.8rem; display:block; }
-.f-title {
-  font-family:'Baloo 2',cursive;
-  font-size:1.1rem; font-weight:700;
-  margin-bottom:0.4rem;
-}
-.f-desc { font-size:0.88rem; color:var(--muted); line-height:1.5; font-weight:600; }
+.feat-icon { font-size: 2rem; display: block; margin-bottom: 0.8rem; }
+.feat-title { font-family: 'Fredoka One', cursive; font-size: 1.2rem; margin-bottom: 0.4rem; color: var(--text); }
+.feat-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.55; font-weight: 600; }
 
 /* ── FOOTER ── */
 footer {
-  text-align:center; padding:2.5rem;
-  border-top:1px solid var(--border);
-  color:var(--muted); font-size:0.9rem; font-weight:600;
-  position:relative; z-index:1;
+  background: var(--text); color: white;
+  text-align: center; padding: 2.5rem 2rem;
 }
-footer strong { color:var(--yellow); font-weight:800; }
+.footer-logo { font-family: 'Fredoka One', cursive; font-size: 1.8rem; margin-bottom: 0.4rem; }
+.footer-logo span { color: #F0997B; }
+footer p { color: rgba(255,255,255,0.45); font-size: 0.88rem; font-weight: 600; margin-top: 0.4rem; }
 
-/* ── ANIMATIONS ── */
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(24px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-.hero-content { animation:fadeUp 0.6s ease both; }
-.year-section  { animation:fadeUp 0.6s 0.15s ease both; }
-.features      { animation:fadeUp 0.6s 0.25s ease both; }
-
-@media (max-width:600px) {
-  nav { padding:1rem 1.2rem; }
-  .years-grid { grid-template-columns:repeat(2,1fr); }
+@media(max-width:600px) {
+  nav { padding: 1rem 1.2rem; }
+  .years-grid { grid-template-columns: repeat(2,1fr); }
+  .section { padding: 2.5rem 1rem; }
 }
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
-  <a href="index.html" class="logo">Smart<em>Spark</em><span class="bolt">⚡</span></a>
+  <a href="index.html" class="logo">Smart<span>Spark</span> ⚡</a>
   <div class="nav-right">
     <div class="score-pill">⭐ <span id="total-score">0</span> pts</div>
+    <a href="cms-login.html" class="nav-link nav-cta">CMS Login</a>
   </div>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
   <div class="hero-content">
-    <div class="hero-badge">🇮🇳 Made for CBSE Students</div>
-    <h1>Learn Smarter.<br><span class="g1">Score</span> <span class="g2">Higher.</span></h1>
-    <p>A smart way to revise daily and stay ahead — flashcards, quizzes, and points — mapped to the CBSE curriculum.</p>
-    <div class="tagline">Year 6 → Year 12 · All subjects </div>
+    <div class="hero-badge">🇮🇳 Made for Indian School Students</div>
+    <h1>Learn <span class="c1">Smarter.</span><br>Score <span class="c2">Higher.</span> ⚡</h1>
+    <p>Flashcards, quizzes, and progress tracking — all aligned to NCERT curriculum.</p>
+    <div class="tagline">Class 6 → Class 8 · All subjects · Free forever</div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num" id="stat-q">0</span><span class="stat-label">Questions</span></div>
+      <div class="stat"><span class="stat-num" id="stat-ch">0</span><span class="stat-label">Chapters</span></div>
+      <div class="stat"><span class="stat-num">4</span><span class="stat-label">Subjects</span></div>
+      <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Free</span></div>
+    </div>
   </div>
 </section>
 
-<div class="year-section">
-  <div class="year-label">— Choose your school year —</div>
+<!-- YEAR PICKER -->
+<div class="section">
+  <div class="section-title">Choose Your Class 📚</div>
+  <div class="section-sub">Select your class to see subjects and chapters tailored for you.</div>
   <div class="years-grid">
 
     <a class="year-card yr6" href="subjects.html" onclick="selectYear(6)">
-      <span class="year-emoji">🌱</span>
-      <span class="year-num">Year 6</span>
-      <span class="year-sub">Middle School Begins</span>
-      <div class="year-topics">
-        <span class="topic-pill">Science</span>
-        <span class="topic-pill">Maths</span>
-        <span class="topic-pill">Social Sc.</span>
-        <span class="topic-pill">English</span>
-      </div>
+      <span class="yr-emoji">🌱</span>
+      <span class="yr-num">Class 6</span>
+      <span class="yr-label">Foundation Building</span>
     </a>
 
     <a class="year-card yr7" href="subjects.html" onclick="selectYear(7)">
-      <span class="year-emoji">🔭</span>
-      <span class="year-num">Year 7</span>
-      <span class="year-sub">Exploring Deeper</span>
-      <div class="year-topics">
-        <span class="topic-pill">Science</span>
-        <span class="topic-pill">Maths</span>
-        <span class="topic-pill">Social Sc.</span>
-        <span class="topic-pill">English</span>
-      </div>
+      <span class="yr-emoji">🔭</span>
+      <span class="yr-num">Class 7</span>
+      <span class="yr-label">Concepts Deepening</span>
     </a>
 
     <a class="year-card yr8" href="subjects.html" onclick="selectYear(8)">
-      <span class="year-emoji">⚗️</span>
-      <span class="year-num">Year 8</span>
-      <span class="year-sub">Building Foundations</span>
-      <div class="year-topics">
-        <span class="topic-pill">Science</span>
-        <span class="topic-pill">Maths</span>
-        <span class="topic-pill">Social Sc.</span>
-        <span class="topic-pill">English</span>
-      </div>
-    </a>
-
-    <a class="year-card yr9" href="subjects.html" onclick="selectYear(9)">
-      <span class="year-emoji">📐</span>
-      <span class="year-num">Year 9</span>
-      <span class="year-sub">Senior Secondary</span>
-      <div class="year-topics">
-        <span class="topic-pill">Physics</span>
-        <span class="topic-pill">Chemistry</span>
-        <span class="topic-pill">Algebra</span>
-        <span class="topic-pill">Trig</span>
-      </div>
-    </a>
-
-    <a class="year-card yr10" href="subjects.html" onclick="selectYear(10)">
-      <span class="year-emoji">🏆</span>
-      <span class="year-num">Year 10</span>
-      <span class="year-sub">Board Prep Begins</span>
-      <div class="year-topics">
-        <span class="topic-pill">Physics</span>
-        <span class="topic-pill">Chemistry</span>
-        <span class="topic-pill">Maths</span>
-        <span class="topic-pill">History</span>
-      </div>
-    </a>
-
-    <a class="year-card yr11" href="subjects.html" onclick="selectYear(11)">
-      <span class="year-emoji">🧪</span>
-      <span class="year-num">Year 11</span>
-      <span class="year-sub">Advanced Learning</span>
-      <div class="year-topics">
-        <span class="topic-pill">Physics</span>
-        <span class="topic-pill">Chem</span>
-        <span class="topic-pill">Maths</span>
-        <span class="topic-pill">Poly Sc.</span>
-      </div>
-    </a>
-
-    <a class="year-card yr12" href="subjects.html" onclick="selectYear(12)">
-      <span class="year-emoji">🚀</span>
-      <span class="year-num">Year 12</span>
-      <span class="year-sub">Final Board Year</span>
-      <div class="year-topics">
-        <span class="topic-pill">Physics</span>
-        <span class="topic-pill">Chem</span>
-        <span class="topic-pill">Maths</span>
-        <span class="topic-pill">English</span>
-      </div>
+      <span class="yr-emoji">⚗️</span>
+      <span class="yr-num">Class 8</span>
+      <span class="yr-label">Pre-Board Prep</span>
     </a>
 
   </div>
 </div>
 
-<div class="features">
-  <div class="feature-card">
-    <span class="f-icon">🃏</span>
-    <div class="f-title">Flashcard Learning</div>
-    <div class="f-desc">Learn key concepts with interactive flashcards before attempting any quiz. No cramming — just understanding.</div>
-  </div>
-  <div class="feature-card">
-    <span class="f-icon">⚡</span>
-    <div class="f-title">Instant Feedback</div>
-    <div class="f-desc">Every quiz answer shows you exactly why you're right or wrong — so you actually learn, not just guess.</div>
-  </div>
-  <div class="feature-card">
-    <span class="f-icon">⭐</span>
-    <div class="f-title">Points & Progress</div>
-    <div class="f-desc">Earn points for every correct answer. Your score is saved locally — future login system coming soon!</div>
-  </div>
-  <div class="feature-card">
-    <span class="f-icon">📚</span>
-    <div class="f-title">Indian Curriculum</div>
-    <div class="f-desc">Content mapped to NCERT topics for Years 6–12. Science, Maths, English, Social Science and more.</div>
+<!-- FEATURES -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">How SmartSpark Works 🚀</div>
+  <div class="section-sub">Learn effectively. Track progress. Improve scores.</div>
+  <div class="features-grid">
+    <div class="feat-card">
+      <span class="feat-icon">🃏</span>
+      <div class="feat-title">Flashcard Learning</div>
+      <div class="feat-desc">Learn key concepts with interactive flashcards. Understand first, then test yourself.</div>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">❓</span>
+      <div class="feat-title">Practice Quizzes</div>
+      <div class="feat-desc">MCQ quizzes with instant feedback and explanations. Learn from every mistake.</div>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">⭐</span>
+      <div class="feat-title">Points & Progress</div>
+      <div class="feat-desc">Earn points for learning. Track your progress across all chapters and subjects.</div>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">📚</span>
+      <div class="feat-title">NCERT Aligned</div>
+      <div class="feat-desc">Content mapped to NCERT curriculum for Classes 6-8. Science, Maths, English, Social Science.</div>
+    </div>
   </div>
 </div>
 
 <footer>
-  Built with ❤️ for <strong>Indian students</strong> SmartSpark ⚡</strong>
+  <div class="footer-logo">Smart<span>Spark</span> ⚡</div>
+  <p>Free learning platform for Indian school students 🇮🇳</p>
+  <p style="margin-top:0.6rem">Made with ❤️ for curious minds</p>
 </footer>
 
-<script src="curriculum.js"></script>
+<script src="data-layer.js"></script>
 <script>
-  document.getElementById('total-score').textContent = getTotalScore();
-
-  function selectYear(y) {
-    setState({ year: y, subject: null, chapter: null });
+// On page load
+window.addEventListener('DOMContentLoaded', () => {
+  const user = getCurrentUser();
+  
+  // Update total score
+  if (user) {
+    const progress = getUserProgress(user.user_id);
+    if (progress) {
+      document.getElementById('total-score').textContent = progress.total_points || 0;
+    }
   }
+  
+  // Update stats
+  const chapters = getStore('ss_chapters');
+  const questions = getStore('ss_question_bank');
+  const publishedCount = Object.values(chapters).filter(ch => ch.status === 'published').length;
+  
+  document.getElementById('stat-ch').textContent = publishedCount;
+  document.getElementById('stat-q').textContent = Object.keys(questions).length;
+});
+
+function selectYear(year) {
+  setState({ year, subject: null, chapter: null });
+}
+
+function setState(patch) {
+  const s = { ...getState(), ...patch };
+  sessionStorage.setItem('ss_state', JSON.stringify(s));
+  return s;
+}
+
+function getState() {
+  try { return JSON.parse(sessionStorage.getItem('ss_state')) || {}; }
+  catch { return {}; }
+}
 </script>
 </body>
 </html>
