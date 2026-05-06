@@ -1,0 +1,577 @@
+// ═════════════════════════════════════════════════════════════════════════════
+//  SmartSpark Data Layer - Content Management + Analytics
+//  - Versioned content system
+//  - Question bank (reusable)
+//  - User progress tracking
+//  - Analytics events
+// ═════════════════════════════════════════════════════════════════════════════
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STORAGE KEYS
+// ─────────────────────────────────────────────────────────────────────────────
+const STORE = {
+  CHAPTERS: 'ss_chapters',
+  QUESTION_BANK: 'ss_question_bank',
+  FLASHCARDS: 'ss_flashcards',
+  USER_PROGRESS: 'ss_user_progress',
+  ANALYTICS_EVENTS: 'ss_analytics_events',
+  USERS: 'ss_users',
+  CMS_DRAFTS: 'ss_cms_drafts',
+  CONFIG: 'ss_config'
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GENERIC STORAGE HELPERS
+// ─────────────────────────────────────────────────────────────────────────────
+function getStore(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function setStore(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+function addToStore(key, id, item) {
+  const store = getStore(key);
+  store[id] = item;
+  setStore(key, store);
+  return item;
+}
+
+function getFromStore(key, id) {
+  return getStore(key)[id];
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CHAPTER MANAGEMENT (Versioned)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function createChapter(class_no, subject, title, description) {
+  const chapter_id = `ch_${class_no}_${subject.toLowerCase()}_${Date.now()}`;
+  const chapter = {
+    chapter_id,
+    class: class_no,
+    subject,
+    title,
+    description,
+    learning_objectives: [],
+    estimated_time_minutes: 45,
+    current_version: 0,
+    versions: [],
+    status: 'draft', // draft, submitted, approved, published
+    created_by: getCurrentUserId(),
+    created_at: new Date().toISOString(),
+    submitted_at: null,
+    approved_at: null,
+    approved_by: null
+  };
+  return addToStore(STORE.CHAPTERS, chapter_id, chapter);
+}
+
+function addFlashcardToChapter(chapter_id, term, definition, image_url = null) {
+  const chapter = getFromStore(STORE.CHAPTERS, chapter_id);
+  if (!chapter || chapter.status !== 'draft') return null;
+  
+  const flashcard_id = `fc_${chapter_id}_${Date.now()}`;
+  const flashcard = {
+    flashcard_id,
+    chapter_id,
+    version: 0, // Will be set when published
+    term,
+    definition,
+    image_url,
+    created_by: getCurrentUserId(),
+    created_at: new Date().toISOString()
+  };
+  
+  if (!chapter.flashcard_ids) chapter.flashcard_ids = [];
+  chapter.flashcard_ids.push(flashcard_id);
+  
+  addToStore(STORE.CHAPTERS, chapter_id, chapter);
+  return addToStore(STORE.FLASHCARDS, flashcard_id, flashcard);
+}
+
+function publishChapter(chapter_id, approver_id) {
+  const chapter = getFromStore(STORE.CHAPTERS, chapter_id);
+  if (!chapter || chapter.status !== 'submitted') return null;
+  
+  // Create immutable published version
+  const new_version = (chapter.current_version || 0) + 1;
+  const published_snapshot = {
+    version: new_version,
+    status: 'published',
+    published_at: new Date().toISOString(),
+    created_by: chapter.created_by,
+    approved_by: approver_id,
+    flashcard_ids: [...(chapter.flashcard_ids || [])],
+    question_ids: [...(chapter.question_ids || [])],
+    content_hash: generateHash(chapter)
+  };
+  
+  if (!chapter.versions) chapter.versions = [];
+  chapter.versions.push(published_snapshot);
+  chapter.current_version = new_version;
+  chapter.status = 'published';
+  chapter.approved_at = new Date().toISOString();
+  chapter.approved_by = approver_id;
+  
+  return addToStore(STORE.CHAPTERS, chapter_id, chapter);
+}
+
+function getPublishedChapter(chapter_id) {
+  const chapter = getFromStore(STORE.CHAPTERS, chapter_id);
+  if (!chapter || chapter.status !== 'published') return null;
+  
+  // Return only published version's data
+  return {
+    ...chapter,
+    version: chapter.current_version
+  };
+}
+
+function getAllChapters(class_no, subject, onlyPublished = true) {
+  const chapters = getStore(STORE.CHAPTERS);
+  return Object.values(chapters).filter(ch => {
+    const matchClass = class_no ? ch.class === class_no : true;
+    const matchSubject = subject ? ch.subject === subject : true;
+    const matchStatus = onlyPublished ? ch.status === 'published' : true;
+    return matchClass && matchSubject && matchStatus;
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// QUESTION BANK (Reusable Questions)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function createQuestion(class_no, subject, topic, question_text, options, correct_option_index, explanation) {
+  const question_id = `q_${subject.toLowerCase()}_${Date.now()}`;
+  const question = {
+    question_id,
+    class: class_no,
+    subject,
+    topic,
+    difficulty: 'medium', // easy, medium, hard
+    question_text,
+    options, // Array of 4 strings
+    correct_option_index,
+    explanation,
+    image_url: null,
+    tags: [],
+    status: 'published',
+    version: 1,
+    created_by: getCurrentUserId(),
+    created_at: new Date().toISOString(),
+    used_in_chapters: [], // Array of {chapter_id, version}
+    analytics: {
+      total_attempts: 0,
+      correct_count: 0,
+      accuracy_pct: 0
+    }
+  };
+  return addToStore(STORE.QUESTION_BANK, question_id, question);
+}
+
+function linkQuestionToChapter(question_id, chapter_id) {
+  const question = getFromStore(STORE.QUESTION_BANK, question_id);
+  const chapter = getFromStore(STORE.CHAPTERS, chapter_id);
+  
+  if (!question || !chapter) return null;
+  
+  if (!chapter.question_ids) chapter.question_ids = [];
+  chapter.question_ids.push(question_id);
+  
+  question.used_in_chapters.push({
+    chapter_id,
+    version: chapter.current_version + 1 // Will be this version when published
+  });
+  
+  addToStore(STORE.QUESTION_BANK, question_id, question);
+  return addToStore(STORE.CHAPTERS, chapter_id, chapter);
+}
+
+function getQuestionsForChapter(chapter_id) {
+  const chapter = getFromStore(STORE.CHAPTERS, chapter_id);
+  if (!chapter) return [];
+  
+  return (chapter.question_ids || []).map(qid => getFromStore(STORE.QUESTION_BANK, qid)).filter(Boolean);
+}
+
+function updateQuestionAnalytics(question_id, was_correct) {
+  const question = getFromStore(STORE.QUESTION_BANK, question_id);
+  if (!question) return null;
+  
+  question.analytics.total_attempts += 1;
+  if (was_correct) question.analytics.correct_count += 1;
+  question.analytics.accuracy_pct = Math.round(
+    (question.analytics.correct_count / question.analytics.total_attempts) * 100
+  );
+  
+  return addToStore(STORE.QUESTION_BANK, question_id, question);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// USER PROGRESS TRACKING
+// ─────────────────────────────────────────────────────────────────────────────
+
+function initUserProgress(user_id, user_name, class_no) {
+  const progress = {
+    user_id,
+    user_name,
+    class: class_no,
+    created_at: new Date().toISOString(),
+    total_points: 0,
+    current_streak: 0,
+    longest_streak: 0,
+    last_activity_date: null,
+    chapters_progress: {}, // {chapter_id: {status, score, etc}}
+    question_attempts: {} // {question_id: {attempts, correct_count, etc}}
+  };
+  return addToStore(STORE.USER_PROGRESS, user_id, progress);
+}
+
+function recordFlashcardView(user_id, chapter_id) {
+  const progress = getFromStore(STORE.USER_PROGRESS, user_id);
+  if (!progress) return null;
+  
+  if (!progress.chapters_progress[chapter_id]) {
+    progress.chapters_progress[chapter_id] = {
+      status: 'in_progress',
+      flashcards_viewed: 0,
+      quiz_attempts: 0,
+      best_score: 0,
+      accuracy_pct: 0,
+      points_earned: 0,
+      revision_before_quiz: false
+    };
+  }
+  
+  progress.chapters_progress[chapter_id].flashcards_viewed += 1;
+  progress.total_points += 5; // 5 pts per flashcard
+  updateStreak(user_id);
+  
+  return addToStore(STORE.USER_PROGRESS, user_id, progress);
+}
+
+function recordQuizAttempt(user_id, chapter_id, question_id, was_correct, revision_used) {
+  const progress = getFromStore(STORE.USER_PROGRESS, user_id);
+  if (!progress) return null;
+  
+  // Update chapter progress
+  if (!progress.chapters_progress[chapter_id]) {
+    progress.chapters_progress[chapter_id] = {
+      status: 'in_progress',
+      flashcards_viewed: 0,
+      quiz_attempts: 0,
+      best_score: 0,
+      accuracy_pct: 0,
+      points_earned: 0,
+      revision_before_quiz: false
+    };
+  }
+  
+  const ch_prog = progress.chapters_progress[chapter_id];
+  ch_prog.quiz_attempts += 1;
+  ch_prog.revision_before_quiz = revision_used;
+  
+  if (was_correct) {
+    const pts = revision_used ? 40 : 50; // 50 pts without revision, 40 with
+    ch_prog.points_earned += pts;
+    progress.total_points += pts;
+  }
+  
+  // Update question attempts
+  if (!progress.question_attempts[question_id]) {
+    progress.question_attempts[question_id] = {
+      attempts: 0,
+      correct_count: 0,
+      incorrect_count: 0
+    };
+  }
+  
+  const q_att = progress.question_attempts[question_id];
+  q_att.attempts += 1;
+  if (was_correct) {
+    q_att.correct_count += 1;
+  } else {
+    q_att.incorrect_count += 1;
+  }
+  
+  updateStreak(user_id);
+  recordAnalyticsEvent(user_id, 'question_answered', {
+    chapter_id,
+    question_id,
+    was_correct,
+    revision_used,
+    points_awarded: was_correct ? (revision_used ? 40 : 50) : 0
+  });
+  
+  return addToStore(STORE.USER_PROGRESS, user_id, progress);
+}
+
+function markChapterComplete(user_id, chapter_id) {
+  const progress = getFromStore(STORE.USER_PROGRESS, user_id);
+  if (!progress) return null;
+  
+  if (progress.chapters_progress[chapter_id]) {
+    progress.chapters_progress[chapter_id].status = 'completed';
+    progress.total_points += 100; // Bonus for completing chapter
+  }
+  
+  return addToStore(STORE.USER_PROGRESS, user_id, progress);
+}
+
+function updateStreak(user_id) {
+  const progress = getFromStore(STORE.USER_PROGRESS, user_id);
+  if (!progress) return;
+  
+  const today = new Date().toDateString();
+  const lastActivityDate = progress.last_activity_date || '';
+  
+  if (lastActivityDate !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    
+    if (lastActivityDate === yesterday) {
+      progress.current_streak += 1;
+      progress.longest_streak = Math.max(progress.current_streak, progress.longest_streak);
+    } else if (lastActivityDate !== today) {
+      progress.current_streak = 1;
+    }
+    
+    progress.last_activity_date = today;
+  }
+  
+  addToStore(STORE.USER_PROGRESS, user_id, progress);
+}
+
+function getUserProgress(user_id) {
+  return getFromStore(STORE.USER_PROGRESS, user_id);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ANALYTICS EVENTS
+// ─────────────────────────────────────────────────────────────────────────────
+
+function recordAnalyticsEvent(user_id, event_type, data = {}) {
+  const event = {
+    event_id: `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    user_id,
+    event_type,
+    timestamp: new Date().toISOString(),
+    session_id: getSessionId(),
+    data
+  };
+  
+  const events = getStore(STORE.ANALYTICS_EVENTS);
+  events[event.event_id] = event;
+  setStore(STORE.ANALYTICS_EVENTS, events);
+  
+  return event;
+}
+
+function getAnalyticsEvents(filters = {}) {
+  const events = getStore(STORE.ANALYTICS_EVENTS);
+  return Object.values(events).filter(evt => {
+    if (filters.user_id && evt.user_id !== filters.user_id) return false;
+    if (filters.event_type && evt.event_type !== filters.event_type) return false;
+    if (filters.since && new Date(evt.timestamp) < new Date(filters.since)) return false;
+    return true;
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CMS: DRAFT & SUBMISSION WORKFLOW
+// ─────────────────────────────────────────────────────────────────────────────
+
+function submitChapterForReview(chapter_id, contributor_id) {
+  const chapter = getFromStore(STORE.CHAPTERS, chapter_id);
+  if (!chapter) return null;
+  
+  chapter.status = 'submitted';
+  chapter.submitted_at = new Date().toISOString();
+  
+  recordAnalyticsEvent(contributor_id, 'chapter_submitted', {
+    chapter_id,
+    title: chapter.title
+  });
+  
+  return addToStore(STORE.CHAPTERS, chapter_id, chapter);
+}
+
+function rejectChapter(chapter_id, admin_id, feedback) {
+  const chapter = getFromStore(STORE.CHAPTERS, chapter_id);
+  if (!chapter) return null;
+  
+  chapter.status = 'draft';
+  chapter.rejection_feedback = feedback;
+  chapter.rejection_date = new Date().toISOString();
+  chapter.rejected_by = admin_id;
+  
+  recordAnalyticsEvent(admin_id, 'chapter_rejected', {
+    chapter_id,
+    feedback
+  });
+  
+  return addToStore(STORE.CHAPTERS, chapter_id, chapter);
+}
+
+function getPendingApprovals() {
+  const chapters = getStore(STORE.CHAPTERS);
+  return Object.values(chapters).filter(ch => ch.status === 'submitted');
+}
+
+function getChapterHistory(chapter_id) {
+  const chapter = getFromStore(STORE.CHAPTERS, chapter_id);
+  if (!chapter || !chapter.versions) return [];
+  
+  return chapter.versions.map(v => ({
+    version: v.version,
+    status: v.status,
+    published_at: v.published_at,
+    created_by: v.created_by,
+    approved_by: v.approved_by
+  }));
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EXPORT & BACKUP
+// ─────────────────────────────────────────────────────────────────────────────
+
+function exportAllContent() {
+  const backup = {
+    exported_at: new Date().toISOString(),
+    version: '1.0',
+    chapters: getStore(STORE.CHAPTERS),
+    question_bank: getStore(STORE.QUESTION_BANK),
+    flashcards: getStore(STORE.FLASHCARDS),
+    config: getStore(STORE.CONFIG)
+  };
+  return backup;
+}
+
+function downloadBackup() {
+  const backup = exportAllContent();
+  const dataStr = JSON.stringify(backup, null, 2);
+  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(dataBlob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `smartspark_backup_${Date.now()}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function importBackup(jsonData) {
+  try {
+    const backup = JSON.parse(jsonData);
+    setStore(STORE.CHAPTERS, backup.chapters);
+    setStore(STORE.QUESTION_BANK, backup.question_bank);
+    setStore(STORE.FLASHCARDS, backup.flashcards);
+    return { success: true, message: 'Backup imported successfully' };
+  } catch (e) {
+    return { success: false, message: 'Invalid backup format: ' + e.message };
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// USER AUTHENTICATION (Basic - Phase 1)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function registerUser(username, email, password, role = 'student', class_no = null) {
+  const user = {
+    user_id: `user_${Date.now()}`,
+    username,
+    email,
+    password_hash: btoa(password), // NOT secure - Phase 2 use proper auth
+    role, // student, contributor, admin
+    class: class_no,
+    created_at: new Date().toISOString(),
+    is_active: true
+  };
+  
+  const users = getStore(STORE.USERS);
+  users[user.user_id] = user;
+  setStore(STORE.USERS, users);
+  
+  if (role === 'student') {
+    initUserProgress(user.user_id, username, class_no);
+  }
+  
+  return user;
+}
+
+function loginUser(email, password) {
+  const users = getStore(STORE.USERS);
+  const user = Object.values(users).find(u => u.email === email);
+  
+  if (!user || btoa(password) !== user.password_hash) {
+    return { success: false, message: 'Invalid credentials' };
+  }
+  
+  sessionStorage.setItem('ss_current_user', JSON.stringify(user));
+  return { success: true, user };
+}
+
+function getCurrentUser() {
+  try {
+    return JSON.parse(sessionStorage.getItem('ss_current_user'));
+  } catch {
+    return null;
+  }
+}
+
+function getCurrentUserId() {
+  const user = getCurrentUser();
+  return user?.user_id || 'anonymous';
+}
+
+function getUserRole() {
+  const user = getCurrentUser();
+  return user?.role || 'student';
+}
+
+function logoutUser() {
+  sessionStorage.removeItem('ss_current_user');
+}
+
+function isAdmin() {
+  return getUserRole() === 'admin';
+}
+
+function isContributor() {
+  return ['admin', 'contributor'].includes(getUserRole());
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UTILITY FUNCTIONS
+// ─────────────────────────────────────────────────────────────────────────────
+
+function generateHash(obj) {
+  return btoa(JSON.stringify(obj)).slice(0, 16);
+}
+
+function getSessionId() {
+  let sessionId = sessionStorage.getItem('ss_session_id');
+  if (!sessionId) {
+    sessionId = `sess_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    sessionStorage.setItem('ss_session_id', sessionId);
+  }
+  return sessionId;
+}
+
+function initializeSystem() {
+  // Set default config
+  const config = getStore(STORE.CONFIG);
+  if (!config.initialized) {
+    config.initialized = true;
+    config.version = '1.0';
+    config.created_at = new Date().toISOString();
+    setStore(STORE.CONFIG, config);
+  }
+}
+
+// Initialize on load
+initializeSystem();
