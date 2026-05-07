@@ -332,8 +332,16 @@ function switchTab(tab) {
 }
 
 // Show class selector for students only
-document.addEventListener('DOMContentLoaded', () => {
-  initDemoUsers();
+window.addEventListener('DOMContentLoaded', () => {
+  // Force initialize demo users
+  const users = getStore('ss_users');
+  if (Object.keys(users).length === 0) {
+    console.log('Creating demo accounts...');
+    registerUser('Admin', 'admin@smartspark.in', 'admin123', 'admin');
+    registerUser('Contributor', 'contributor@smartspark.in', 'contrib123', 'contributor');
+    registerUser('Student', 'student@smartspark.in', 'student123', 'student', 6);
+    console.log('Demo accounts created!');
+  }
   
   document.querySelectorAll('input[name="role"]').forEach(radio => {
     radio.addEventListener('change', (e) => {
