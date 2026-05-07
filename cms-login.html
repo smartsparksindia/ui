@@ -303,14 +303,8 @@ if (getCurrentUser()) {
 }
 
 // Initialize demo users
-function initDemoUsers() {
-  const users = getStore('ss_users');
-  if (Object.keys(users).length > 0) return; // Already initialized
-  
-  registerUser('Admin', 'admin@smartspark.in', 'admin123', 'admin');
-  registerUser('Contributor', 'contributor@smartspark.in', 'contrib123', 'contributor');
-  registerUser('Student', 'student@smartspark.in', 'student123', 'student', 6);
-}
+// Demo accounts are now hardcoded in data-layer.js
+// No need to create them here anymore!
 
 // Switch between login and register
 function switchTab(tab) {
@@ -333,15 +327,14 @@ function switchTab(tab) {
 
 // Show class selector for students only
 window.addEventListener('DOMContentLoaded', () => {
-  // Force initialize demo users
-  const users = getStore('ss_users');
-  if (Object.keys(users).length === 0) {
-    console.log('Creating demo accounts...');
-    registerUser('Admin', 'admin@smartspark.in', 'admin123', 'admin');
-    registerUser('Contributor', 'contributor@smartspark.in', 'contrib123', 'contributor');
-    registerUser('Student', 'student@smartspark.in', 'student123', 'student', 6);
-    console.log('Demo accounts created!');
-  }
+  // Demo accounts are now hardcoded in data-layer.js
+  // They auto-initialize on page load
+  
+  // Show demo credentials to user
+  console.log('📚 SmartSpark CMS - Demo Accounts Ready');
+  console.log('Admin: admin@smartspark.in / admin123');
+  console.log('Contributor: contributor@smartspark.in / contrib123');
+  console.log('Student: student@smartspark.in / student123');
   
   document.querySelectorAll('input[name="role"]').forEach(radio => {
     radio.addEventListener('change', (e) => {

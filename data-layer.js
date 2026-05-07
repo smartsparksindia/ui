@@ -507,11 +507,19 @@ function loginUser(email, password) {
   const users = getStore(STORE.USERS);
   const user = Object.values(users).find(u => u.email === email);
   
-  if (!user || btoa(password) !== user.password_hash) {
-    return { success: false, message: 'Invalid credentials' };
+  if (!user) {
+    return { success: false, message: 'Invalid email or password' };
+  }
+  
+  // Check password (demo accounts use plaintext, others use btoa hash)
+  const passwordMatch = user.password === password || btoa(password) === user.password_hash;
+  
+  if (!passwordMatch) {
+    return { success: false, message: 'Invalid email or password' };
   }
   
   sessionStorage.setItem('ss_current_user', JSON.stringify(user));
+  console.log('✅ Login successful:', email);
   return { success: true, user };
 }
 
@@ -573,5 +581,71 @@ function initializeSystem() {
   }
 }
 
+// Initialize system and create demo accounts
+function initializeSystemWithDemoAccounts() {
+  // Set default config
+  const config = getStore(STORE.CONFIG);
+  if (!config.initialized) {
+    config.initialized = true;
+    config.version = '1.0';
+    config.created_at = new Date().toISOString();
+    setStore(STORE.CONFIG, config);
+  }
+  
+  // Hardcode demo accounts
+  const users = getStore(STORE.USERS);
+  
+  // Only create if they don't exist
+  if (Object.keys(users).length === 0) {
+    console.log('Creating hardcoded demo accounts...');
+    
+    // Admin user
+    const admin = {
+      user_id: 'admin_demo_001',
+      username: 'Admin',
+      email: 'admin@smartspark.in',
+      password: 'admin123',  // Stored plaintext for MVP demo
+      role: 'admin',
+      class: null,
+      created_at: new Date().toISOString(),
+      is_active: true
+    };
+    users[admin.user_id] = admin;
+    
+    // Contributor user
+    const contributor = {
+      user_id: 'contributor_demo_001',
+      username: 'Contributor',
+      email: 'contributor@smartspark.in',
+      password: 'contrib123',  // Stored plaintext for MVP demo
+      role: 'contributor',
+      class: null,
+      created_at: new Date().toISOString(),
+      is_active: true
+    };
+    users[contributor.user_id] = contributor;
+    
+    // Student user
+    const student = {
+      user_id: 'student_demo_001',
+      username: 'Student',
+      email: 'student@smartspark.in',
+      password: 'student123',  // Stored plaintext for MVP demo
+      role: 'student',
+      class: 6,
+      created_at: new Date().toISOString(),
+      is_active: true
+    };
+    users[student.user_id] = student;
+    
+    // Save all users
+    setStore(STORE.USERS, users);
+    console.log('✅ Demo accounts created!');
+    console.log('Admin: admin@smartspark.in / admin123');
+    console.log('Contributor: contributor@smartspark.in / contrib123');
+    console.log('Student: student@smartspark.in / student123');
+  }
+}
+
 // Initialize on load
-initializeSystem();
+initializeSystemWithDemoAccounts();
