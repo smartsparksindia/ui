@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartSpark CMS — Content Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple: #7F77DD; --teal: #1D9E75; --coral: #D85A30;
+  --amber: #BA7517; --bg: #FFF9F0; --card-bg: #FFFFFF;
+  --text: #2C2C2A; --text-muted: #888780;
+  --radius: 20px; --radius-sm: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+nav {
+  background: white; padding: 1.2rem 3rem;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 2px solid #F0EBE0;
+}
+.logo { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--purple); text-decoration: none; }
+.logo span { color: var(--coral); }
+
+.editor-wrap {
+  max-width: 900px; margin: 2rem auto; padding: 0 2rem 4rem;
+}
+
+.editor-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: var(--text);
+}
+
+.form-section {
+  background: white;
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.section-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+  border-bottom: 2px solid #F0EBE0;
+  padding-bottom: 0.8rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 2px solid #F0EBE0;
+  border-radius: var(--radius-sm);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--purple);
+  background: white;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.9rem 1.8rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.btn-primary {
+  background: var(--purple);
+  color: white;
+  box-shadow: 0 4px 0 #3C3489;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: white;
+  border: 2px solid #F0EBE0;
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  background: #FAFAF8;
+}
+
+.btn-add {
+  background: var(--teal);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.85rem;
+}
+
+.btn-add:hover {
+  transform: translateY(-1px);
+}
+
+.btn-remove {
+  background: #FAECE7;
+  color: var(--coral);
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
+.btn-remove:hover {
+  background: var(--coral);
+  color: white;
+}
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.item-card {
+  background: #FAFAF8;
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  border-left: 4px solid var(--purple);
+}
+
+.item-content { flex: 1; }
+.item-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+.item-text { font-weight: 700; margin-top: 0.3rem; }
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.alert {
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1rem;
+}
+
+.alert-success {
+  background: #E1F5EE;
+  border-left: 4px solid var(--teal);
+  color: #085041;
+  font-weight: 700;
+}
+
+.alert-info {
+  background: #EEEDFE;
+  border-left: 4px solid var(--purple);
+  color: var(--purple);
+  font-weight: 700;
+}
+
+@media(max-width:600px) {
+  nav { padding: 1rem 1.2rem; }
+  .editor-wrap { padding: 0 1rem 4rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .form-actions { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="cms-dashboard.html" class="logo">Smart<span>Spark</span> CMS</a>
+  <a href="cms-dashboard.html" style="color:var(--text-muted);text-decoration:none;font-weight:700;">← Dashboard</a>
+</nav>
+
+<div class="editor-wrap">
+  <h1 class="editor-title">✏️ Create Chapter</h1>
+
+  <div class="alert alert-info">
+    📝 Fill in the chapter details, add flashcards, and questions. Save as draft, then submit for admin review.
+  </div>
+
+  <form id="editor-form">
+    
+    <!-- CHAPTER BASICS -->
+    <div class="form-section">
+      <h2 class="section-title">Chapter Details</h2>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="class">Class</label>
+          <select id="class" required>
+            <option value="">Select class</option>
+            <option value="6">Class 6</option>
+            <option value="7">Class 7</option>
+            <option value="8">Class 8</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <select id="subject" required>
+            <option value="">Select subject</option>
+            <option value="Science">Science</option>
+            <option value="Maths">Maths</option>
+            <option value="English">English</option>
+            <option value="Social Science">Social Science</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="title">Chapter Title</label>
+        <input type="text" id="title" placeholder="e.g., Photosynthesis" required>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Chapter Description</label>
+        <textarea id="description" placeholder="What will students learn in this chapter?" required></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="objectives">Learning Objectives (comma-separated)</label>
+          <input type="text" id="objectives" placeholder="e.g., Define photosynthesis, Identify reactants, Explain products">
+        </div>
+        <div class="form-group">
+          <label for="time">Estimated Time (minutes)</label>
+          <input type="number" id="time" value="45" min="10" max="180">
+        </div>
+      </div>
+    </div>
+
+    <!-- FLASHCARDS -->
+    <div class="form-section">
+      <h2 class="section-title">Flashcards</h2>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;">Add key terms and their definitions</p>
+
+      <div class="items-list" id="flashcards-list"></div>
+
+      <button type="button" class="btn btn-add" onclick="addFlashcard()">+ Add Flashcard</button>
+    </div>
+
+    <!-- QUIZ QUESTIONS -->
+    <div class="form-section">
+      <h2 class="section-title">Quiz Questions</h2>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;">Add MCQ questions to test understanding</p>
+
+      <div class="items-list" id="questions-list"></div>
+
+      <button type="button" class="btn btn-add" onclick="addQuestion()">+ Add Question</button>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">💾 Save as Draft</button>
+      <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+    </div>
+  </form>
+
+  <div id="success-alert" class="alert alert-success" style="display:none;margin-top:2rem;">
+    ✅ Chapter saved as draft! You can now submit it for review.
+  </div>
+</div>
+
+<script src="data-layer.js"></script>
+<script>
+const user = getCurrentUser();
+if (!user || !['admin', 'contributor'].includes(user.role)) {
+  window.location.href = 'cms-login.html';
+}
+
+let flashcardsData = [];
+let questionsData = [];
+
+function addFlashcard() {
+  const id = 'fc_' + Date.now();
+  flashcardsData.push({ id, term: '', definition: '' });
+  renderFlashcards();
+}
+
+function removeFlashcard(id) {
+  flashcardsData = flashcardsData.filter(fc => fc.id !== id);
+  renderFlashcards();
+}
+
+function renderFlashcards() {
+  const list = document.getElementById('flashcards-list');
+  list.innerHTML = flashcardsData.map((fc, idx) => `
+    <div class="item-card">
+      <div class="item-content">
+        <div class="item-label">Flashcard ${idx + 1}</div>
+        <input type="text" placeholder="Term" value="${fc.term}" style="margin:0.5rem 0;" onchange="updateFlashcard('${fc.id}', 'term', this.value)">
+        <textarea placeholder="Definition" style="margin:0.5rem 0;" onchange="updateFlashcard('${fc.id}', 'definition', this.value)">${fc.definition}</textarea>
+      </div>
+      <button type="button" class="btn btn-remove" onclick="removeFlashcard('${fc.id}')">Remove</button>
+    </div>
+  `).join('');
+}
+
+function updateFlashcard(id, field, value) {
+  const fc = flashcardsData.find(f => f.id === id);
+  if (fc) fc[field] = value;
+}
+
+function addQuestion() {
+  const id = 'q_' + Date.now();
+  questionsData.push({
+    id,
+    question: '',
+    options: ['', '', '', ''],
+    correct: 0,
+    explanation: ''
+  });
+  renderQuestions();
+}
+
+function removeQuestion(id) {
+  questionsData = questionsData.filter(q => q.id !== id);
+  renderQuestions();
+}
+
+function renderQuestions() {
+  const list = document.getElementById('questions-list');
+  list.innerHTML = questionsData.map((q, idx) => `
+    <div class="item-card">
+      <div class="item-content" style="width:100%;">
+        <div class="item-label">Question ${idx + 1}</div>
+        <input type="text" placeholder="Question" value="${q.question}" style="margin:0.5rem 0;" onchange="updateQuestion('${q.id}', 'question', this.value)">
+        
+        <div style="margin:0.8rem 0;">
+          <label style="font-size:0.8rem;color:var(--text-muted);">Options:</label>
+          ${q.options.map((opt, i) => `
+            <div style="display:flex;gap:0.5rem;margin-top:0.3rem;align-items:center;">
+              <input type="text" placeholder="Option ${i+1}" value="${opt}" style="flex:1;" onchange="updateQuestionOption('${q.id}', ${i}, this.value)">
+              <input type="radio" name="correct_${q.id}" value="${i}" ${q.correct == i ? 'checked' : ''} onchange="updateQuestion('${q.id}', 'correct', ${i})">
+              <span style="font-size:0.75rem;color:var(--text-muted);">Correct</span>
+            </div>
+          `).join('')}
+        </div>
+
+        <textarea placeholder="Explanation" style="margin:0.5rem 0;" onchange="updateQuestion('${q.id}', 'explanation', this.value)">${q.explanation}</textarea>
+      </div>
+      <button type="button" class="btn btn-remove" onclick="removeQuestion('${q.id}')">Remove</button>
+    </div>
+  `).join('');
+}
+
+function updateQuestion(id, field, value) {
+  const q = questionsData.find(x => x.id === id);
+  if (q) q[field] = value;
+}
+
+function updateQuestionOption(id, idx, value) {
+  const q = questionsData.find(x => x.id === id);
+  if (q) q.options[idx] = value;
+}
+
+document.getElementById('editor-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const classNum = parseInt(document.getElementById('class').value);
+  const subject = document.getElementById('subject').value;
+  const title = document.getElementById('title').value;
+  const description = document.getElementById('description').value;
+
+  if (!classNum || !subject || !title || flashcardsData.length === 0 || questionsData.length === 0) {
+    alert('Please fill in all required fields and add at least 1 flashcard and 1 question');
+    return;
+  }
+
+  // Create chapter
+  const chapter = createChapter(classNum, subject, title, description);
+
+  // Add flashcards
+  flashcardsData.forEach(fc => {
+    addFlashcardToChapter(chapter.chapter_id, fc.term, fc.definition);
+  });
+
+  // Add/create questions
+  questionsData.forEach(q => {
+    const question = createQuestion(
+      classNum,
+      subject,
+      title,
+      q.question,
+      q.options,
+      parseInt(q.correct),
+      q.explanation
+    );
+    linkQuestionToChapter(question.question_id, chapter.chapter_id);
+  });
+
+  // Show success
+  document.getElementById('editor-form').style.display = 'none';
+  document.getElementById('success-alert').style.display = 'block';
+
+  setTimeout(() => {
+    window.location.href = 'cms-dashboard.html';
+  }, 2000);
+});
+
+// Initialize
+renderFlashcards();
+renderQuestions();
+</script>
+</body>
+</html>

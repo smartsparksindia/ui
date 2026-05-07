@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartSpark CMS — Question Bank</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root { --purple: #7F77DD; --teal: #1D9E75; --coral: #D85A30; --bg: #FFF9F0; --text: #2C2C2A; --text-muted: #888780; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+nav { background: white; padding: 1.2rem 3rem; display: flex; justify-content: space-between; border-bottom: 2px solid #F0EBE0; }
+.logo { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--purple); text-decoration: none; }
+.logo span { color: var(--coral); }
+
+.main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+.title { font-family: 'Fredoka One', cursive; font-size: 2rem; }
+.btn-new { background: var(--purple); color: white; border: none; padding: 0.8rem 1.6rem; border-radius: 12px; font-weight: 800; cursor: pointer; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+thead { background: #FAFAF8; }
+th { padding: 1rem; text-align: left; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid #F0EBE0; }
+td { padding: 1rem; border-bottom: 1px solid #F0EBE0; }
+tbody tr:hover { background: #FAFAF8; }
+
+.question-preview { max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.accuracy { font-weight: 800; color: var(--teal); }
+
+.empty { text-align: center; padding: 3rem; color: var(--text-muted); }
+
+footer { background: var(--text); color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="cms-dashboard.html" class="logo">Smart<span>Spark</span> CMS</a>
+  <a href="cms-dashboard.html" style="color:var(--text-muted);text-decoration:none;font-weight:700;">← Dashboard</a>
+</nav>
+
+<div class="main">
+  <div class="header">
+    <h1 class="title">🏦 Question Bank</h1>
+    <button class="btn-new" onclick="addNewQuestion()">+ New Question</button>
+  </div>
+
+  <p style="color:var(--text-muted);margin-bottom:2rem;font-weight:600;">Reusable questions used across chapters</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Question</th>
+          <th>Subject / Topic</th>
+          <th>Accuracy</th>
+          <th>Used in Chapters</th>
+        </tr>
+      </thead>
+      <tbody id="questions-body">
+        <tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:3rem;">Loading questions...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer>
+  <p>SmartSpark CMS — Question Bank Management</p>
+</footer>
+
+<script src="data-layer.js"></script>
+<script>
+const user = getCurrentUser();
+
+const qb = getStore('ss_question_bank');
+const questions = Object.values(qb);
+
+const tbody = document.getElementById('questions-body');
+
+if (questions.length === 0) {
+  tbody.innerHTML = '<tr><td colspan="4"><div class="empty"><h3>No questions yet</h3><p>Questions are added when you create chapters</p></div></td></tr>';
+} else {
+  tbody.innerHTML = questions.map(q => `
+    <tr>
+      <td><div class="question-preview">${q.question_text}</div></td>
+      <td>${q.subject} • ${q.topic}</td>
+      <td><span class="accuracy">${q.analytics.accuracy_pct}%</span></td>
+      <td>${q.used_in_chapters.length} chapters</td>
+    </tr>
+  `).join('');
+}
+
+function addNewQuestion() {
+  alert('Add question feature coming soon! Create questions while editing chapters.');
+}
+</script>
+</body>
+</html>

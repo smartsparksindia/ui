@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartSpark CMS — My Drafts</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root { --purple: #7F77DD; --teal: #1D9E75; --coral: #D85A30; --bg: #FFF9F0; --text: #2C2C2A; --text-muted: #888780; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+nav { background: white; padding: 1.2rem 3rem; display: flex; justify-content: space-between; border-bottom: 2px solid #F0EBE0; }
+.logo { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--purple); text-decoration: none; }
+.logo span { color: var(--coral); }
+
+.main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+.title { font-family: 'Fredoka One', cursive; font-size: 2rem; margin-bottom: 2rem; }
+
+.draft-card {
+  background: white; border-radius: 20px; padding: 1.5rem;
+  margin-bottom: 1rem; display: flex; justify-content: space-between;
+  align-items: center; border: 2px solid #F0EBE0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.draft-info { flex: 1; }
+.draft-title { font-family: 'Fredoka One', cursive; font-size: 1.1rem; margin-bottom: 0.3rem; }
+.draft-meta { font-size: 0.85rem; color: var(--text-muted); }
+
+.draft-status {
+  display: inline-block; padding: 0.3rem 0.8rem; border-radius: 50px;
+  font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
+}
+
+.status-draft { background: #FAEEDA; color: var(--coral); }
+.status-submitted { background: #E6F1FB; color: #2176FF; }
+
+.draft-actions { display: flex; gap: 0.8rem; }
+.btn { padding: 0.6rem 1.2rem; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 0.85rem; }
+.btn-edit { background: white; border: 2px solid #F0EBE0; color: var(--text); }
+.btn-submit { background: var(--purple); color: white; }
+
+.empty { text-align: center; padding: 3rem; color: var(--text-muted); }
+
+footer { background: var(--text); color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="cms-dashboard.html" class="logo">Smart<span>Spark</span> CMS</a>
+  <a href="cms-dashboard.html" style="color:var(--text-muted);text-decoration:none;font-weight:700;">← Dashboard</a>
+</nav>
+
+<div class="main">
+  <h1 class="title">📝 My Drafts</h1>
+  <p style="color:var(--text-muted);margin-bottom:2rem;font-weight:600;">Your draft and submitted chapters</p>
+
+  <div id="drafts-list"></div>
+</div>
+
+<footer>
+  <p>SmartSpark CMS — Content Management</p>
+</footer>
+
+<script src="data-layer.js"></script>
+<script>
+const user = getCurrentUser();
+if (!user || !['admin', 'contributor'].includes(user.role)) {
+  window.location.href = 'cms-login.html';
+}
+
+const chapters = getStore('ss_chapters');
+const myChapters = Object.values(chapters).filter(ch => ch.created_by === user.user_id);
+const drafts = myChapters.filter(ch => ['draft', 'submitted'].includes(ch.status));
+
+const list = document.getElementById('drafts-list');
+
+if (drafts.length === 0) {
+  list.innerHTML = '<div class="empty"><h3>No drafts</h3><p>Create a new chapter to get started!</p><a href="cms-editor.html" style="color:var(--purple);text-decoration:none;font-weight:700;">+ Create Chapter →</a></div>';
+} else {
+  list.innerHTML = drafts.map(ch => `
+    <div class="draft-card">
+      <div class="draft-info">
+        <div class="draft-title">${ch.title}</div>
+        <div class="draft-meta">Class ${ch.class} • ${ch.subject}</div>
+        <div style="margin-top:0.5rem;">
+          <span class="draft-status status-${ch.status}">${ch.status}</span>
+        </div>
+      </div>
+      <div class="draft-actions">
+        <button class="btn btn-edit" onclick="editChapter('${ch.chapter_id}')">Edit</button>
+        ${ch.status === 'draft' ? `<button class="btn btn-submit" onclick="submitChapter('${ch.chapter_id}')">Submit</button>` : '<span style="font-size:0.9rem;color:var(--text-muted);">Awaiting Review</span>'}
+      </div>
+    </div>
+  `).join('');
+}
+
+function editChapter(id) {
+  alert('Edit feature coming soon!');
+}
+
+function submitChapter(id) {
+  if (confirm('Submit this chapter for review?')) {
+    submitChapterForReview(id, user.user_id);
+    alert('✅ Chapter submitted for review!');
+    location.reload();
+  }
+}
+</script>
+</body>
+</html>

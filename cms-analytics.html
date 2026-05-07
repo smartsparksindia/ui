@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartSpark CMS — Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root { --purple: #7F77DD; --teal: #1D9E75; --coral: #D85A30; --amber: #BA7517; --bg: #FFF9F0; --text: #2C2C2A; --text-muted: #888780; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+nav { background: white; padding: 1.2rem 3rem; display: flex; justify-content: space-between; border-bottom: 2px solid #F0EBE0; }
+.logo { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--purple); text-decoration: none; }
+.logo span { color: var(--coral); }
+
+.main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+.title { font-family: 'Fredoka One', cursive; font-size: 2rem; margin-bottom: 2rem; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.stat-card { background: white; border-radius: 20px; padding: 1.5rem; border-left: 4px solid var(--purple); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.stat-label { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+.stat-value { font-family: 'Fredoka One', cursive; font-size: 2.5rem; font-weight: 800; color: var(--purple); margin-top: 0.5rem; }
+
+.card-teal { border-left-color: var(--teal); }
+.card-teal .stat-value { color: var(--teal); }
+
+.card-coral { border-left-color: var(--coral); }
+.card-coral .stat-value { color: var(--coral); }
+
+.card-amber { border-left-color: var(--amber); }
+.card-amber .stat-value { color: var(--amber); }
+
+.section { background: white; border-radius: 20px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.section-title { font-family: 'Fredoka One', cursive; font-size: 1.3rem; margin-bottom: 1rem; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 1rem; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid #F0EBE0; }
+td { padding: 1rem; border-bottom: 1px solid #F0EBE0; }
+
+footer { background: var(--text); color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="cms-dashboard.html" class="logo">Smart<span>Spark</span> CMS</a>
+  <a href="cms-dashboard.html" style="color:var(--text-muted);text-decoration:none;font-weight:700;">← Dashboard</a>
+</nav>
+
+<div class="main">
+  <h1 class="title">📈 Analytics</h1>
+  <p style="color:var(--text-muted);margin-bottom:2rem;font-weight:600;">Platform performance and student progress insights</p>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Students</div>
+      <div class="stat-value" id="stat-students">0</div>
+    </div>
+    <div class="stat-card card-teal">
+      <div class="stat-label">Chapters Completed</div>
+      <div class="stat-value" id="stat-completed">0</div>
+    </div>
+    <div class="stat-card card-coral">
+      <div class="stat-label">Avg Accuracy</div>
+      <div class="stat-value" id="stat-accuracy">0%</div>
+    </div>
+    <div class="stat-card card-amber">
+      <div class="stat-label">Total Questions</div>
+      <div class="stat-value" id="stat-questions">0</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Most Difficult Questions</h2>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1rem;">Questions with lowest accuracy (< 60%)</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>Accuracy</th>
+            <th>Attempts</th>
+          </tr>
+        </thead>
+        <tbody id="difficult-tbody">
+          <tr><td colspan="3" style="text-align:center;padding:2rem;color:var(--text-muted);">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Popular Questions</h2>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1rem;">Most attempted questions</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>Attempts</th>
+            <th>Accuracy</th>
+          </tr>
+        </thead>
+        <tbody id="popular-tbody">
+          <tr><td colspan="3" style="text-align:center;padding:2rem;color:var(--text-muted);">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>SmartSpark CMS — Analytics Dashboard</p>
+</footer>
+
+<script src="data-layer.js"></script>
+<script>
+const user = getCurrentUser();
+if (!user || user.role !== 'admin') {
+  window.location.href = 'cms-login.html';
+}
+
+const users = getStore('ss_users');
+const studentCount = Object.values(users).filter(u => u.role === 'student').length;
+const qb = getStore('ss_question_bank');
+const questions = Object.values(qb);
+
+document.getElementById('stat-students').textContent = studentCount;
+document.getElementById('stat-questions').textContent = Object.keys(qb).length;
+
+// Calculate metrics
+const allAccuracies = questions.map(q => q.analytics.accuracy_pct).filter(a => a > 0);
+const avgAccuracy = allAccuracies.length > 0 ? Math.round(allAccuracies.reduce((a,b) => a+b) / allAccuracies.length) : 0;
+document.getElementById('stat-accuracy').textContent = avgAccuracy + '%';
+
+// Difficult questions (< 60% accuracy)
+const difficult = questions.filter(q => q.analytics.accuracy_pct > 0 && q.analytics.accuracy_pct < 60).sort((a,b) => a.analytics.accuracy_pct - b.analytics.accuracy_pct).slice(0, 5);
+const diffBody = document.getElementById('difficult-tbody');
+diffBody.innerHTML = difficult.length > 0
+  ? difficult.map(q => `<tr><td>${q.question_text.substring(0, 50)}...</td><td style="color:var(--coral);font-weight:800;">${q.analytics.accuracy_pct}%</td><td>${q.analytics.total_attempts}</td></tr>`).join('')
+  : '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:2rem;">All questions performing well! 🎉</td></tr>';
+
+// Popular questions
+const popular = questions.filter(q => q.analytics.total_attempts > 0).sort((a,b) => b.analytics.total_attempts - a.analytics.total_attempts).slice(0, 5);
+const popBody = document.getElementById('popular-tbody');
+popBody.innerHTML = popular.length > 0
+  ? popular.map(q => `<tr><td>${q.question_text.substring(0, 50)}...</td><td>${q.analytics.total_attempts}</td><td style="color:var(--teal);font-weight:800;">${q.analytics.accuracy_pct}%</td></tr>`).join('')
+  : '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:2rem;">No question data yet</td></tr>';
+</script>
+</body>
+</html>

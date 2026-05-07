@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartSpark CMS — Export & Backup</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root { --purple: #7F77DD; --teal: #1D9E75; --coral: #D85A30; --bg: #FFF9F0; --text: #2C2C2A; --text-muted: #888780; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+nav { background: white; padding: 1.2rem 3rem; display: flex; justify-content: space-between; border-bottom: 2px solid #F0EBE0; }
+.logo { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--purple); text-decoration: none; }
+.logo span { color: var(--coral); }
+
+.main { max-width: 800px; margin: 0 auto; padding: 2rem; }
+.title { font-family: 'Fredoka One', cursive; font-size: 2rem; margin-bottom: 2rem; }
+
+.card { background: white; border-radius: 20px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border-left: 4px solid var(--purple); }
+.card h3 { font-family: 'Fredoka One', cursive; font-size: 1.2rem; margin-bottom: 0.5rem; }
+.card p { color: var(--text-muted); font-weight: 600; margin-bottom: 1.5rem; }
+
+.btn { padding: 0.9rem 1.8rem; border: none; border-radius: 12px; font-family: 'Nunito', sans-serif; font-weight: 800; cursor: pointer; font-size: 0.95rem; transition: transform 0.15s; }
+.btn-primary { background: var(--purple); color: white; }
+.btn-primary:hover { transform: translateY(-2px); }
+.btn-secondary { background: white; border: 2px solid #F0EBE0; color: var(--text); }
+
+.info-box { background: #EEEDFE; border: 2px solid var(--purple); border-radius: 12px; padding: 1rem; margin-top: 1rem; font-size: 0.9rem; font-weight: 600; color: var(--purple); }
+
+.success { background: #E1F5EE; border-left: 4px solid var(--teal); color: var(--teal); padding: 1rem; border-radius: 12px; margin-bottom: 1rem; font-weight: 700; display: none; }
+
+footer { background: var(--text); color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="cms-dashboard.html" class="logo">Smart<span>Spark</span> CMS</a>
+  <a href="cms-dashboard.html" style="color:var(--text-muted);text-decoration:none;font-weight:700;">← Dashboard</a>
+</nav>
+
+<div class="main">
+  <h1 class="title">💾 Export & Backup</h1>
+  <p style="color:var(--text-muted);margin-bottom:2rem;font-weight:600;">Download your entire platform as JSON for backup or migration</p>
+
+  <div id="success-msg" class="success">✅ Backup downloaded successfully!</div>
+
+  <div class="card">
+    <h3>📥 Download Backup</h3>
+    <p>Export all chapters, questions, flashcards, and content. Create a portable backup of your entire platform.</p>
+    <button class="btn btn-primary" onclick="downloadBackup()">📥 Download Backup</button>
+    <div class="info-box">
+      Includes: All chapters (all versions), question bank, flashcards, metadata. Does NOT include student progress data.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📤 Import Backup</h3>
+    <p>Restore content from a previously exported backup file.</p>
+    <input type="file" id="import-file" accept=".json" style="padding:0.5rem;margin-bottom:1rem;border:2px solid #F0EBE0;border-radius:12px;width:100%;">
+    <button class="btn btn-secondary" onclick="importBackupFile()">📤 Import Backup</button>
+    <div class="info-box">
+      Select a JSON file exported from SmartSpark. Will merge with existing content.
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:#E84040;">
+    <h3 style="color:#E84040;">⚠️ Danger Zone</h3>
+    <p>Reset entire platform. This cannot be undone.</p>
+    <button class="btn" style="background:#E84040;color:white;" onclick="resetPlatform()">🗑️ Reset Everything</button>
+    <div class="info-box" style="background:#FAECE7;border-color:#E84040;color:#4A1B0C;">
+      ⚠️ This will delete ALL chapters, questions, flashcards, and user progress. Download a backup first!
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>SmartSpark CMS — Data Management</p>
+</footer>
+
+<script src="data-layer.js"></script>
+<script>
+const user = getCurrentUser();
+if (!user || user.role !== 'admin') {
+  window.location.href = 'cms-login.html';
+}
+
+function downloadBackup() {
+  downloadBackup(); // Calls data-layer.js function
+  document.getElementById('success-msg').style.display = 'block';
+  setTimeout(() => document.getElementById('success-msg').style.display = 'none', 3000);
+}
+
+function importBackupFile() {
+  const file = document.getElementById('import-file').files[0];
+  if (!file) { alert('Please select a file'); return; }
+  
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const result = importBackup(e.target.result);
+    if (result.success) {
+      alert('✅ ' + result.message);
+      location.reload();
+    } else {
+      alert('❌ ' + result.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function resetPlatform() {
+  if (!confirm('⚠️ This will delete EVERYTHING. Download a backup first. Are you sure?')) return;
+  if (!confirm('Last warning! This cannot be undone. Proceed?')) return;
+  
+  localStorage.clear();
+  alert('✅ Platform reset. Page will reload.');
+  location.reload();
+}
+</script>
+</body>
+</html>

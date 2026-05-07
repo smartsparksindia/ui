@@ -3,153 +3,131 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SmartSpark ⚡ — Choose Subject</title>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>SmartSpark — Subjects</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --yellow:#F5C518; --orange:#F07733; --purple:#6C4EE4;
-  --teal:#15A585; --pink:#E8437F; --blue:#2176FF;
-  --bg:#0F0E17; --bg2:#1A1929; --card:#211F35;
-  --border:rgba(255,255,255,0.08); --text:#F2EFE9;
-  --muted:rgba(242,239,233,0.5); --r:18px;
+  --purple: #7F77DD; --purple-light: #EEEDFE;
+  --teal: #1D9E75; --teal-light: #E1F5EE;
+  --coral: #D85A30; --coral-light: #FAECE7;
+  --amber: #BA7517; --amber-light: #FAEEDA;
+  --pink: #D4537E; --pink-light: #FBEAF0;
+  --blue: #378ADD; --blue-light: #E6F1FB;
+  --green: #639922; --green-light: #EAF3DE;
+  --bg: #FFF9F0; --card-bg: #FFFFFF;
+  --text: #2C2C2A; --text-muted: #888780;
+  --radius: 20px;
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(108,78,228,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(108,78,228,0.05) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 3rem;border-bottom:1px solid var(--border);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;background:rgba(15,14,23,0.85);}
-.logo{font-family:'Baloo 2',cursive;font-size:1.7rem;font-weight:800;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:0.3rem;}
-.logo em{color:var(--yellow);font-style:normal;}
-.nav-right{display:flex;align-items:center;gap:1rem;}
-.score-pill{background:rgba(245,197,24,0.12);border:1px solid rgba(245,197,24,0.25);color:var(--yellow);padding:0.4rem 1rem;border-radius:50px;font-weight:800;font-size:0.9rem;display:flex;align-items:center;gap:0.4rem;}
-.back-btn{color:var(--muted);text-decoration:none;font-weight:700;font-size:0.9rem;display:flex;align-items:center;gap:0.3rem;transition:color 0.2s;}
-.back-btn:hover{color:var(--text);}
-
-.breadcrumb{display:flex;align-items:center;gap:0.5rem;padding:1.5rem 3rem 0;font-size:0.85rem;font-weight:700;color:var(--muted);position:relative;z-index:1;}
-.breadcrumb a{color:var(--purple);text-decoration:none;}
-.breadcrumb span{color:rgba(255,255,255,0.2);}
-
-.page-header{text-align:center;padding:3rem 2rem 2.5rem;position:relative;z-index:1;}
-.year-badge{display:inline-block;padding:0.4rem 1.4rem;border-radius:50px;font-weight:800;font-size:0.9rem;margin-bottom:1.2rem;letter-spacing:0.06em;}
-.page-header h1{font-family:'Baloo 2',cursive;font-size:clamp(2rem,6vw,3.2rem);font-weight:800;margin-bottom:0.6rem;}
-.page-header p{color:var(--muted);font-size:1rem;font-weight:600;}
-
-.subjects-wrap{max-width:900px;margin:0 auto;padding:0 2rem 5rem;position:relative;z-index:1;}
-.subjects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.2rem;}
-
-.subject-card{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:var(--r);padding:2rem 1.5rem;
-  text-align:center;cursor:pointer;text-decoration:none;
-  color:var(--text);display:block;
-  transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;
-  position:relative;overflow:hidden;
+nav {
+  background: white; padding: 1rem 2.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 3px solid #F0EBE0;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
-.subject-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity 0.3s;}
-.subject-card:hover{transform:translateY(-6px);}
-.subject-card:hover::before{opacity:1;}
+.logo { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--purple); text-decoration: none; }
+.logo span { color: var(--coral); }
+.nav-right { display: flex; align-items: center; gap: 1rem; }
+.score-pill { background: var(--amber-light); color: var(--amber); padding: 0.4rem 1rem; border-radius: 50px; font-weight: 800; font-size: 0.9rem; }
+.back-btn { color: var(--text-muted); text-decoration: none; font-weight: 700; font-size: 0.9rem; }
 
-.s-science{--a:#15A585;}
-.s-science::before{background:radial-gradient(circle at top,rgba(21,165,133,0.15),transparent 70%);}
-.s-science:hover{border-color:rgba(21,165,133,0.4);box-shadow:0 12px 40px rgba(21,165,133,0.15);}
-.s-science .s-num{color:#15A585;}
+.breadcrumb { display: flex; align-items: center; gap: 0.5rem; padding: 1.5rem 2.5rem 0; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); }
+.breadcrumb a { color: var(--purple); text-decoration: none; }
 
-.s-maths{--a:#6C4EE4;}
-.s-maths::before{background:radial-gradient(circle at top,rgba(108,78,228,0.15),transparent 70%);}
-.s-maths:hover{border-color:rgba(108,78,228,0.4);box-shadow:0 12px 40px rgba(108,78,228,0.15);}
-.s-maths .s-num{color:#6C4EE4;}
+.header { text-align: center; padding: 2.5rem 2rem; }
+.badge { display: inline-block; padding: 0.4rem 1.4rem; border-radius: 50px; font-weight: 800; font-size: 0.9rem; margin-bottom: 1rem; }
+.header h1 { font-family: 'Fredoka One', cursive; font-size: 2.2rem; margin-bottom: 0.6rem; }
+.header p { color: var(--text-muted); font-size: 0.95rem; font-weight: 600; }
 
-.s-english{--a:#E8437F;}
-.s-english::before{background:radial-gradient(circle at top,rgba(232,67,127,0.15),transparent 70%);}
-.s-english:hover{border-color:rgba(232,67,127,0.4);box-shadow:0 12px 40px rgba(232,67,127,0.15);}
-.s-english .s-num{color:#E8437F;}
+.subjects-wrap { max-width: 950px; margin: 0 auto; padding: 0 2rem 4rem; }
+.subjects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
 
-.s-social{--a:#F07733;}
-.s-social::before{background:radial-gradient(circle at top,rgba(240,119,51,0.15),transparent 70%);}
-.s-social:hover{border-color:rgba(240,119,51,0.4);box-shadow:0 12px 40px rgba(240,119,51,0.15);}
-.s-social .s-num{color:#F07733;}
+.subject-card {
+  background: white; border-radius: var(--radius);
+  padding: 2rem 1.5rem; text-align: center;
+  cursor: pointer; text-decoration: none; color: var(--text);
+  display: block; border: 3px solid transparent;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative; overflow: hidden;
+}
+.subject-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.1); }
 
-.s-coding{--a:#F5C518;}
-.s-coding::before{background:radial-gradient(circle at top,rgba(245,197,24,0.15),transparent 70%);}
-.s-coding:hover{border-color:rgba(245,197,24,0.4);box-shadow:0 12px 40px rgba(245,197,24,0.15);}
-.s-coding .s-num{color:#F5C518;}
+.s-science { border-color: #9FE1CB; background: linear-gradient(135deg,white 60%,var(--teal-light)); }
+.s-science .s-name { color: var(--teal); }
+.s-maths { border-color: #AFA9EC; background: linear-gradient(135deg,white 60%,var(--purple-light)); }
+.s-maths .s-name { color: var(--purple); }
+.s-english { border-color: #F4C0D1; background: linear-gradient(135deg,white 60%,var(--pink-light)); }
+.s-english .s-name { color: var(--pink); }
+.s-social { border-color: #FAC775; background: linear-gradient(135deg,white 60%,var(--amber-light)); }
+.s-social .s-name { color: var(--amber); }
 
-.s-icon{font-size:3rem;display:block;margin-bottom:1rem;}
-.s-name{font-family:'Baloo 2',cursive;font-size:1.35rem;font-weight:700;margin-bottom:0.4rem;}
-.s-num{font-size:0.8rem;font-weight:700;}
-.s-progress{margin-top:1rem;height:4px;background:rgba(255,255,255,0.08);border-radius:50px;overflow:hidden;}
-.s-progress-fill{height:100%;border-radius:50px;background:var(--a,#fff);transition:width 0.6s ease;}
+.s-icon { font-size: 3rem; display: block; margin-bottom: 1rem; }
+.s-name { font-family: 'Fredoka One', cursive; font-size: 1.35rem; margin-bottom: 0.3rem; }
+.s-count { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); }
+.s-progress { margin-top: 1rem; height: 4px; background: rgba(0,0,0,0.08); border-radius: 50px; overflow: hidden; }
+.s-progress-fill { height: 100%; border-radius: 50px; transition: width 0.6s; }
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
-.subjects-wrap{animation:fadeUp 0.5s ease both;}
-.subject-card{animation:fadeUp 0.5s ease both;}
-.subject-card:nth-child(1){animation-delay:0.05s;}
-.subject-card:nth-child(2){animation-delay:0.1s;}
-.subject-card:nth-child(3){animation-delay:0.15s;}
-.subject-card:nth-child(4){animation-delay:0.2s;}
-.subject-card:nth-child(5){animation-delay:0.25s;}
+footer { background: var(--text); color: white; text-align: center; padding: 2.5rem 2rem; }
+footer p { color: rgba(255,255,255,0.45); font-size: 0.88rem; margin-top: 0.4rem; }
 
-@media(max-width:600px){nav{padding:1rem 1.2rem;}.breadcrumb{padding:1rem 1.2rem 0;}.subjects-grid{grid-template-columns:repeat(2,1fr);}.page-header{padding:2rem 1.2rem 1.5rem;}}
+@media(max-width:600px) { nav { padding: 1rem 1.2rem; } .subjects-grid { grid-template-columns: repeat(2,1fr); } }
 </style>
 </head>
 <body>
+
 <nav>
-  <a href="index.html" class="logo">Smart<em>Spark</em>⚡</a>
+  <a href="index.html" class="logo">Smart<span>Spark</span> ⚡</a>
   <div class="nav-right">
     <div class="score-pill">⭐ <span id="total-score">0</span> pts</div>
-    <a href="index.html" class="back-btn">← Home</a>
+    <a href="index.html" class="back-btn">← Back</a>
   </div>
 </nav>
 
 <div class="breadcrumb">
-  <a href="index.html">Home</a>
-  <span>›</span>
-  <span id="bc-year">Year —</span>
+  <a href="index.html">Home</a> <span>›</span>
+  <span id="bc-year">Class 6</span>
 </div>
 
-<div class="page-header">
-  <div class="year-badge" id="year-badge">Year 6</div>
+<div class="header">
+  <div class="badge" id="badge" style="background:var(--purple-light);color:var(--purple);">Class 6</div>
   <h1>Choose a Subject</h1>
-  <p id="page-sub">Pick a subject to explore chapters and start learning!</p>
+  <p>Pick a subject to explore chapters and start learning!</p>
 </div>
 
 <div class="subjects-wrap">
   <div class="subjects-grid" id="subjects-grid"></div>
 </div>
 
-<script src="curriculum.js"></script>
+<footer>
+  <div style="font-family:'Fredoka One',cursive;font-size:1.8rem;margin-bottom:0.4rem;">Smart<span style="color:#F0997B;">Spark</span> ⚡</div>
+  <p>Free learning for Indian students 🇮🇳</p>
+</footer>
+
+<script src="data-layer.js"></script>
 <script>
 const state = getState();
 const year = state.year || 6;
 
-const yearColors = {
-  6:'#F5C518',7:'#F07733',8:'#E8437F',
-  9:'#2176FF',10:'#6C4EE4',11:'#15A585',12:'#E84040'
-};
-const badge = document.getElementById('year-badge');
-badge.textContent = `Year ${year}`;
-badge.style.background = (yearColors[year]||'#F5C518') + '22';
-badge.style.border = `1px solid ${(yearColors[year]||'#F5C518')}44`;
-badge.style.color = yearColors[year]||'#F5C518';
+document.getElementById('bc-year').textContent = `Class ${year}`;
 
-document.getElementById('bc-year').textContent = `Year ${year}`;
-document.getElementById('total-score').textContent = getTotalScore();
-
-const subjectMeta = {
-  'Science':       { cls:'s-science', icon:'🔬', label:'Explore nature & the universe' },
-  'Maths':         { cls:'s-maths',   icon:'🔢', label:'Numbers, shapes & logic' },
-  'English':       { cls:'s-english', icon:'📚', label:'Language, grammar & reading' },
-  'Social Science':{ cls:'s-social',  icon:'🌍', label:'History, civics & geography' },
-  'Coding':        { cls:'s-coding',  icon:'💻', label:'Programming & technology' },
+// Color map
+const colorMap = {
+  'Science': { icon: '🔬', color: '#1D9E75', cls: 's-science' },
+  'Maths': { icon: '🔢', color: '#7F77DD', cls: 's-maths' },
+  'English': { icon: '📚', color: '#D4537E', cls: 's-english' },
+  'Social Science': { icon: '🌍', color: '#BA7517', cls: 's-social' }
 };
 
-const data = CURRICULUM[year] || CURRICULUM[6];
+const subjects = ['Science', 'Maths', 'English', 'Social Science'];
 const grid = document.getElementById('subjects-grid');
 
-Object.entries(data).forEach(([subject, info]) => {
-  const meta = subjectMeta[subject] || { cls:'s-science', icon:'📖', label:'' };
-  const chapters = Object.keys(info.chapters);
-  const done = chapters.filter(ch => getChapterScore(year,subject,ch) > 0).length;
+subjects.forEach(subject => {
+  const meta = colorMap[subject];
+  const chapters = getChaptersForYearSubject(year, subject);
+  const done = chapters.filter(ch => getChapterScore(year, subject, ch.title) > 0).length;
   const pct = chapters.length ? Math.round(done/chapters.length*100) : 0;
 
   const card = document.createElement('a');
@@ -158,13 +136,41 @@ Object.entries(data).forEach(([subject, info]) => {
   card.innerHTML = `
     <span class="s-icon">${meta.icon}</span>
     <div class="s-name">${subject}</div>
-    <div class="s-num">${chapters.length} chapter${chapters.length!==1?'s':''} · ${meta.label}</div>
-    <div class="s-progress"><div class="s-progress-fill" style="width:${pct}%"></div></div>
-    ${done>0 ? `<div style="font-size:0.75rem;color:var(--a,#aaa);font-weight:700;margin-top:0.5rem">${done}/${chapters.length} done</div>` : ''}
+    <div class="s-count">${chapters.length} chapter${chapters.length!==1?'s':''}</div>
+    <div class="s-progress"><div class="s-progress-fill" style="background:${meta.color};width:${pct}%"></div></div>
+    ${done > 0 ? `<div style="font-size:0.75rem;color:${meta.color};font-weight:700;margin-top:0.5rem;">${done}/${chapters.length} done</div>` : ''}
   `;
-  card.onclick = () => setState({ subject, chapter:null });
+  card.onclick = (e) => { e.preventDefault(); setState({ subject }); window.location.href = 'chapters.html'; };
   grid.appendChild(card);
 });
+
+document.getElementById('total-score').textContent = getTotalScore();
+
+function getChaptersForYearSubject(year, subject) {
+  const chapters = getStore('ss_chapters');
+  return Object.values(chapters).filter(ch => 
+    ch.class === year && ch.subject === subject && ch.status === 'published'
+  );
+}
+
+function getChapterScore(year, subject, title) {
+  const user = getCurrentUser();
+  if (!user) return 0;
+  const progress = getUserProgress(user.user_id);
+  if (!progress) return 0;
+  // Find chapter by title
+  const chapters = getChaptersForYearSubject(year, subject);
+  const ch = chapters.find(c => c.title === title);
+  if (!ch || !progress.chapters_progress[ch.chapter_id]) return 0;
+  return progress.chapters_progress[ch.chapter_id].points_earned || 0;
+}
+
+function getTotalScore() {
+  const user = getCurrentUser();
+  if (!user) return 0;
+  const progress = getUserProgress(user.user_id);
+  return progress?.total_points || 0;
+}
 </script>
 </body>
 </html>
