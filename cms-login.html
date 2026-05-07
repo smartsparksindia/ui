@@ -4,21 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SmartSpark CMS — Login</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
 <style>
 :root {
-  --purple: #7F77DD; --purple-light: #EEEDFE; --purple-dark: #3C3489;
-  --teal: #1D9E75; --teal-light: #E1F5EE;
-  --coral: #D85A30; --coral-light: #FAECE7;
-  --amber: #BA7517; --amber-light: #FAEEDA;
-  --bg: #FFF9F0; --card-bg: #FFFFFF;
-  --text: #2C2C2A; --text-muted: #888780;
+  --purple: #7F77DD;
+  --purple-light: #EEEDFE;
+  --purple-dark: #3C3489;
+  --teal: #1D9E75;
+  --teal-light: #E1F5EE;
+  --coral: #D85A30;
+  --coral-light: #FAECE7;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --bg: #FFF9F0;
+  --text: #2C2C2A;
+  --text-muted: #888780;
   --radius: 20px;
 }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
   font-family: 'Nunito', sans-serif;
-  background: linear-gradient(135deg, var(--purple-light) 0%, var(--teal-light) 100%);
+  background: linear-gradient(135deg, var(--purple-light), var(--teal-light));
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -37,7 +47,7 @@ body {
 
 .logo {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
   font-family: 'Fredoka One', cursive;
   font-size: 2.2rem;
   color: var(--purple);
@@ -45,346 +55,324 @@ body {
 .logo span { color: var(--coral); }
 
 .login-title {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.8rem;
-  margin-bottom: 0.5rem;
   text-align: center;
-  color: var(--text);
+  font-family: 'Fredoka One';
+  margin-bottom: 0.5rem;
 }
+
 .login-sub {
   text-align: center;
   color: var(--text-muted);
-  font-weight: 600;
-  font-size: 0.95rem;
-  margin-bottom: 2.5rem;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-label {
-  display: block;
-  font-weight: 800;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  color: var(--text);
-}
-input[type="text"],
-input[type="email"],
-input[type="password"],
-select {
-  width: 100%;
-  padding: 0.9rem 1.2rem;
-  border: 2px solid #F0EBE0;
-  border-radius: 12px;
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.95rem;
-  transition: border-color 0.2s, background 0.2s;
-  background: var(--bg);
-}
-input:focus,
-select:focus {
-  outline: none;
-  border-color: var(--purple);
-  background: white;
-}
-
-.form-tabs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.8rem;
   margin-bottom: 2rem;
 }
-.tab-btn {
-  padding: 0.7rem;
-  border: 2px solid #F0EBE0;
-  background: transparent;
-  border-radius: 12px;
+
+.form-group { margin-bottom: 1.2rem; }
+
+label {
   font-weight: 800;
-  cursor: pointer;
   font-size: 0.9rem;
-  transition: all 0.2s;
-  color: var(--text-muted);
-}
-.tab-btn.active {
-  background: var(--purple);
-  color: white;
-  border-color: var(--purple);
-}
-.tab-btn:hover:not(.active) {
-  border-color: var(--purple);
-  color: var(--purple);
+  display: block;
+  margin-bottom: 0.4rem;
 }
 
-.role-selector {
-  margin-bottom: 1.5rem;
-}
-.role-options {
-  display: grid;
-  gap: 0.8rem;
-}
-.role-option {
-  padding: 1rem;
-  border: 2px solid #F0EBE0;
+input, select {
+  width: 100%;
+  padding: 0.9rem 1rem;
   border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
+  border: 2px solid #eee;
+  background: #fafafa;
 }
-.role-option input {
-  position: absolute;
-  opacity: 0;
-}
-.role-option input:checked + .role-label {
-  color: var(--purple);
-  font-weight: 800;
-}
-.role-option input:checked ~ * {
+
+input:focus {
   border-color: var(--purple);
-}
-.role-option:has(input:checked) {
-  background: var(--purple-light);
-  border-color: var(--purple);
-}
-.role-label {
-  display: block;
-  font-weight: 700;
-  margin-bottom: 0.2rem;
-  cursor: pointer;
-}
-.role-desc {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-left: 1.8rem;
+  outline: none;
+  background: white;
 }
 
 .btn-submit {
   width: 100%;
   padding: 1rem;
-  background: var(--purple);
-  color: white;
   border: none;
   border-radius: 12px;
-  font-family: 'Nunito', sans-serif;
+  background: var(--purple);
+  color: white;
   font-weight: 800;
-  font-size: 1rem;
   cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
-  box-shadow: 0 4px 0 var(--purple-dark);
-  margin-bottom: 1rem;
 }
-.btn-submit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 0 var(--purple-dark);
-}
-.btn-submit:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 var(--purple-dark);
-}
+
+.btn-submit:hover { opacity: 0.9; }
 
 .error-msg {
-  background: #FAECE7;
+  display: none;
+  background: var(--coral-light);
   color: var(--coral);
-  padding: 1rem;
-  border-radius: 12px;
+  padding: 0.8rem;
+  border-radius: 10px;
   margin-bottom: 1rem;
   font-weight: 700;
-  font-size: 0.9rem;
-  display: none;
 }
+
 .error-msg.show { display: block; }
 
-.demo-info {
-  background: var(--amber-light);
-  border-left: 4px solid var(--amber);
-  padding: 1rem;
-  border-radius: 8px;
-  margin-top: 1.5rem;
-  font-size: 0.85rem;
+.form-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 1.5rem;
+  gap: 0.5rem;
 }
-.demo-info strong { color: var(--amber); font-weight: 800; }
 
-@media (max-width: 480px) {
-  .login-container { padding: 2rem 1.5rem; }
-  .form-tabs { grid-template-columns: 1fr; }
+.tab-btn {
+  padding: 0.7rem;
+  border-radius: 10px;
+  border: 2px solid #eee;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.tab-btn.active {
+  background: var(--purple);
+  color: white;
+  border-color: var(--purple);
+}
+
+.demo-info {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  background: var(--amber-light);
+  padding: 1rem;
+  border-radius: 10px;
 }
 </style>
 </head>
+
 <body>
 
 <div class="login-container">
-  <div class="logo">Smart<span>Spark</span> ⚡</div>
-  <h1 class="login-title">CMS Login</h1>
-  <p class="login-sub">Content Management System for SmartSpark India</p>
-  
-  <div class="error-msg" id="error-msg"></div>
 
-  <!-- TABS -->
+  <div class="logo">Smart<span>Spark</span> ⚡</div>
+
+  <h2 class="login-title">CMS Login</h2>
+  <p class="login-sub">Admin & Contributors Panel</p>
+
+  <div class="error-msg" id="error"></div>
+
   <div class="form-tabs">
     <button class="tab-btn active" onclick="switchTab('login')">Login</button>
     <button class="tab-btn" onclick="switchTab('register')">Register</button>
   </div>
 
-  <!-- LOGIN FORM -->
-  <form id="login-form" style="display:block;">
+  <!-- LOGIN -->
+  <form id="login-form">
     <div class="form-group">
-      <label for="login-email">Email</label>
-      <input type="email" id="login-email" placeholder="name@example.com" required>
+      <label>Email</label>
+      <input type="email" id="login-email" required>
     </div>
+
     <div class="form-group">
-      <label for="login-password">Password</label>
-      <input type="password" id="login-password" placeholder="••••••••" required>
+      <label>Password</label>
+      <input type="password" id="login-password" required>
     </div>
-    <button type="submit" class="btn-submit">Login</button>
+
+    <button class="btn-submit" type="submit">Login</button>
 
     <div class="demo-info">
       <strong>Demo Accounts:</strong><br>
-      👨‍🏫 Admin: admin@smartspark.in / admin123<br>
-      ✍️ Contributor: contributor@smartspark.in / contrib123<br>
-      👨‍🎓 Student: student@smartspark.in / student123
+      Admin: admin@smartspark.in / admin123<br>
+      Contributor: contributor@smartspark.in / contrib123<br>
+      Student: student@smartspark.in / student123
     </div>
   </form>
 
-  <!-- REGISTER FORM -->
+  <!-- REGISTER -->
   <form id="register-form" style="display:none;">
     <div class="form-group">
-      <label for="reg-username">Full Name</label>
-      <input type="text" id="reg-username" placeholder="Your full name" required>
-    </div>
-    <div class="form-group">
-      <label for="reg-email">Email</label>
-      <input type="email" id="reg-email" placeholder="name@example.com" required>
-    </div>
-    <div class="form-group">
-      <label for="reg-password">Password</label>
-      <input type="password" id="reg-password" placeholder="••••••••" required>
+      <label>Name</label>
+      <input type="text" id="reg-name">
     </div>
 
-    <div class="role-selector">
-      <label>Account Type</label>
-      <div class="role-options">
-        <div class="role-option">
-          <input type="radio" name="role" id="role-student" value="student" checked>
-          <label class="role-label" for="role-student">Student</label>
-          <span class="role-desc">Learn chapters, practice quizzes, track progress</span>
-        </div>
-        <div class="role-option">
-          <input type="radio" name="role" id="role-contributor" value="contributor">
-          <label class="role-label" for="role-contributor">Contributor</label>
-          <span class="role-desc">Create and edit chapters (subject to admin approval)</span>
-        </div>
-        <div class="role-option">
-          <input type="radio" name="role" id="role-admin" value="admin">
-          <label class="role-label" for="role-admin">Admin</label>
-          <span class="role-desc">Manage all content, approve submissions, view analytics</span>
-        </div>
-      </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="reg-email">
     </div>
 
-    <div class="form-group" id="class-selector" style="display:none;">
-      <label for="reg-class">Class</label>
-      <select id="reg-class" required>
-        <option value="">Select your class</option>
-        <option value="6">Class 6</option>
-        <option value="7">Class 7</option>
-        <option value="8">Class 8</option>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="reg-password">
+    </div>
+
+    <div class="form-group">
+      <label>Role</label>
+      <select id="reg-role">
+        <option value="student">Student</option>
+        <option value="contributor">Contributor</option>
+        <option value="admin">Admin</option>
       </select>
     </div>
 
-    <button type="submit" class="btn-submit">Create Account</button>
+    <button class="btn-submit" type="submit">Create Account</button>
   </form>
+
 </div>
 
-<script src="data-layer.js"></script>
 <script>
-// Check if already logged in
-if (getCurrentUser()) {
-  window.location.href = 'cms-dashboard.html';
+// =======================
+// STORAGE CORE (FIXED)
+// =======================
+function getUsers() {
+  return JSON.parse(localStorage.getItem('ss_users') || '{}');
 }
 
-// Initialize demo users
-function initDemoUsers() {
-  const users = getStore('ss_users');
-  if (Object.keys(users).length > 0) return; // Already initialized
-  
-  registerUser('Admin', 'admin@smartspark.in', 'admin123', 'admin');
-  registerUser('Contributor', 'contributor@smartspark.in', 'contrib123', 'contributor');
-  registerUser('Student', 'student@smartspark.in', 'student123', 'student', 6);
+function saveUsers(users) {
+  localStorage.setItem('ss_users', JSON.stringify(users));
 }
 
-// Switch between login and register
+function setCurrentUser(user) {
+  sessionStorage.setItem('ss_current_user', JSON.stringify(user));
+}
+
+function getCurrentUser() {
+  return JSON.parse(sessionStorage.getItem('ss_current_user'));
+}
+
+// =======================
+// INIT DEMO USERS (SAFE)
+// =======================
+function initUsers() {
+  const users = getUsers();
+
+  if (Object.keys(users).length > 0) return;
+
+  users["admin@smartspark.in"] = {
+    name: "Admin",
+    email: "admin@smartspark.in",
+    password: "admin123",
+    role: "admin"
+  };
+
+  users["contributor@smartspark.in"] = {
+    name: "Contributor",
+    email: "contributor@smartspark.in",
+    password: "contrib123",
+    role: "contributor"
+  };
+
+  users["student@smartspark.in"] = {
+    name: "Student",
+    email: "student@smartspark.in",
+    password: "student123",
+    role: "student"
+  };
+
+  saveUsers(users);
+}
+
+// =======================
+// LOGIN
+// =======================
+function login(email, password) {
+  const users = getUsers();
+  const user = users[email.toLowerCase().trim()];
+
+  if (!user) return { success:false, message:"User not found" };
+
+  if (user.password !== password)
+    return { success:false, message:"Incorrect password" };
+
+  setCurrentUser(user);
+
+  return { success:true, user };
+}
+
+// =======================
+// REGISTER
+// =======================
+function register(name, email, password, role) {
+  const users = getUsers();
+
+  const key = email.toLowerCase().trim();
+
+  if (users[key]) {
+    return { success:false, message:"User already exists" };
+  }
+
+  users[key] = {
+    name,
+    email: key,
+    password,
+    role
+  };
+
+  saveUsers(users);
+
+  return { success:true };
+}
+
+// =======================
+// UI LOGIC
+// =======================
 function switchTab(tab) {
-  const loginForm = document.getElementById('login-form');
-  const regForm = document.getElementById('register-form');
-  const tabs = document.querySelectorAll('.tab-btn');
-  
-  tabs.forEach(t => t.classList.remove('active'));
-  
-  if (tab === 'login') {
-    loginForm.style.display = 'block';
-    regForm.style.display = 'none';
-    tabs[0].classList.add('active');
-  } else {
-    loginForm.style.display = 'none';
-    regForm.style.display = 'block';
-    tabs[1].classList.add('active');
-  }
-}
+  document.getElementById('login-form').style.display =
+    tab === 'login' ? 'block' : 'none';
 
-// Show class selector for students only
-window.addEventListener('DOMContentLoaded', () => {
-  // Force initialize demo users
-  const users = getStore('ss_users');
-  if (Object.keys(users).length === 0) {
-    console.log('Creating demo accounts...');
-    registerUser('Admin', 'admin@smartspark.in', 'admin123', 'admin');
-    registerUser('Contributor', 'contributor@smartspark.in', 'contrib123', 'contributor');
-    registerUser('Student', 'student@smartspark.in', 'student123', 'student', 6);
-    console.log('Demo accounts created!');
-  }
-  
-  document.querySelectorAll('input[name="role"]').forEach(radio => {
-    radio.addEventListener('change', (e) => {
-      const classSelector = document.getElementById('class-selector');
-      classSelector.style.display = e.target.value === 'student' ? 'block' : 'none';
-    });
+  document.getElementById('register-form').style.display =
+    tab === 'register' ? 'block' : 'none';
+
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    b.classList.toggle('active', (tab==='login'?i===0:i===1));
   });
-  
-  // Login form
-  document.getElementById('login-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-    
-    const result = loginUser(email, password);
-    if (result.success) {
-      window.location.href = result.user.role === 'student' ? 'index.html' : 'cms-dashboard.html';
-    } else {
-      showError(result.message);
-    }
-  });
-  
-  // Register form
-  document.getElementById('register-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const username = document.getElementById('reg-username').value;
-    const email = document.getElementById('reg-email').value;
-    const password = document.getElementById('reg-password').value;
-    const role = document.querySelector('input[name="role"]:checked').value;
-    const class_no = role === 'student' ? parseInt(document.getElementById('reg-class').value) : null;
-    
-    const user = registerUser(username, email, password, role, class_no);
-    sessionStorage.setItem('ss_current_user', JSON.stringify(user));
-    window.location.href = role === 'student' ? 'index.html' : 'cms-dashboard.html';
-  });
-});
+}
 
 function showError(msg) {
-  const errorEl = document.getElementById('error-msg');
-  errorEl.textContent = msg;
-  errorEl.classList.add('show');
-  setTimeout(() => errorEl.classList.remove('show'), 5000);
+  const el = document.getElementById('error');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 4000);
 }
+
+// =======================
+// EVENTS
+// =======================
+document.addEventListener('DOMContentLoaded', () => {
+
+  initUsers();
+
+  // LOGIN
+  document.getElementById('login-form').onsubmit = (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('login-email').value;
+    const pass = document.getElementById('login-password').value;
+
+    const res = login(email, pass);
+
+    if (!res.success) return showError(res.message);
+
+    window.location.href =
+      res.user.role === 'student'
+        ? 'index.html'
+        : 'cms-dashboard.html';
+  };
+
+  // REGISTER
+  document.getElementById('register-form').onsubmit = (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('reg-name').value;
+    const email = document.getElementById('reg-email').value;
+    const pass = document.getElementById('reg-password').value;
+    const role = document.getElementById('reg-role').value;
+
+    const res = register(name, email, pass, role);
+
+    if (!res.success) return showError(res.message);
+
+    showError("Account created! Please login.");
+    switchTab('login');
+  };
+
+});
 </script>
+
 </body>
 </html>
