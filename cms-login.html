@@ -9,139 +9,132 @@
 
 <style>
 :root {
-  --purple: #7F77DD;
-  --purple-light: #EEEDFE;
-  --purple-dark: #3C3489;
-  --teal: #1D9E75;
-  --teal-light: #E1F5EE;
-  --coral: #D85A30;
-  --coral-light: #FAECE7;
-  --amber: #BA7517;
-  --amber-light: #FAEEDA;
-  --bg: #FFF9F0;
-  --text: #2C2C2A;
-  --text-muted: #888780;
-  --radius: 20px;
+  --purple:#7F77DD;
+  --purple-dark:#3C3489;
+  --coral:#D85A30;
+  --amber-light:#FAEEDA;
+  --text:#2C2C2A;
+  --text-muted:#888780;
+  --radius:20px;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing:border-box; margin:0; padding:0; }
 
 body {
-  font-family: 'Nunito', sans-serif;
-  background: linear-gradient(135deg, var(--purple-light), var(--teal-light));
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
+  font-family:'Nunito',sans-serif;
+  background:linear-gradient(135deg,#EEEDFE,#E1F5EE);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:2rem;
 }
 
 .login-container {
-  background: white;
-  border-radius: var(--radius);
-  padding: 3rem 2.5rem;
-  max-width: 420px;
-  width: 100%;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+  background:white;
+  width:100%;
+  max-width:420px;
+  padding:3rem 2.5rem;
+  border-radius:var(--radius);
+  box-shadow:0 12px 40px rgba(0,0,0,0.12);
 }
 
 .logo {
-  text-align: center;
-  margin-bottom: 2rem;
-  font-family: 'Fredoka One', cursive;
-  font-size: 2.2rem;
-  color: var(--purple);
+  text-align:center;
+  font-family:'Fredoka One';
+  font-size:2rem;
+  color:var(--purple);
+  margin-bottom:1.5rem;
 }
-.logo span { color: var(--coral); }
+.logo span { color:var(--coral); }
 
-.login-title {
-  text-align: center;
-  font-family: 'Fredoka One';
-  margin-bottom: 0.5rem;
-}
-
-.login-sub {
-  text-align: center;
-  color: var(--text-muted);
-  margin-bottom: 2rem;
+h2 {
+  text-align:center;
+  margin-bottom:0.5rem;
 }
 
-.form-group { margin-bottom: 1.2rem; }
+p {
+  text-align:center;
+  color:var(--text-muted);
+  margin-bottom:1.5rem;
+}
+
+.form-group { margin-bottom:1rem; }
 
 label {
-  font-weight: 800;
-  font-size: 0.9rem;
-  display: block;
-  margin-bottom: 0.4rem;
+  font-weight:800;
+  font-size:0.85rem;
+  display:block;
+  margin-bottom:0.3rem;
 }
 
 input, select {
-  width: 100%;
-  padding: 0.9rem 1rem;
-  border-radius: 12px;
-  border: 2px solid #eee;
-  background: #fafafa;
+  width:100%;
+  padding:0.9rem;
+  border-radius:12px;
+  border:2px solid #eee;
+  background:#fafafa;
 }
 
 input:focus {
-  border-color: var(--purple);
-  outline: none;
-  background: white;
+  border-color:var(--purple);
+  background:white;
+  outline:none;
 }
 
-.btn-submit {
-  width: 100%;
-  padding: 1rem;
-  border: none;
-  border-radius: 12px;
-  background: var(--purple);
-  color: white;
-  font-weight: 800;
-  cursor: pointer;
+button {
+  width:100%;
+  padding:1rem;
+  border:none;
+  border-radius:12px;
+  background:var(--purple);
+  color:white;
+  font-weight:800;
+  cursor:pointer;
 }
 
-.btn-submit:hover { opacity: 0.9; }
+button:hover { opacity:0.9; }
 
-.error-msg {
-  display: none;
-  background: var(--coral-light);
-  color: var(--coral);
-  padding: 0.8rem;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-  font-weight: 700;
+.tabs {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0.5rem;
+  margin-bottom:1rem;
 }
 
-.error-msg.show { display: block; }
-
-.form-tabs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: 1.5rem;
-  gap: 0.5rem;
+.tab {
+  padding:0.7rem;
+  border:2px solid #eee;
+  background:transparent;
+  border-radius:10px;
+  font-weight:800;
+  cursor:pointer;
 }
 
-.tab-btn {
-  padding: 0.7rem;
-  border-radius: 10px;
-  border: 2px solid #eee;
-  background: transparent;
-  cursor: pointer;
-  font-weight: 800;
+.tab.active {
+  background:var(--purple);
+  color:white;
+  border-color:var(--purple);
 }
 
-.tab-btn.active {
-  background: var(--purple);
-  color: white;
-  border-color: var(--purple);
+#error {
+  display:none;
+  background:#FAECE7;
+  color:var(--coral);
+  padding:0.8rem;
+  border-radius:10px;
+  margin-bottom:1rem;
+  font-weight:700;
 }
 
-.demo-info {
-  margin-top: 1rem;
-  font-size: 0.85rem;
-  background: var(--amber-light);
-  padding: 1rem;
-  border-radius: 10px;
+#error.show { display:block; }
+
+.demo {
+  margin-top:1rem;
+  background:var(--amber-light);
+  padding:1rem;
+  border-radius:10px;
+  font-size:0.85rem;
 }
 </style>
 </head>
@@ -152,14 +145,14 @@ input:focus {
 
   <div class="logo">Smart<span>Spark</span> ⚡</div>
 
-  <h2 class="login-title">CMS Login</h2>
-  <p class="login-sub">Admin & Contributors Panel</p>
+  <h2>CMS Login</h2>
+  <p>Admin & Contributor Access</p>
 
-  <div class="error-msg" id="error"></div>
+  <div id="error"></div>
 
-  <div class="form-tabs">
-    <button class="tab-btn active" onclick="switchTab('login')">Login</button>
-    <button class="tab-btn" onclick="switchTab('register')">Register</button>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('login')">Login</button>
+    <button class="tab" onclick="switchTab('register')">Register</button>
   </div>
 
   <!-- LOGIN -->
@@ -174,13 +167,13 @@ input:focus {
       <input type="password" id="login-password" required>
     </div>
 
-    <button class="btn-submit" type="submit">Login</button>
+    <button type="submit">Login</button>
 
-    <div class="demo-info">
+    <div class="demo">
       <strong>Demo Accounts:</strong><br>
-      Admin: admin@smartspark.in / admin123<br>
-      Contributor: contributor@smartspark.in / contrib123<br>
-      Student: student@smartspark.in / student123
+      admin@smartspark.in / admin123<br>
+      contributor@smartspark.in / contrib123<br>
+      student@smartspark.in / student123
     </div>
   </form>
 
@@ -210,15 +203,13 @@ input:focus {
       </select>
     </div>
 
-    <button class="btn-submit" type="submit">Create Account</button>
+    <button type="submit">Create Account</button>
   </form>
 
 </div>
 
 <script>
-// =======================
-// STORAGE CORE (FIXED)
-// =======================
+// ===================== STORAGE =====================
 function getUsers() {
   return JSON.parse(localStorage.getItem('ss_users') || '{}');
 }
@@ -227,135 +218,108 @@ function saveUsers(users) {
   localStorage.setItem('ss_users', JSON.stringify(users));
 }
 
-function setCurrentUser(user) {
+function setUser(user) {
   sessionStorage.setItem('ss_current_user', JSON.stringify(user));
 }
 
-function getCurrentUser() {
-  return JSON.parse(sessionStorage.getItem('ss_current_user'));
+function normalize(email) {
+  return email.toLowerCase().trim();
 }
 
-// =======================
-// INIT DEMO USERS (SAFE)
-// =======================
-function initUsers() {
+// ===================== FORCE USERS =====================
+function seedUsers() {
   const users = getUsers();
 
-  if (Object.keys(users).length > 0) return;
-
-  users["admin@smartspark.in"] = {
-    name: "Admin",
-    email: "admin@smartspark.in",
-    password: "admin123",
-    role: "admin"
+  users["admin@smartspark.in"] = users["admin@smartspark.in"] || {
+    name:"Admin",
+    email:"admin@smartspark.in",
+    password:"admin123",
+    role:"admin"
   };
 
-  users["contributor@smartspark.in"] = {
-    name: "Contributor",
-    email: "contributor@smartspark.in",
-    password: "contrib123",
-    role: "contributor"
+  users["contributor@smartspark.in"] = users["contributor@smartspark.in"] || {
+    name:"Contributor",
+    email:"contributor@smartspark.in",
+    password:"contrib123",
+    role:"contributor"
   };
 
-  users["student@smartspark.in"] = {
-    name: "Student",
-    email: "student@smartspark.in",
-    password: "student123",
-    role: "student"
+  users["student@smartspark.in"] = users["student@smartspark.in"] || {
+    name:"Student",
+    email:"student@smartspark.in",
+    password:"student123",
+    role:"student"
   };
 
   saveUsers(users);
 }
 
-// =======================
-// LOGIN
-// =======================
-function login(email, password) {
+// ===================== LOGIN =====================
+function loginUser(email, password) {
   const users = getUsers();
-  const user = users[email.toLowerCase().trim()];
+  const user = users[normalize(email)];
 
   if (!user) return { success:false, message:"User not found" };
+  if (user.password !== password) return { success:false, message:"Wrong password" };
 
-  if (user.password !== password)
-    return { success:false, message:"Incorrect password" };
-
-  setCurrentUser(user);
-
+  setUser(user);
   return { success:true, user };
 }
 
-// =======================
-// REGISTER
-// =======================
-function register(name, email, password, role) {
+// ===================== REGISTER =====================
+function registerUser(name,email,password,role) {
   const users = getUsers();
+  const key = normalize(email);
 
-  const key = email.toLowerCase().trim();
+  if (users[key]) return users[key];
 
-  if (users[key]) {
-    return { success:false, message:"User already exists" };
-  }
-
-  users[key] = {
-    name,
-    email: key,
-    password,
-    role
-  };
-
+  const user = { name,email:key,password,role };
+  users[key] = user;
   saveUsers(users);
-
-  return { success:true };
+  return user;
 }
 
-// =======================
-// UI LOGIC
-// =======================
+// ===================== UI =====================
+function showError(msg) {
+  const el = document.getElementById('error');
+  el.innerText = msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),3000);
+}
+
 function switchTab(tab) {
-  document.getElementById('login-form').style.display =
-    tab === 'login' ? 'block' : 'none';
+  document.getElementById('login-form').style.display = tab==='login'?'block':'none';
+  document.getElementById('register-form').style.display = tab==='register'?'block':'none';
 
-  document.getElementById('register-form').style.display =
-    tab === 'register' ? 'block' : 'none';
-
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
-    b.classList.toggle('active', (tab==='login'?i===0:i===1));
+  document.querySelectorAll('.tab').forEach((b,i)=>{
+    b.classList.toggle('active', tab==='login'?i===0:i===1);
   });
 }
 
-function showError(msg) {
-  const el = document.getElementById('error');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'), 4000);
-}
+// ===================== INIT =====================
+window.addEventListener('DOMContentLoaded',()=>{
 
-// =======================
-// EVENTS
-// =======================
-document.addEventListener('DOMContentLoaded', () => {
-
-  initUsers();
+  seedUsers();
 
   // LOGIN
-  document.getElementById('login-form').onsubmit = (e) => {
+  document.getElementById('login-form').addEventListener('submit',(e)=>{
     e.preventDefault();
 
     const email = document.getElementById('login-email').value;
     const pass = document.getElementById('login-password').value;
 
-    const res = login(email, pass);
+    const res = loginUser(email,pass);
 
-    if (!res.success) return showError(res.message);
+    if(!res.success) return showError(res.message);
 
     window.location.href =
       res.user.role === 'student'
         ? 'index.html'
         : 'cms-dashboard.html';
-  };
+  });
 
   // REGISTER
-  document.getElementById('register-form').onsubmit = (e) => {
+  document.getElementById('register-form').addEventListener('submit',(e)=>{
     e.preventDefault();
 
     const name = document.getElementById('reg-name').value;
@@ -363,13 +327,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const pass = document.getElementById('reg-password').value;
     const role = document.getElementById('reg-role').value;
 
-    const res = register(name, email, pass, role);
+    const user = registerUser(name,email,pass,role);
 
-    if (!res.success) return showError(res.message);
+    setUser(user);
 
-    showError("Account created! Please login.");
-    switchTab('login');
-  };
+    window.location.href =
+      role==='student'
+        ? 'index.html'
+        : 'cms-dashboard.html';
+  });
 
 });
 </script>
