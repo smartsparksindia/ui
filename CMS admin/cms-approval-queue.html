@@ -62,6 +62,36 @@ footer { background: var(--text); color: white; text-align: center; padding: 2re
 
 <script src="data-layer.js"></script>
 <script>
+// Helper functions for storage operations
+function getFromStore(key, id) {
+  try {
+    const store = JSON.parse(localStorage.getItem(key)) || {};
+    return store[id];
+  } catch {
+    return null;
+  }
+}
+
+function addToStore(key, id, item) {
+  try {
+    const store = JSON.parse(localStorage.getItem(key)) || {};
+    store[id] = item;
+    localStorage.setItem(key, JSON.stringify(store));
+    return item;
+  } catch (e) {
+    console.error('Storage error:', e);
+    return null;
+  }
+}
+
+function getStore(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key)) || {};
+  } catch {
+    return {};
+  }
+}
+
 const user = getCurrentUser();
 if (!user || user.role !== 'admin') {
   window.location.href = 'cms-login.html';
@@ -104,18 +134,61 @@ if (pending.length === 0) {
 }
 
 function approveChapter(chapterId) {
-  if (confirm('Publish this chapter? Students will be able to access it.')) {
-    publishChapter(chapterId, user.user_id);
-    alert('✅ Chapter published!');
+  if (confirm('✅ Publish this chapter? Students will be able to see it immediately.')) {
+    const chapter = getFromStore('ss_chapters', chapterId);
+    if (!chapter) { alert('❌ Chapter not found'); return; }
+    
+    // Create immutable published version
+    const new_version = (chapter.current_version || 0) + 1;
+    const published_snapshot = {
+      version: new_version,
+      status: 'published',
+      published_at: new Date().toISOString(),
+      created_by: chapter.created_by,
+      approved_by: user.user_id,
+      flashcard_ids: [...(chapter.flashcard_ids || [])],
+      question_ids: [...(chapter.question_ids || [])]
+    };
+    
+    if (!chapter.versions) chapter.versions = [];
+    chapter.versions.push(published_snapshot);
+    chapter.current_version = new_version;
+    chapter.status = 'published';
+    chapter.approved_at = new Date().toISOString();
+    chapter.approved_by = user.user_id;
+    
+    addToStore('ss_chapters', chapterId, chapter);
+    
+    recordAnalyticsEvent(user.user_id, 'chapter_approved', {
+      chapter_id: chapterId,
+      title: chapter.title,
+      version: new_version
+    });
+    
+    alert(`✅ Chapter "${chapter.title}" published!\n\nVersion: ${new_version}\n\nStudents can now see this chapter in the learning app!`);
     location.reload();
   }
 }
 
 function rejectChapter(chapterId) {
-  const feedback = prompt('Enter rejection feedback for the contributor:');
-  if (feedback) {
-    rejectChapter(chapterId, user.user_id, feedback);
-    alert('❌ Chapter rejected. Feedback sent to contributor.');
+  const feedback = prompt('📝 Enter rejection feedback for the contributor:\n\n(They will see this and can revise)');
+  if (feedback && feedback.trim()) {
+    const chapter = getFromStore('ss_chapters', chapterId);
+    if (!chapter) { alert('❌ Chapter not found'); return; }
+    
+    chapter.status = 'draft';
+    chapter.rejection_feedback = feedback;
+    chapter.rejection_date = new Date().toISOString();
+    chapter.rejected_by = user.user_id;
+    
+    addToStore('ss_chapters', chapterId, chapter);
+    
+    recordAnalyticsEvent(user.user_id, 'chapter_rejected', {
+      chapter_id: chapterId,
+      feedback: feedback
+    });
+    
+    alert(`❌ Chapter rejected!\n\nFeedback sent to contributor: "${feedback}"\n\nThey can revise and resubmit.`);
     location.reload();
   }
 }

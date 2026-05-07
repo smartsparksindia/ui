@@ -66,6 +66,36 @@ footer { background: var(--text); color: white; text-align: center; padding: 2re
 
 <script src="data-layer.js"></script>
 <script>
+// Helper functions for storage operations
+function getFromStore(key, id) {
+  try {
+    const store = JSON.parse(localStorage.getItem(key)) || {};
+    return store[id];
+  } catch {
+    return null;
+  }
+}
+
+function addToStore(key, id, item) {
+  try {
+    const store = JSON.parse(localStorage.getItem(key)) || {};
+    store[id] = item;
+    localStorage.setItem(key, JSON.stringify(store));
+    return item;
+  } catch (e) {
+    console.error('Storage error:', e);
+    return null;
+  }
+}
+
+function getStore(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key)) || {};
+  } catch {
+    return {};
+  }
+}
+
 const user = getCurrentUser();
 if (!user || !['admin', 'contributor'].includes(user.role)) {
   window.location.href = 'cms-login.html';
@@ -101,11 +131,22 @@ function editChapter(id) {
   alert('Edit feature coming soon!');
 }
 
-function submitChapter(id) {
-  if (confirm('Submit this chapter for review?')) {
-    submitChapterForReview(id, user.user_id);
-    alert('✅ Chapter submitted for review!');
-    location.reload();
+function submitChapter(chapterId) {
+  if (confirm('Submit this chapter for admin review?\n\nOnce submitted, an admin will review and approve it for publication.')) {
+    const chapter = getFromStore('ss_chapters', chapterId);
+    if (chapter) {
+      chapter.status = 'submitted';
+      chapter.submitted_at = new Date().toISOString();
+      addToStore('ss_chapters', chapterId, chapter);
+      
+      recordAnalyticsEvent(user.user_id, 'chapter_submitted', {
+        chapter_id: chapterId,
+        title: chapter.title
+      });
+      
+      alert('✅ Chapter submitted for review!\n\nThe admin will review your chapter and either approve it or provide feedback.');
+      location.reload();
+    }
   }
 }
 </script>
