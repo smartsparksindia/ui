@@ -1,0 +1,36 @@
+{
+  "name": "smartspark-ui",
+  "version": "1.0.0",
+  "description": "SmartSpark - Educational Platform UI",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -p 5500",
+    "test": "cypress run",
+    "test:open": "cypress open",
+    "test:headless": "cypress run --headless",
+    "test:chrome": "cypress run --browser chrome",
+    "test:firefox": "cypress run --browser firefox",
+    "test:tc7-1": "cypress run cypress/e2e/workflow-tc7-1.cy.js",
+    "test:watch": "cypress open --e2e"
+  },
+  "keywords": [
+    "education",
+    "quiz",
+    "learning",
+    "smartspark"
+  ],
+  "author": "SmartSpark Team",
+  "license": "MIT",
+  "devDependencies": {
+    "cypress": "^13.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smartsparks/ui.git"
+  },
+  "devDependencies": {
+    "cypress": "^13.6.0",
+    "http-server": "^14.1.1"
+  }
+}
+
