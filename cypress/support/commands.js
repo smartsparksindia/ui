@@ -16,7 +16,7 @@ Cypress.Commands.add('authenticateUser', (userId = 'user_test_001', userName = '
       created_at: new Date().toISOString()
     };
     
-    // Store user in localStorage (using data-layer.js functions)
+    // Store user in localStorage
     const users = JSON.parse(localStorage.getItem('ss_users') || '{}');
     users[userId] = user;
     localStorage.setItem('ss_users', JSON.stringify(users));
@@ -89,7 +89,7 @@ Cypress.Commands.add('setupTestData', () => {
         question_text: 'What is 25 + 35?',
         options: ['50', '55', '60', '65'],
         correct_option_index: 1,
-        explanation: 'Adding 25 + 35 gives us 60. Wait, let me recalculate: 25 + 35 = 60. No, 25 + 30 = 55. So 25 + 35 = 60. Actually 25 + 35 = 60. Hmm, 20 + 30 = 50, so 25 + 35 = 60. Let me verify: 25 + 35 = 60. Actually no: 25 + 35 equals 60. Wait: 2*10 + 2*10 = 40, + 5 + 5 = 10, total 50? No. 25 + 35: the 20s make 40, the 5s make 10, so 50 total. Actually 25+35 = 60. Let me be more careful. 20 + 30 = 50. 5 + 5 = 10. 50 + 10 = 60.'
+        explanation: 'Adding 25 + 35 gives us 60'
       },
       'q_ch_6_math_001_2': {
         question_id: 'q_ch_6_math_001_2',
@@ -97,7 +97,7 @@ Cypress.Commands.add('setupTestData', () => {
         question_text: 'What is 100 ÷ 4?',
         options: ['20', '25', '30', '40'],
         correct_option_index: 1,
-        explanation: 'Dividing 100 by 4 equals 25. We can verify: 25 × 4 = 100.'
+        explanation: 'Dividing 100 by 4 equals 25'
       },
       'q_ch_6_math_001_3': {
         question_id: 'q_ch_6_math_001_3',
@@ -105,7 +105,7 @@ Cypress.Commands.add('setupTestData', () => {
         question_text: 'What is 12 × 5?',
         options: ['50', '55', '60', '65'],
         correct_option_index: 2,
-        explanation: 'Multiplying 12 by 5 gives us 60.'
+        explanation: 'Multiplying 12 by 5 gives us 60'
       },
       'q_ch_6_math_001_4': {
         question_id: 'q_ch_6_math_001_4',
@@ -113,7 +113,7 @@ Cypress.Commands.add('setupTestData', () => {
         question_text: 'Which number is even?',
         options: ['13', '17', '22', '29'],
         correct_option_index: 2,
-        explanation: 'Even numbers are divisible by 2. 22 is even because 22 ÷ 2 = 11.'
+        explanation: '22 is even because 22 ÷ 2 = 11'
       },
       'q_ch_6_math_001_5': {
         question_id: 'q_ch_6_math_001_5',

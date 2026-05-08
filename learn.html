@@ -208,7 +208,10 @@ function showPhase(phase) {
 // ─────────────────────────────────────────────────────────────────
 
 function startRevision() {
-  recordFlashcardView(user.user_id, chapterId);
+  const currentUser = getCurrentUser();
+  if (currentUser) {
+    recordFlashcardView(currentUser.user_id, chapterId);
+  }
   fcIndex = 0;
   renderFlashcard();
   showPhase('flashcards');
@@ -303,12 +306,14 @@ function startQuiz() {
           btn.classList.add('correct');
           sessionScore += 20;  // ⭐ 20 POINTS PER CORRECT!
           correctAnswers++;
-          recordQuizAttempt(user.user_id, chapterId, q.question_id, true);
+          const currentUser = getCurrentUser();
+          if (currentUser) recordQuizAttempt(currentUser.user_id, chapterId, q.question_id, true);
         } else {
           btn.classList.add('wrong');
           const correct = document.querySelectorAll('.option')[q.correct_option_index];
           correct.classList.add('correct');
-          recordQuizAttempt(user.user_id, chapterId, q.question_id, false);
+          const currentUser = getCurrentUser();
+          if (currentUser) recordQuizAttempt(currentUser.user_id, chapterId, q.question_id, false);
         }
         
         document.querySelectorAll('.option').forEach(b => b.style.pointerEvents = 'none');
@@ -345,7 +350,8 @@ function renderResults() {
   
   // Mark chapter complete if 100%
   if (isAllCorrect) {
-    markChapterComplete(user.user_id, chapterId);
+    const currentUser = getCurrentUser();
+    if (currentUser) markChapterComplete(currentUser.user_id, chapterId);
   }
   
   // Update total score
@@ -417,20 +423,26 @@ function getChapterQuestions(cId) {
 }
 
 function getTotalPoints() {
-  const progress = getUserProgress(user.user_id);
+  const currentUser = getCurrentUser();
+  if (!currentUser) return 0;
+  const progress = getUserProgress(currentUser.user_id);
   return progress?.total_points || 0;
 }
 
 function getStreak() {
-  const progress = getUserProgress(user.user_id);
+  const currentUser = getCurrentUser();
+  if (!currentUser) return 0;
+  const progress = getUserProgress(currentUser.user_id);
   return progress?.current_streak || 0;
 }
 
 function updateTotalScore(points) {
-  const progress = getUserProgress(user.user_id);
+  const currentUser = getCurrentUser();
+  if (!currentUser) return;
+  const progress = getUserProgress(currentUser.user_id);
   if (progress) {
     progress.total_points = (progress.total_points || 0) + points;
-    addToStore('ss_user_progress', user.user_id, progress);
+    addToStore('ss_user_progress', currentUser.user_id, progress);
   }
 }
 

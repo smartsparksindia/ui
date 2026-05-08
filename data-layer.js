@@ -504,14 +504,10 @@ function registerUser(username, email, password, role = 'student', class_no = nu
 }
 
 function loginUser(email, password) {
-  // Ensure demo accounts are always available
-  initializeSystemWithDemoAccounts();
-  
   const users = getStore(STORE.USERS);
   const user = Object.values(users).find(u => u.email === email);
   
   if (!user) {
-    console.log('❌ User not found:', email);
     return { success: false, message: 'Invalid email or password' };
   }
   
@@ -519,13 +515,11 @@ function loginUser(email, password) {
   const passwordMatch = user.password === password || btoa(password) === user.password_hash;
   
   if (!passwordMatch) {
-    console.log('❌ Wrong password for:', email);
     return { success: false, message: 'Invalid email or password' };
   }
   
-  // Successful login
   sessionStorage.setItem('ss_current_user', JSON.stringify(user));
-  console.log('✅ Login successful:', email, 'Role:', user.role);
+  console.log('✅ Login successful:', email);
   return { success: true, user };
 }
 
@@ -587,7 +581,7 @@ function initializeSystem() {
   }
 }
 
-// Initialize system and create demo accounts (BULLETPROOF)
+// Initialize system and create demo accounts
 function initializeSystemWithDemoAccounts() {
   // Set default config
   const config = getStore(STORE.CONFIG);
@@ -598,71 +592,193 @@ function initializeSystemWithDemoAccounts() {
     setStore(STORE.CONFIG, config);
   }
   
-  // Hardcode demo accounts - ALWAYS ENSURE THEY EXIST
+  // Hardcode demo accounts
   const users = getStore(STORE.USERS);
-  let needsUpdate = false;
   
-  // Define all demo accounts
-  const demoAccounts = {
-    admin_demo_001: {
+  // Only create if they don't exist
+  if (Object.keys(users).length === 0) {
+    console.log('Creating hardcoded demo accounts...');
+    
+    // Admin user
+    const admin = {
       user_id: 'admin_demo_001',
       username: 'Admin',
       email: 'admin@smartspark.in',
-      password: 'admin123',
+      password: 'admin123',  // Stored plaintext for MVP demo
       role: 'admin',
       class: null,
       created_at: new Date().toISOString(),
       is_active: true
-    },
-    contributor_demo_001: {
+    };
+    users[admin.user_id] = admin;
+    
+    // Contributor user
+    const contributor = {
       user_id: 'contributor_demo_001',
       username: 'Contributor',
       email: 'contributor@smartspark.in',
-      password: 'contrib123',
+      password: 'contrib123',  // Stored plaintext for MVP demo
       role: 'contributor',
       class: null,
       created_at: new Date().toISOString(),
       is_active: true
-    },
-    student_demo_001: {
+    };
+    users[contributor.user_id] = contributor;
+    
+    // Student user
+    const student = {
       user_id: 'student_demo_001',
       username: 'Student',
       email: 'student@smartspark.in',
-      password: 'student123',
+      password: 'student123',  // Stored plaintext for MVP demo
       role: 'student',
       class: 6,
       created_at: new Date().toISOString(),
       is_active: true
-    }
-  };
-  
-  // Check if demo accounts exist
-  if (!users.admin_demo_001 || !users.contributor_demo_001 || !users.student_demo_001) {
-    console.log('🔧 Initializing demo accounts...');
+    };
+    users[student.user_id] = student;
     
-    // Add missing accounts
-    Object.keys(demoAccounts).forEach(key => {
-      if (!users[key]) {
-        users[key] = demoAccounts[key];
-        needsUpdate = true;
-        console.log(`✅ Created: ${demoAccounts[key].email}`);
-      }
-    });
-    
-    // Save updated users
-    if (needsUpdate) {
-      setStore(STORE.USERS, users);
-      console.log('✅ All demo accounts ready!');
-      console.log('Admin: admin@smartspark.in / admin123');
-      console.log('Contributor: contributor@smartspark.in / contrib123');
-      console.log('Student: student@smartspark.in / student123');
-    }
-  } else {
-    console.log('✅ Demo accounts verified in localStorage');
+    // Save all users
+    setStore(STORE.USERS, users);
+    console.log('✅ Demo accounts created!');
+    console.log('Admin: admin@smartspark.in / admin123');
+    console.log('Contributor: contributor@smartspark.in / contrib123');
+    console.log('Student: student@smartspark.in / student123');
   }
 }
 
-// Initialize on load
-if (typeof document !== 'undefined') {
-  initializeSystemWithDemoAccounts();
+// ─────────────────────────────────────────────────────────────────────────────
+// DEMO CONTENT INITIALIZATION
+// ─────────────────────────────────────────────────────────────────────────────
+
+function initializeSystemWithDemoContent() {
+  const config = getStore(STORE.CONFIG);
+  
+  // Only create demo content once
+  if (config.demo_content_created) {
+    return;
+  }
+  
+  console.log('Creating demo chapters, questions, and flashcards...');
+  
+  const demoChapters = [
+    { class: 6, subject: 'Maths', title: 'Chapter 1: Numbers and Operations', desc: 'Learn about numbers, place value, and basic arithmetic operations' },
+    { class: 6, subject: 'Maths', title: 'Chapter 2: Fractions and Decimals', desc: 'Understand fractions, decimals, and their applications' },
+    { class: 6, subject: 'Science', title: 'Chapter 1: Living World', desc: 'Explore living organisms and their characteristics' },
+    { class: 6, subject: 'Science', title: 'Chapter 2: Human Body', desc: 'Learn about human anatomy and body systems' },
+    { class: 6, subject: 'English', title: 'Chapter 1: Reading Comprehension', desc: 'Improve reading skills and comprehension' },
+    { class: 7, subject: 'Maths', title: 'Chapter 1: Integers', desc: 'Understand positive and negative integers' },
+    { class: 7, subject: 'Science', title: 'Chapter 1: Motion and Forces', desc: 'Learn about motion, speed, and forces' }
+  ];
+  
+  const chapters = getStore(STORE.CHAPTERS);
+  const questionBank = getStore(STORE.QUESTION_BANK);
+  const flashcards = getStore(STORE.FLASHCARDS);
+  
+  demoChapters.forEach((demoChap, idx) => {
+    const chapter_id = `ch_${demoChap.class}_${demoChap.subject.toLowerCase()}_${idx}`;
+    
+    // Create chapter in draft status first
+    const chapter = {
+      chapter_id,
+      class: demoChap.class,
+      subject: demoChap.subject,
+      title: demoChap.title,
+      description: demoChap.desc,
+      learning_objectives: [],
+      estimated_time_minutes: 45,
+      current_version: 0,
+      versions: [],
+      status: 'draft',
+      created_by: 'admin_demo_001',
+      created_at: new Date().toISOString(),
+      submitted_at: null,
+      approved_at: null,
+      approved_by: null,
+      question_ids: [],
+      flashcard_ids: []
+    };
+    
+    chapters[chapter_id] = chapter;
+    
+    // Create 5 sample questions for this chapter
+    for (let q = 0; q < 5; q++) {
+      const question_id = `q_${chapter_id}_${q}`;
+      const question = {
+        question_id,
+        class: demoChap.class,
+        subject: demoChap.subject,
+        topic: demoChap.title,
+        difficulty: ['easy', 'medium', 'hard'][q % 3],
+        question_text: `Sample Question ${q + 1} for ${demoChap.title}`,
+        options: ['Option A', 'Option B', 'Option C', 'Option D'],
+        correct_option_index: q % 4,
+        explanation: `This is the correct answer because...`,
+        image_url: null,
+        tags: [],
+        status: 'published',
+        version: 1,
+        created_by: 'admin_demo_001',
+        created_at: new Date().toISOString(),
+        used_in_chapters: [{ chapter_id, version: 1 }],
+        analytics: {
+          total_attempts: 0,
+          correct_count: 0,
+          accuracy_pct: 0
+        }
+      };
+      
+      questionBank[question_id] = question;
+      chapter.question_ids.push(question_id);
+    }
+    
+    // Create 3 sample flashcards for this chapter
+    for (let f = 0; f < 3; f++) {
+      const flashcard_id = `fc_${chapter_id}_${f}`;
+      const flashcard = {
+        flashcard_id,
+        chapter_id,
+        version: 1,
+        term: `Term ${f + 1}`,
+        definition: `Definition for term ${f + 1}`,
+        image_url: null,
+        created_by: 'admin_demo_001',
+        created_at: new Date().toISOString()
+      };
+      
+      flashcards[flashcard_id] = flashcard;
+      chapter.flashcard_ids.push(flashcard_id);
+    }
+    
+    // Publish the chapter
+    chapter.status = 'published';
+    chapter.current_version = 1;
+    chapter.approved_at = new Date().toISOString();
+    chapter.approved_by = 'admin_demo_001';
+    chapter.versions.push({
+      version: 1,
+      status: 'published',
+      published_at: new Date().toISOString(),
+      created_by: 'admin_demo_001',
+      approved_by: 'admin_demo_001',
+      flashcard_ids: [...chapter.flashcard_ids],
+      question_ids: [...chapter.question_ids],
+      content_hash: generateHash(chapter)
+    });
+  });
+  
+  // Save all data
+  setStore(STORE.CHAPTERS, chapters);
+  setStore(STORE.QUESTION_BANK, questionBank);
+  setStore(STORE.FLASHCARDS, flashcards);
+  
+  // Mark config as initialized
+  config.demo_content_created = true;
+  setStore(STORE.CONFIG, config);
+  
+  console.log('✅ Demo content created:', demoChapters.length, 'chapters');
 }
+
+// Initialize on load
+initializeSystemWithDemoAccounts();
+initializeSystemWithDemoContent();
