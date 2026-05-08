@@ -504,10 +504,14 @@ function registerUser(username, email, password, role = 'student', class_no = nu
 }
 
 function loginUser(email, password) {
+  // Ensure demo accounts are always available
+  initializeSystemWithDemoAccounts();
+  
   const users = getStore(STORE.USERS);
   const user = Object.values(users).find(u => u.email === email);
   
   if (!user) {
+    console.log('❌ User not found:', email);
     return { success: false, message: 'Invalid email or password' };
   }
   
@@ -515,11 +519,13 @@ function loginUser(email, password) {
   const passwordMatch = user.password === password || btoa(password) === user.password_hash;
   
   if (!passwordMatch) {
+    console.log('❌ Wrong password for:', email);
     return { success: false, message: 'Invalid email or password' };
   }
   
+  // Successful login
   sessionStorage.setItem('ss_current_user', JSON.stringify(user));
-  console.log('✅ Login successful:', email);
+  console.log('✅ Login successful:', email, 'Role:', user.role);
   return { success: true, user };
 }
 
@@ -581,7 +587,7 @@ function initializeSystem() {
   }
 }
 
-// Initialize system and create demo accounts
+// Initialize system and create demo accounts (BULLETPROOF)
 function initializeSystemWithDemoAccounts() {
   // Set default config
   const config = getStore(STORE.CONFIG);
@@ -592,60 +598,71 @@ function initializeSystemWithDemoAccounts() {
     setStore(STORE.CONFIG, config);
   }
   
-  // Hardcode demo accounts
+  // Hardcode demo accounts - ALWAYS ENSURE THEY EXIST
   const users = getStore(STORE.USERS);
+  let needsUpdate = false;
   
-  // Only create if they don't exist
-  if (Object.keys(users).length === 0) {
-    console.log('Creating hardcoded demo accounts...');
-    
-    // Admin user
-    const admin = {
+  // Define all demo accounts
+  const demoAccounts = {
+    admin_demo_001: {
       user_id: 'admin_demo_001',
       username: 'Admin',
       email: 'admin@smartspark.in',
-      password: 'admin123',  // Stored plaintext for MVP demo
+      password: 'admin123',
       role: 'admin',
       class: null,
       created_at: new Date().toISOString(),
       is_active: true
-    };
-    users[admin.user_id] = admin;
-    
-    // Contributor user
-    const contributor = {
+    },
+    contributor_demo_001: {
       user_id: 'contributor_demo_001',
       username: 'Contributor',
       email: 'contributor@smartspark.in',
-      password: 'contrib123',  // Stored plaintext for MVP demo
+      password: 'contrib123',
       role: 'contributor',
       class: null,
       created_at: new Date().toISOString(),
       is_active: true
-    };
-    users[contributor.user_id] = contributor;
-    
-    // Student user
-    const student = {
+    },
+    student_demo_001: {
       user_id: 'student_demo_001',
       username: 'Student',
       email: 'student@smartspark.in',
-      password: 'student123',  // Stored plaintext for MVP demo
+      password: 'student123',
       role: 'student',
       class: 6,
       created_at: new Date().toISOString(),
       is_active: true
-    };
-    users[student.user_id] = student;
+    }
+  };
+  
+  // Check if demo accounts exist
+  if (!users.admin_demo_001 || !users.contributor_demo_001 || !users.student_demo_001) {
+    console.log('🔧 Initializing demo accounts...');
     
-    // Save all users
-    setStore(STORE.USERS, users);
-    console.log('✅ Demo accounts created!');
-    console.log('Admin: admin@smartspark.in / admin123');
-    console.log('Contributor: contributor@smartspark.in / contrib123');
-    console.log('Student: student@smartspark.in / student123');
+    // Add missing accounts
+    Object.keys(demoAccounts).forEach(key => {
+      if (!users[key]) {
+        users[key] = demoAccounts[key];
+        needsUpdate = true;
+        console.log(`✅ Created: ${demoAccounts[key].email}`);
+      }
+    });
+    
+    // Save updated users
+    if (needsUpdate) {
+      setStore(STORE.USERS, users);
+      console.log('✅ All demo accounts ready!');
+      console.log('Admin: admin@smartspark.in / admin123');
+      console.log('Contributor: contributor@smartspark.in / contrib123');
+      console.log('Student: student@smartspark.in / student123');
+    }
+  } else {
+    console.log('✅ Demo accounts verified in localStorage');
   }
 }
 
 // Initialize on load
-initializeSystemWithDemoAccounts();
+if (typeof document !== 'undefined') {
+  initializeSystemWithDemoAccounts();
+}

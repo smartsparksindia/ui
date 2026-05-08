@@ -1,69 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SmartSpark CMS — Content Editor</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
-
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --purple: #7F77DD;
-  --teal: #1D9E75;
-  --coral: #D85A30;
-  --amber: #BA7517;
-  --bg: #FFF9F0;
-  --card-bg: #FFFFFF;
-  --text: #2C2C2A;
-  --text-muted: #888780;
-  --radius: 20px;
-  --radius-sm: 12px;
+  --purple: #7F77DD; --teal: #1D9E75; --coral: #D85A30;
+  --amber: #BA7517; --bg: #FFF9F0; --card-bg: #FFFFFF;
+  --text: #2C2C2A; --text-muted: #888780;
+  --radius: 20px; --radius-sm: 12px;
 }
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Nunito', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
 nav {
-  background: white;
-  padding: 1.2rem 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  background: white; padding: 1.2rem 3rem;
+  display: flex; align-items: center; justify-content: space-between;
   border-bottom: 2px solid #F0EBE0;
 }
-
-.logo {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.4rem;
-  color: var(--purple);
-  text-decoration: none;
-}
-
-.logo span {
-  color: var(--coral);
-}
+.logo { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--purple); text-decoration: none; }
+.logo span { color: var(--coral); }
 
 .editor-wrap {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 0 2rem 4rem;
+  max-width: 900px; margin: 2rem auto; padding: 0 2rem 4rem;
 }
 
 .editor-title {
   font-family: 'Fredoka One', cursive;
   font-size: 2rem;
   margin-bottom: 2rem;
+  color: var(--text);
 }
 
 .form-section {
@@ -78,6 +46,7 @@ nav {
   font-family: 'Fredoka One', cursive;
   font-size: 1.3rem;
   margin-bottom: 1.5rem;
+  color: var(--text);
   border-bottom: 2px solid #F0EBE0;
   padding-bottom: 0.8rem;
 }
@@ -91,6 +60,7 @@ label {
   font-weight: 800;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
+  color: var(--text);
 }
 
 input[type="text"],
@@ -111,6 +81,7 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--purple);
+  background: white;
 }
 
 textarea {
@@ -151,11 +122,19 @@ textarea {
   color: var(--text);
 }
 
+.btn-secondary:hover {
+  background: #FAFAF8;
+}
+
 .btn-add {
   background: var(--teal);
   color: white;
   padding: 0.6rem 1.2rem;
   font-size: 0.85rem;
+}
+
+.btn-add:hover {
+  transform: translateY(-1px);
 }
 
 .btn-remove {
@@ -164,6 +143,11 @@ textarea {
   padding: 0.5rem 1rem;
   font-size: 0.8rem;
   margin-left: 0.5rem;
+}
+
+.btn-remove:hover {
+  background: var(--coral);
+  color: white;
 }
 
 .items-list {
@@ -179,21 +163,13 @@ textarea {
   padding: 1rem;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: start;
   border-left: 4px solid var(--purple);
-  gap: 1rem;
 }
 
-.item-content {
-  flex: 1;
-}
-
-.item-label {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  font-weight: 700;
-  text-transform: uppercase;
-}
+.item-content { flex: 1; }
+.item-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+.item-text { font-weight: 700; margin-top: 0.3rem; }
 
 .form-actions {
   display: flex;
@@ -222,75 +198,37 @@ textarea {
   font-weight: 700;
 }
 
-.optional-badge {
-  display: inline-block;
-  margin-left: 0.5rem;
-  padding: 0.15rem 0.5rem;
-  border-radius: 999px;
-  background: #F5F4FF;
-  color: var(--purple);
-  font-size: 0.7rem;
-  font-weight: 800;
-}
-
 @media(max-width:600px) {
-  nav {
-    padding: 1rem 1.2rem;
-  }
-
-  .editor-wrap {
-    padding: 0 1rem 4rem;
-  }
-
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-
-  .form-actions {
-    flex-direction: column;
-  }
-
-  .item-card {
-    flex-direction: column;
-  }
+  nav { padding: 1rem 1.2rem; }
+  .editor-wrap { padding: 0 1rem 4rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .form-actions { flex-direction: column; }
 }
 </style>
 </head>
-
 <body>
 
 <nav>
   <a href="cms-dashboard.html" class="logo">Smart<span>Spark</span> CMS</a>
-
-  <a
-    href="cms-dashboard.html"
-    style="color:var(--text-muted);text-decoration:none;font-weight:700;"
-  >
-    ← Dashboard
-  </a>
+  <a href="cms-dashboard.html" style="color:var(--text-muted);text-decoration:none;font-weight:700;">← Dashboard</a>
 </nav>
 
 <div class="editor-wrap">
-
   <h1 class="editor-title">✏️ Create Chapter</h1>
 
   <div class="alert alert-info">
-    📝 Fill in the chapter details, optionally add flashcards,
-    and add quiz questions before saving.
+    📝 Fill in the chapter details, add flashcards, and questions. Save as draft, then submit for admin review.
   </div>
 
   <form id="editor-form">
-
-    <!-- CHAPTER DETAILS -->
+    
+    <!-- CHAPTER BASICS -->
     <div class="form-section">
-
       <h2 class="section-title">Chapter Details</h2>
-
+      
       <div class="form-row">
-
         <div class="form-group">
           <label for="class">Class</label>
-
           <select id="class" required>
             <option value="">Select class</option>
             <option value="6">Class 6</option>
@@ -298,10 +236,8 @@ textarea {
             <option value="8">Class 8</option>
           </select>
         </div>
-
         <div class="form-group">
           <label for="subject">Subject</label>
-
           <select id="subject" required>
             <option value="">Select subject</option>
             <option value="Science">Science</option>
@@ -310,139 +246,91 @@ textarea {
             <option value="Social Science">Social Science</option>
           </select>
         </div>
-
       </div>
 
       <div class="form-group">
         <label for="title">Chapter Title</label>
-
-        <input
-          type="text"
-          id="title"
-          placeholder="e.g., Photosynthesis"
-          required
-        />
+        <input type="text" id="title" placeholder="e.g., Photosynthesis" required>
       </div>
 
       <div class="form-group">
         <label for="description">Chapter Description</label>
-
-        <textarea
-          id="description"
-          placeholder="What will students learn in this chapter?"
-          required
-        ></textarea>
+        <textarea id="description" placeholder="What will students learn in this chapter?" required></textarea>
       </div>
 
       <div class="form-row">
-
         <div class="form-group">
-          <label for="objectives">
-            Learning Objectives (comma-separated)
-          </label>
-
-          <input
-            type="text"
-            id="objectives"
-            placeholder="Define photosynthesis, Identify reactants"
-          />
+          <label for="objectives">Learning Objectives (comma-separated)</label>
+          <input type="text" id="objectives" placeholder="e.g., Define photosynthesis, Identify reactants, Explain products">
         </div>
-
         <div class="form-group">
           <label for="time">Estimated Time (minutes)</label>
-
-          <input
-            type="number"
-            id="time"
-            value="45"
-            min="10"
-            max="180"
-          />
+          <input type="number" id="time" value="45" min="10" max="180">
         </div>
-
       </div>
-
     </div>
 
     <!-- FLASHCARDS -->
     <div class="form-section">
-
-      <h2 class="section-title">
-        Flashcards
-        <span class="optional-badge">Optional</span>
-      </h2>
-
-      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;">
-        Add study flashcards if needed.
-      </p>
+      <h2 class="section-title">Flashcards</h2>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;">Add key terms and their definitions</p>
 
       <div class="items-list" id="flashcards-list"></div>
 
-      <button
-        type="button"
-        class="btn btn-add"
-        onclick="addFlashcard()"
-      >
-        + Add Flashcard
-      </button>
-
+      <button type="button" class="btn btn-add" onclick="addFlashcard()">+ Add Flashcard</button>
     </div>
 
-    <!-- QUESTIONS -->
+    <!-- QUIZ QUESTIONS -->
     <div class="form-section">
-
       <h2 class="section-title">Quiz Questions</h2>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;">Add MCQ questions to test understanding</p>
 
-      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;">
-        Add MCQ questions to test understanding.
-      </p>
+      <!-- CSV IMPORT SECTION -->
+      <div style="background:#FAFAF8;border:2px dashed #F0EBE0;border-radius:12px;padding:1.5rem;margin-bottom:2rem;">
+        <h3 style="font-size:0.95rem;font-weight:800;margin-bottom:0.8rem;color:var(--text);">📥 Bulk Import from CSV</h3>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;">
+          Download template, fill in Excel, upload to import all questions at once!
+        </p>
+        
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+          <button type="button" class="btn btn-secondary" onclick="downloadCSVTemplate()" style="background:white;border:2px solid #F0EBE0;">📥 Download Template</button>
+          <label style="flex:1;cursor:pointer;">
+            <input type="file" id="csv-file" accept=".csv" style="display:none;" onchange="importCSV(event)">
+            <span class="btn btn-add" style="display:inline-block;">📤 Upload CSV</span>
+          </label>
+        </div>
+        
+        <div id="csv-status" style="font-size:0.85rem;color:var(--text-muted);"></div>
+      </div>
 
       <div class="items-list" id="questions-list"></div>
 
-      <button
-        type="button"
-        class="btn btn-add"
-        onclick="addQuestion()"
-      >
-        + Add Question
-      </button>
-
+      <button type="button" class="btn btn-add" onclick="addQuestion()">+ Add Question Manually</button>
     </div>
 
     <!-- ACTIONS -->
     <div class="form-actions">
-
-      <button type="submit" class="btn btn-primary">
-        💾 Save as Draft
-      </button>
-
-      <button
-        type="button"
-        class="btn btn-secondary"
-        onclick="window.history.back()"
-      >
-        Cancel
-      </button>
-
+      <button type="submit" class="btn btn-primary">💾 Save as Draft</button>
+      <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
     </div>
-
   </form>
 
-  <div
-    id="success-alert"
-    class="alert alert-success"
-    style="display:none;margin-top:2rem;"
-  >
+  <div id="success-alert" class="alert alert-success" style="display:none;margin-top:2rem;">
     ✅ Chapter saved as draft!
+    <br><br>
+    <strong>Next Steps:</strong>
+    <ol style="margin-top:1rem;text-align:left;">
+      <li>Go to <strong>My Drafts</strong> in the sidebar</li>
+      <li>Click <strong>Submit</strong> button on your chapter</li>
+      <li>Admin will review and approve</li>
+      <li>Once approved, it will be <strong>published</strong> and visible to students</li>
+    </ol>
   </div>
-
 </div>
 
 <script src="data-layer.js"></script>
-
 <script>
-const user = getCurrentUser?.();
-
+const user = getCurrentUser();
 if (!user || !['admin', 'contributor'].includes(user.role)) {
   window.location.href = 'cms-login.html';
 }
@@ -450,17 +338,9 @@ if (!user || !['admin', 'contributor'].includes(user.role)) {
 let flashcardsData = [];
 let questionsData = [];
 
-/* ---------------- FLASHCARDS ---------------- */
-
 function addFlashcard() {
   const id = 'fc_' + Date.now();
-
-  flashcardsData.push({
-    id,
-    term: '',
-    definition: ''
-  });
-
+  flashcardsData.push({ id, term: '', definition: '' });
   renderFlashcards();
 }
 
@@ -469,59 +349,27 @@ function removeFlashcard(id) {
   renderFlashcards();
 }
 
-function updateFlashcard(id, field, value) {
-  const card = flashcardsData.find(fc => fc.id === id);
-
-  if (card) {
-    card[field] = value;
-  }
-}
-
 function renderFlashcards() {
   const list = document.getElementById('flashcards-list');
-
   list.innerHTML = flashcardsData.map((fc, idx) => `
     <div class="item-card">
-
       <div class="item-content">
-
-        <div class="item-label">
-          Flashcard ${idx + 1}
-        </div>
-
-        <input
-          type="text"
-          placeholder="Term"
-          value="${fc.term}"
-          style="margin:0.5rem 0;"
-          oninput="updateFlashcard('${fc.id}', 'term', this.value)"
-        />
-
-        <textarea
-          placeholder="Definition"
-          style="margin:0.5rem 0;"
-          oninput="updateFlashcard('${fc.id}', 'definition', this.value)"
-        >${fc.definition}</textarea>
-
+        <div class="item-label">Flashcard ${idx + 1}</div>
+        <input type="text" placeholder="Term" value="${fc.term}" style="margin:0.5rem 0;" onchange="updateFlashcard('${fc.id}', 'term', this.value)">
+        <textarea placeholder="Definition" style="margin:0.5rem 0;" onchange="updateFlashcard('${fc.id}', 'definition', this.value)">${fc.definition}</textarea>
       </div>
-
-      <button
-        type="button"
-        class="btn btn-remove"
-        onclick="removeFlashcard('${fc.id}')"
-      >
-        Remove
-      </button>
-
+      <button type="button" class="btn btn-remove" onclick="removeFlashcard('${fc.id}')">Remove</button>
     </div>
   `).join('');
 }
 
-/* ---------------- QUESTIONS ---------------- */
+function updateFlashcard(id, field, value) {
+  const fc = flashcardsData.find(f => f.id === id);
+  if (fc) fc[field] = value;
+}
 
 function addQuestion() {
   const id = 'q_' + Date.now();
-
   questionsData.push({
     id,
     question: '',
@@ -529,7 +377,6 @@ function addQuestion() {
     correct: 0,
     explanation: ''
   });
-
   renderQuestions();
 }
 
@@ -538,213 +385,168 @@ function removeQuestion(id) {
   renderQuestions();
 }
 
-function updateQuestion(id, field, value) {
-  const q = questionsData.find(item => item.id === id);
-
-  if (q) {
-    q[field] = value;
-  }
-}
-
-function updateQuestionOption(id, index, value) {
-  const q = questionsData.find(item => item.id === id);
-
-  if (q) {
-    q.options[index] = value;
-  }
-}
-
 function renderQuestions() {
   const list = document.getElementById('questions-list');
-
   list.innerHTML = questionsData.map((q, idx) => `
     <div class="item-card">
-
-      <div class="item-content">
-
-        <div class="item-label">
-          Question ${idx + 1}
-        </div>
-
-        <input
-          type="text"
-          placeholder="Question"
-          value="${q.question}"
-          style="margin:0.5rem 0;"
-          oninput="updateQuestion('${q.id}', 'question', this.value)"
-        />
-
+      <div class="item-content" style="width:100%;">
+        <div class="item-label">Question ${idx + 1}</div>
+        <input type="text" placeholder="Question" value="${q.question}" style="margin:0.5rem 0;" onchange="updateQuestion('${q.id}', 'question', this.value)">
+        
         <div style="margin:0.8rem 0;">
-
-          <label
-            style="font-size:0.8rem;color:var(--text-muted);"
-          >
-            Options
-          </label>
-
+          <label style="font-size:0.8rem;color:var(--text-muted);">Options:</label>
           ${q.options.map((opt, i) => `
-            <div
-              style="
-                display:flex;
-                gap:0.5rem;
-                margin-top:0.4rem;
-                align-items:center;
-              "
-            >
-
-              <input
-                type="text"
-                placeholder="Option ${i + 1}"
-                value="${opt}"
-                style="flex:1;"
-                oninput="updateQuestionOption('${q.id}', ${i}, this.value)"
-              />
-
-              <input
-                type="radio"
-                name="correct_${q.id}"
-                ${q.correct === i ? 'checked' : ''}
-                onchange="updateQuestion('${q.id}', 'correct', ${i})"
-              />
-
-              <span style="font-size:0.75rem;color:var(--text-muted);">
-                Correct
-              </span>
-
+            <div style="display:flex;gap:0.5rem;margin-top:0.3rem;align-items:center;">
+              <input type="text" placeholder="Option ${i+1}" value="${opt}" style="flex:1;" onchange="updateQuestionOption('${q.id}', ${i}, this.value)">
+              <input type="radio" name="correct_${q.id}" value="${i}" ${q.correct == i ? 'checked' : ''} onchange="updateQuestion('${q.id}', 'correct', ${i})">
+              <span style="font-size:0.75rem;color:var(--text-muted);">Correct</span>
             </div>
           `).join('')}
-
         </div>
 
-        <textarea
-          placeholder="Explanation"
-          style="margin-top:0.5rem;"
-          oninput="updateQuestion('${q.id}', 'explanation', this.value)"
-        >${q.explanation}</textarea>
-
+        <textarea placeholder="Explanation" style="margin:0.5rem 0;" onchange="updateQuestion('${q.id}', 'explanation', this.value)">${q.explanation}</textarea>
       </div>
-
-      <button
-        type="button"
-        class="btn btn-remove"
-        onclick="removeQuestion('${q.id}')"
-      >
-        Remove
-      </button>
-
+      <button type="button" class="btn btn-remove" onclick="removeQuestion('${q.id}')">Remove</button>
     </div>
   `).join('');
 }
 
-/* ---------------- SUBMIT ---------------- */
+function updateQuestion(id, field, value) {
+  const q = questionsData.find(x => x.id === id);
+  if (q) q[field] = value;
+}
 
-document
-  .getElementById('editor-form')
-  .addEventListener('submit', (e) => {
+function updateQuestionOption(id, idx, value) {
+  const q = questionsData.find(x => x.id === id);
+  if (q) q.options[idx] = value;
+}
 
-    e.preventDefault();
+document.getElementById('editor-form').addEventListener('submit', (e) => {
+  e.preventDefault();
 
-    const classNum = parseInt(document.getElementById('class').value);
-    const subject = document.getElementById('subject').value.trim();
-    const title = document.getElementById('title').value.trim();
-    const description = document.getElementById('description').value.trim();
+  const classNum = parseInt(document.getElementById('class').value);
+  const subject = document.getElementById('subject').value;
+  const title = document.getElementById('title').value;
+  const description = document.getElementById('description').value;
 
-    // REQUIRED VALIDATION
-    if (!classNum || !subject || !title || !description) {
-      alert('Please fill in all required fields.');
-      return;
-    }
+  // Flashcards are now OPTIONAL
+  if (!classNum || !subject || !title || questionsData.length === 0) {
+    alert('Please fill in: Class, Subject, Title, Description, and at least 1 question');
+    return;
+  }
 
-    // REQUIRE AT LEAST 1 QUESTION
-    if (questionsData.length === 0) {
-      alert('Please add at least 1 quiz question.');
-      return;
-    }
+  // Create chapter
+  const chapter = createChapter(classNum, subject, title, description);
 
-    // CREATE CHAPTER
-    const chapter = createChapter(
+  // Add flashcards
+  flashcardsData.forEach(fc => {
+    addFlashcardToChapter(chapter.chapter_id, fc.term, fc.definition);
+  });
+
+  // Add/create questions
+  questionsData.forEach(q => {
+    const question = createQuestion(
       classNum,
       subject,
       title,
-      description
+      q.question,
+      q.options,
+      parseInt(q.correct),
+      q.explanation
     );
-
-    /* -------- SAVE FLASHCARDS (OPTIONAL) -------- */
-
-    if (flashcardsData.length > 0) {
-
-      flashcardsData.forEach(fc => {
-
-        // skip empty flashcards
-        if (!fc.term.trim() || !fc.definition.trim()) {
-          return;
-        }
-
-        // if your backend has createFlashcard()
-        if (typeof createFlashcard === 'function') {
-
-          const flashcard = createFlashcard(
-            classNum,
-            subject,
-            title,
-            fc.term,
-            fc.definition
-          );
-
-          // optional linking
-          if (
-            flashcard &&
-            typeof linkFlashcardToChapter === 'function'
-          ) {
-            linkFlashcardToChapter(
-              flashcard.flashcard_id,
-              chapter.chapter_id
-            );
-          }
-        }
-      });
-    }
-
-    /* -------- SAVE QUESTIONS -------- */
-
-    questionsData.forEach(q => {
-
-      const question = createQuestion(
-        classNum,
-        subject,
-        title,
-        q.question,
-        q.options,
-        parseInt(q.correct),
-        q.explanation
-      );
-
-      if (
-        question &&
-        typeof linkQuestionToChapter === 'function'
-      ) {
-        linkQuestionToChapter(
-          question.question_id,
-          chapter.chapter_id
-        );
-      }
-    });
-
-    // SUCCESS UI
-    document.getElementById('editor-form').style.display = 'none';
-
-    document.getElementById('success-alert').style.display = 'block';
-
-    setTimeout(() => {
-      window.location.href = 'cms-dashboard.html';
-    }, 2000);
+    linkQuestionToChapter(question.question_id, chapter.chapter_id);
   });
 
-/* ---------------- INIT ---------------- */
+  // Show success
+  document.getElementById('editor-form').style.display = 'none';
+  document.getElementById('success-alert').style.display = 'block';
 
+  setTimeout(() => {
+    window.location.href = 'cms-dashboard.html';
+  }, 2000);
+});
+
+// Initialize
 renderFlashcards();
 renderQuestions();
-</script>
 
+// CSV TEMPLATE DOWNLOAD
+function downloadCSVTemplate() {
+  const csv = `question,option1,option2,option3,option4,correct,explanation
+What is H2O?,Water,Oxygen,Hydrogen,Salt,1,H2O is water molecule
+What is photosynthesis?,Plant food making,Animal breathing,Water cycle,Soil formation,0,Photosynthesis is the process by which plants convert sunlight into chemical energy
+Which planet is closest to sun?,Mercury,Venus,Earth,Mars,0,Mercury is the closest planet to the sun
+What does DNA stand for?,Deoxyribonucleic acid,Dynamic neutral acid,Diatomic nitrogen acid,Data natural acid,0,DNA stands for Deoxyribonucleic acid`;
+  
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'SmartSpark-Questions-Template.csv';
+  a.click();
+  window.URL.revokeObjectURL(url);
+}
+
+// CSV IMPORT
+function importCSV(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const csv = e.target.result;
+      const lines = csv.trim().split('\n');
+      const headers = lines[0].split(',').map(h => h.trim());
+      
+      // Validate headers
+      const required = ['question', 'option1', 'option2', 'option3', 'option4', 'correct', 'explanation'];
+      const hasAll = required.every(h => headers.includes(h));
+      
+      if (!hasAll) {
+        alert('❌ CSV must have columns: ' + required.join(', '));
+        return;
+      }
+      
+      // Parse data
+      let imported = 0;
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        
+        const values = lines[i].split(',').map(v => v.trim());
+        const question = {
+          id: 'q_' + Date.now() + '_' + i,
+          question: values[0],
+          options: [values[1], values[2], values[3], values[4]],
+          correct: parseInt(values[5]) || 0,
+          explanation: values[6] || ''
+        };
+        
+        // Validate
+        if (!question.question || question.options.some(o => !o)) {
+          console.warn('Skipping invalid row:', i);
+          continue;
+        }
+        
+        questionsData.push(question);
+        imported++;
+      }
+      
+      renderQuestions();
+      document.getElementById('csv-status').innerHTML = `✅ Imported ${imported} question${imported !== 1 ? 's' : ''}!`;
+      document.getElementById('csv-file').value = '';
+      
+      setTimeout(() => {
+        document.getElementById('csv-status').innerHTML = '';
+      }, 3000);
+      
+    } catch (error) {
+      alert('❌ Error reading CSV: ' + error.message);
+      console.error(error);
+    }
+  };
+  reader.readAsText(file);
+}
+</script>
 </body>
 </html>
