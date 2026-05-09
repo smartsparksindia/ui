@@ -335,8 +335,120 @@ if (!user || !['admin', 'contributor'].includes(user.role)) {
   window.location.href = 'cms-login.html';
 }
 
+// Check if editing existing chapter
+const urlParams = new URLSearchParams(window.location.search);
+const editChapterId = urlParams.get('edit');
+const editVersionChapterId = urlParams.get('editVersion');
+let isEditingChapter = false;
+let currentChapterId = null;
+let isCreatingNewVersion = false;
+
 let flashcardsData = [];
 let questionsData = [];
+
+// Load existing chapter if editing
+if (editChapterId) {
+  isEditingChapter = true;
+  currentChapterId = editChapterId;
+  document.querySelector('.editor-title').textContent = '✏️ Edit Chapter';
+  
+  const chapter = getFromStore('ss_chapters', editChapterId);
+  if (!chapter) {
+    alert('Chapter not found');
+    window.location.href = 'cms-my-drafts.html';
+  }
+  
+  // Populate form
+  document.getElementById('class').value = chapter.class;
+  document.getElementById('subject').value = chapter.subject;
+  document.getElementById('title').value = chapter.title;
+  document.getElementById('description').value = chapter.description;
+  
+  // Load flashcards
+  if (chapter.flashcard_ids) {
+    chapter.flashcard_ids.forEach(fcId => {
+      const fc = getFromStore('ss_flashcards', fcId);
+      if (fc) {
+        flashcardsData.push({
+          id: fc.flashcard_id,
+          term: fc.term,
+          definition: fc.definition
+        });
+      }
+    });
+  }
+  
+  // Load questions
+  if (chapter.question_ids) {
+    chapter.question_ids.forEach(qId => {
+      const q = getFromStore('ss_question_bank', qId);
+      if (q) {
+        questionsData.push({
+          id: q.question_id,
+          question: q.question_text,
+          options: q.options,
+          correct: q.correct_option_index,
+          explanation: q.explanation
+        });
+      }
+    });
+  }
+}
+
+// Load published chapter for creating new version
+if (editVersionChapterId) {
+  isCreatingNewVersion = true;
+  currentChapterId = editVersionChapterId;
+  document.querySelector('.editor-title').textContent = '✏️ Create New Version';
+  
+  const chapter = getFromStore('ss_chapters', editVersionChapterId);
+  if (!chapter) {
+    alert('Chapter not found');
+    window.location.href = 'cms-my-drafts.html';
+  }
+  
+  // Populate form
+  document.getElementById('class').value = chapter.class;
+  document.getElementById('subject').value = chapter.subject;
+  document.getElementById('title').value = chapter.title;
+  document.getElementById('description').value = chapter.description;
+  
+  // Load flashcards
+  if (chapter.flashcard_ids) {
+    chapter.flashcard_ids.forEach(fcId => {
+      const fc = getFromStore('ss_flashcards', fcId);
+      if (fc) {
+        flashcardsData.push({
+          id: fc.flashcard_id,
+          term: fc.term,
+          definition: fc.definition
+        });
+      }
+    });
+  }
+  
+  // Load questions
+  if (chapter.question_ids) {
+    chapter.question_ids.forEach(qId => {
+      const q = getFromStore('ss_question_bank', qId);
+      if (q) {
+        questionsData.push({
+          id: q.question_id,
+          question: q.question_text,
+          options: q.options,
+          correct: q.correct_option_index,
+          explanation: q.explanation
+        });
+      }
+    });
+  }
+}
+
+// Helper to get from store
+function getFromStore(key, id) {
+  const store = getStore(key);
+  return store[id];
+}
 
 function addFlashcard() {
   const id = 'fc_' + Date.now();
@@ -398,6 +510,185 @@ function renderQuestions() {
           ${q.options.map((opt, i) => `
             <div style="display:flex;gap:0.5rem;margin-top:0.3rem;align-items:center;">
               <input type="text" placeholder="Option ${i+1}" value="${opt}" style="flex:1;" onchange="updateQuestionOption('${q.id}', ${i}, this.value)">
+              <input type="radio" name="correct_${q.id}" value="${i}" ${q.correct == i ? 'checked' : ''} onchange="updateQuestion('${q.id}', 'correct', ${i})">
+            </div>
+          `).join('')}
+        </div>
+        
+        <textarea placeholder="Explanation" style="margin:0.5rem 0;" onchange="updateQuestion('${q.id}', 'explanation', this.value)">${q.explanation}</textarea>
+      </div>
+      <button type="button" class="btn btn-remove" onclick="removeQuestion('${q.id}')">Remove</button>
+    </div>
+  `).join('');
+}
+
+function updateQuestion(id, field, value) {
+  const q = questionsData.find(x => x.id === id);
+  if (q) q[field] = value;
+}
+
+function updateQuestionOption(id, idx, value) {
+  const q = questionsData.find(x => x.id === id);
+  if (q) q.options[idx] = value;
+}
+
+document.getElementById('editor-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const classNum = parseInt(document.getElementById('class').value);
+  const subject = document.getElementById('subject').value;
+  const title = document.getElementById('title').value;
+  const description = document.getElementById('description').value;
+
+  // Flashcards are now OPTIONAL
+  if (!classNum || !subject || !title || questionsData.length === 0) {
+    alert('Please fill in: Class, Subject, Title, Description, and at least 1 question');
+    return;
+  }
+
+  // If editing existing chapter, update it
+  if (isEditingChapter || isCreatingNewVersion) {
+    const chapter = getFromStore('ss_chapters', currentChapterId);
+    
+    // Create new draft version based on existing chapter
+    const newChapter = {
+      chapter_id: currentChapterId,
+      class: classNum,
+      subject: subject,
+      title: title,
+      description: description,
+      learning_objectives: chapter.learning_objectives || [],
+      estimated_time_minutes: 45,
+      current_version: chapter.current_version,
+      versions: chapter.versions || [],
+      status: isCreatingNewVersion ? 'draft' : chapter.status,
+      created_by: chapter.created_by,
+      created_at: chapter.created_at,
+      submitted_at: isCreatingNewVersion ? null : chapter.submitted_at,
+      approved_at: chapter.approved_at,
+      approved_by: chapter.approved_by,
+      question_ids: [],
+      flashcard_ids: []
+    };
+    
+    // Save updated chapter
+    addToStore('ss_chapters', currentChapterId, newChapter);
+    
+    // Update flashcards (add new ones, keep existing)
+    flashcardsData.forEach((fc, idx) => {
+      if (fc.id.startsWith('fc_')) {
+        // New flashcard
+        const newFcId = `fc_${currentChapterId}_${idx}_${Date.now()}`;
+        const flashcard = {
+          flashcard_id: newFcId,
+          chapter_id: currentChapterId,
+          version: 1,
+          term: fc.term,
+          definition: fc.definition,
+          image_url: null,
+          created_by: user.user_id,
+          created_at: new Date().toISOString()
+        };
+        addToStore('ss_flashcards', newFcId, flashcard);
+        newChapter.flashcard_ids.push(newFcId);
+      } else {
+        // Existing flashcard
+        newChapter.flashcard_ids.push(fc.id);
+      }
+    });
+    
+    // Update questions
+    questionsData.forEach((q) => {
+      if (q.id.startsWith('q_')) {
+        // New question
+        const newQId = `q_${currentChapterId}_${Date.now()}`;
+        const question = {
+          question_id: newQId,
+          class: classNum,
+          subject: subject,
+          topic: title,
+          difficulty: 'medium',
+          question_text: q.question,
+          options: q.options,
+          correct_option_index: q.correct,
+          explanation: q.explanation,
+          image_url: null,
+          tags: [],
+          status: 'published',
+          version: 1,
+          created_by: user.user_id,
+          created_at: new Date().toISOString(),
+          used_in_chapters: [{ chapter_id: currentChapterId, version: 1 }],
+          analytics: { total_attempts: 0, correct_count: 0, accuracy_pct: 0 }
+        };
+        addToStore('ss_question_bank', newQId, question);
+        newChapter.question_ids.push(newQId);
+      } else {
+        // Existing question
+        newChapter.question_ids.push(q.id);
+      }
+    });
+    
+    // Save final chapter
+    addToStore('ss_chapters', currentChapterId, newChapter);
+    
+    // Record event
+    if (isCreatingNewVersion) {
+      recordAnalyticsEvent(user.user_id, 'chapter_new_version', {
+        chapter_id: currentChapterId,
+        title: title,
+        from_version: chapter.current_version
+      });
+    } else {
+      recordAnalyticsEvent(user.user_id, 'chapter_edited', {
+        chapter_id: currentChapterId,
+        title: title
+      });
+    }
+    
+    document.getElementById('editor-form').style.display = 'none';
+    document.getElementById('success-alert').style.display = 'block';
+    
+    setTimeout(() => {
+      window.location.href = 'cms-my-drafts.html';
+    }, 2000);
+    
+  } else {
+    // Create new chapter
+    const chapter = createChapter(classNum, subject, title, description);
+
+    // Add flashcards
+    flashcardsData.forEach(fc => {
+      addFlashcardToChapter(chapter.chapter_id, fc.term, fc.definition);
+    });
+
+    // Add/create questions
+    questionsData.forEach(q => {
+      const question = createQuestion(
+        classNum,
+        subject,
+        title,
+        q.question,
+        q.options,
+        parseInt(q.correct),
+        q.explanation
+      );
+      linkQuestionToChapter(question.question_id, chapter.chapter_id);
+    });
+
+    // Show success
+    document.getElementById('editor-form').style.display = 'none';
+    document.getElementById('success-alert').style.display = 'block';
+
+    setTimeout(() => {
+      window.location.href = 'cms-dashboard.html';
+    }, 2000);
+  }
+});
+
+// Initialize
+renderFlashcards();
+renderQuestions();
               <input type="radio" name="correct_${q.id}" value="${i}" ${q.correct == i ? 'checked' : ''} onchange="updateQuestion('${q.id}', 'correct', ${i})">
               <span style="font-size:0.75rem;color:var(--text-muted);">Correct</span>
             </div>

@@ -54,8 +54,8 @@ footer { background: var(--text); color: white; text-align: center; padding: 2re
 </nav>
 
 <div class="main">
-  <h1 class="title">📝 My Drafts</h1>
-  <p style="color:var(--text-muted);margin-bottom:2rem;font-weight:600;">Your draft and submitted chapters</p>
+  <h1 class="title">📝 My Work</h1>
+  <p style="color:var(--text-muted);margin-bottom:2rem;font-weight:600;">Your draft, submitted, and published chapters</p>
 
   <div id="drafts-list"></div>
 </div>
@@ -103,7 +103,7 @@ if (!user || !['admin', 'contributor'].includes(user.role)) {
 
 const chapters = getStore('ss_chapters');
 const myChapters = Object.values(chapters).filter(ch => ch.created_by === user.user_id);
-const drafts = myChapters.filter(ch => ['draft', 'submitted'].includes(ch.status));
+const drafts = myChapters.filter(ch => ['draft', 'submitted', 'published'].includes(ch.status));
 
 const list = document.getElementById('drafts-list');
 
@@ -117,18 +117,25 @@ if (drafts.length === 0) {
         <div class="draft-meta">Class ${ch.class} • ${ch.subject}</div>
         <div style="margin-top:0.5rem;">
           <span class="draft-status status-${ch.status}">${ch.status}</span>
+          ${ch.status === 'published' ? `<span style="margin-left:0.5rem;font-size:0.75rem;color:var(--teal);font-weight:800;">v${ch.current_version || 1}</span>` : ''}
         </div>
       </div>
       <div class="draft-actions">
-        <button class="btn btn-edit" onclick="editChapter('${ch.chapter_id}')">Edit</button>
-        ${ch.status === 'draft' ? `<button class="btn btn-submit" onclick="submitChapter('${ch.chapter_id}')">Submit</button>` : '<span style="font-size:0.9rem;color:var(--text-muted);">Awaiting Review</span>'}
+        ${ch.status === 'published' ? `<button class="btn btn-edit" onclick="editPublishedChapter('${ch.chapter_id}')">📝 Create New Version</button>` : `<button class="btn btn-edit" onclick="editChapter('${ch.chapter_id}')">Edit</button>`}
+        ${ch.status === 'draft' ? `<button class="btn btn-submit" onclick="submitChapter('${ch.chapter_id}')">Submit</button>` : ch.status === 'submitted' ? '<span style="font-size:0.9rem;color:var(--text-muted);">Awaiting Review</span>' : '<span style="font-size:0.9rem;color:var(--teal);font-weight:700;">✅ Published</span>'}
       </div>
     </div>
   `).join('');
 }
 
 function editChapter(id) {
-  alert('Edit feature coming soon!');
+  window.location.href = `cms-editor.html?edit=${id}`;
+}
+
+function editPublishedChapter(id) {
+  if (confirm('Create a new version for editing?\n\nYour changes will need admin approval before publishing.')) {
+    window.location.href = `cms-editor.html?editVersion=${id}`;
+  }
 }
 
 function submitChapter(chapterId) {
