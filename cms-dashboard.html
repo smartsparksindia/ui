@@ -44,6 +44,8 @@ body {
   overflow-y: auto;
   box-shadow: 0 0 30px rgba(127,119,221,0.06);
   backdrop-filter: blur(18px);
+  display: flex;
+  flex-direction: column;
 }
 
 .cms-logo {
@@ -59,6 +61,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  flex: 1;
 }
 
 .cms-nav-item {
@@ -82,6 +85,18 @@ body {
   background: var(--purple);
   color: white;
   border-left: 4px solid var(--coral);
+}
+
+.cms-nav-item.logout {
+  margin-top: auto;
+  color: var(--error);
+  border-top: 1px solid #F0EBE0;
+  padding-top: 1rem;
+}
+
+.cms-nav-item.logout:hover {
+  background: #FFCDD2;
+  color: #C62828;
 }
 
 .cms-main {
@@ -125,6 +140,8 @@ body {
   font-weight: 800;
   cursor: pointer;
   font-size: 0.9rem;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .btn-primary {
@@ -137,6 +154,27 @@ body {
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 24px rgba(127,119,221,0.28);
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  margin: 0 0.3rem;
+}
+
+.btn-edit {
+  background: var(--purple);
+  color: white;
+}
+
+.btn-unpublish {
+  background: #FFB74D;
+  color: #5D4037;
+}
+
+.btn-delete {
+  background: #EF5350;
+  color: white;
 }
 
 .stats-grid {
@@ -227,6 +265,36 @@ th, td {
   color: var(--teal);
 }
 
+.status-draft {
+  background: var(--amber-light);
+  color: var(--amber);
+}
+
+.status-submitted {
+  background: var(--blue-light);
+  color: var(--blue);
+}
+
+.chapter-row {
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.chapter-row:hover {
+  background: #FAF7FF;
+}
+
+.chapter-title {
+  font-weight: 800;
+  color: var(--purple-dark);
+}
+
+.chapter-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+}
+
 .activity-item {
   padding: 1rem 1rem;
   border: 1px solid #F0EBE0;
@@ -244,32 +312,11 @@ th, td {
   box-shadow: 0 8px 20px rgba(127,119,221,0.08);
 }
 
-.chapter-row {
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease;
-}
-
-.chapter-row:hover {
-  background: #FAF7FF;
-  transform: scale(1.01);
-}
-
-.chapter-title {
-  font-weight: 800;
-  color: var(--purple-dark);
-}
-
-.chapter-subject {
-  font-weight: 700;
+.empty-state {
+  text-align: center;
+  padding: 2rem;
   color: var(--text-muted);
 }
-
-.edit-hint {
-  font-size: 0.8rem;
-  color: var(--purple);
-  font-weight: 700;
-}
-
 
 @media (max-width: 768px) {
   .cms-container {
@@ -288,14 +335,8 @@ th, td {
     padding: 1rem;
   }
 
-  .cms-topbar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .cms-section {
@@ -309,96 +350,214 @@ th, td {
   <aside class="cms-sidebar">
     <div class="cms-logo">Smart<span>Spark</span> CMS</div>
     <nav class="cms-nav">
-      <a href="#" class="cms-nav-item active">📊 Dashboard</a>
-      <a href="#" class="cms-nav-item">✏️ Create Chapter</a>
-      <a href="#" class="cms-nav-item">📝 Edit Chapter</a>
-      <a href="#" class="cms-nav-item">✅ Approval Queue</a>
-      <a href="#" class="cms-nav-item">🏦 Question Bank</a>
-      <a href="#" class="cms-nav-item">📈 Analytics</a>
+      <a href="cms-dashboard.html" class="cms-nav-item active">📊 Dashboard</a>
+      <a href="cms-editor.html" class="cms-nav-item">✏️ Create Chapter</a>
+      <a href="cms-my-drafts.html" class="cms-nav-item">📝 My Drafts</a>
+      <a href="cms-approval-queue.html" class="cms-nav-item">✅ Approval Queue</a>
+      <a href="cms-question-bank.html" class="cms-nav-item">🏦 Question Bank</a>
+      <a href="cms-analytics.html" class="cms-nav-item">📈 Analytics</a>
+      <a href="cms-export.html" class="cms-nav-item">💾 Backup</a>
+      <a href="cms-login.html" class="cms-nav-item logout" onclick="logout()">🚪 Logout</a>
     </nav>
   </aside>
 
   <main class="cms-main">
     <div class="cms-main-inner">
-    <div class="cms-topbar">
-      <h1 class="cms-title">Dashboard</h1>
-      <button class="btn btn-primary">+ Create New Chapter</button>
-    </div>
+      <div class="cms-topbar">
+        <h1 class="cms-title">Dashboard</h1>
+        <a href="cms-editor.html" class="btn btn-primary">+ Create New Chapter</a>
+      </div>
 
-    <div class="stats-grid">
-      <div class="stat-card" onclick="window.location.href='cms-edit-chapter.html'">
-        <div>Published Chapters</div>
-        <div class="stat-value">24</div>
-      </div>
-      <div class="stat-card" onclick="window.location.href='cms-edit-chapter.html'">
-        <div>Your Drafts</div>
-        <div class="stat-value">7</div>
-      </div>
-      <div class="stat-card" onclick="window.location.href='cms-approval-queue.html'">
-        <div>Pending Review</div>
-        <div class="stat-value">5</div>
-      </div>
-      <div class="stat-card" onclick="window.location.href='cms-question-bank.html'">
-        <div>Questions in Bank</div>
-        <div class="stat-value">312</div>
-      </div>
-    </div>
-
-    <div class="cms-section">
-      <h2 class="section-title">📝 Edit Your Recent Chapters</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Chapter</th>
-              <th>Subject</th>
-              <th>Status</th>
-              <th>Updated</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="chapter-row" onclick="window.location.href='cms-edit-chapter.html'">
-              <td>
-                <div class="chapter-title">Introduction to Algebra</div>
-                <div class="edit-hint">Click to edit chapter →</div>
-              </td>
-              <td><span class="chapter-subject">Math</span></td>
-              <td><span class="status-badge status-published">Published</span></td>
-              <td>May 9, 2026</td>
-            </tr>
-            <tr class="chapter-row" onclick="window.location.href='cms-edit-chapter.html'">
-              <td>
-                <div class="chapter-title">Photosynthesis</div>
-                <div class="edit-hint">Click to edit chapter →</div>
-              </td>
-              <td><span class="chapter-subject">Science</span></td>
-              <td><span class="status-badge status-published">Published</span></td>
-              <td>May 8, 2026</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="cms-section">
-      <h2 class="section-title">🔔 Recent Activity</h2>
-      <div class="activity-item">
-        <div>📤</div>
-        <div>
-          <strong>Chapter submitted for review</strong><br>
-          <small>2 hours ago</small>
+      <div class="stats-grid">
+        <div class="stat-card" onclick="window.location.href='cms-analytics.html'">
+          <div>Published Chapters</div>
+          <div class="stat-value" id="stat-published">0</div>
+        </div>
+        <div class="stat-card" onclick="window.location.href='cms-my-drafts.html'">
+          <div>Your Drafts</div>
+          <div class="stat-value" id="stat-drafts">0</div>
+        </div>
+        <div class="stat-card" onclick="window.location.href='cms-approval-queue.html'">
+          <div>Pending Review</div>
+          <div class="stat-value" id="stat-pending">0</div>
+        </div>
+        <div class="stat-card" onclick="window.location.href='cms-question-bank.html'">
+          <div>Total Questions</div>
+          <div class="stat-value" id="stat-questions">0</div>
         </div>
       </div>
-      <div class="activity-item">
-        <div>✅</div>
-        <div>
-          <strong>Chapter published</strong><br>
-          <small>Yesterday</small>
+
+      <div class="cms-section">
+        <h2 class="section-title">📖 Published Chapters</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Chapter</th>
+                <th>Subject</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="chapters-tbody">
+              <tr>
+                <td colspan="4" class="empty-state">Loading chapters...</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-    </div>
+
+      <div class="cms-section">
+        <h2 class="section-title">⏳ Pending Approvals</h2>
+        <div id="pending-list"></div>
       </div>
+    </div>
   </main>
 </div>
+
+<script src="data-layer.js"></script>
+<script>
+const user = getCurrentUser();
+if (!user || !['admin', 'contributor'].includes(user.role)) {
+  window.location.href = 'cms-login.html';
+}
+
+// GET DATA
+const chapters = getStore('ss_chapters');
+const published = Object.values(chapters).filter(ch => ch.status === 'published').sort((a, b) => new Date(b.approved_at) - new Date(a.approved_at));
+const submitted = Object.values(chapters).filter(ch => ch.status === 'submitted');
+const drafts = Object.values(chapters).filter(ch => ch.created_by === user.user_id && ch.status === 'draft');
+const qb = getStore('ss_question_bank');
+
+// UPDATE STATS
+document.getElementById('stat-published').textContent = published.length;
+document.getElementById('stat-drafts').textContent = drafts.length;
+document.getElementById('stat-pending').textContent = submitted.length;
+document.getElementById('stat-questions').textContent = Object.keys(qb).length;
+
+// RENDER CHAPTERS
+const tbody = document.getElementById('chapters-tbody');
+if (published.length === 0) {
+  tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No published chapters yet</td></tr>';
+} else {
+  tbody.innerHTML = published.map(ch => `
+    <tr class="chapter-row">
+      <td>
+        <div class="chapter-title">${ch.title}</div>
+        <div class="chapter-meta">Class ${ch.class}</div>
+      </td>
+      <td>${ch.subject}</td>
+      <td><span class="status-badge status-published">Published</span></td>
+      <td>
+        <button class="btn btn-sm btn-edit" onclick="editChapter('${ch.chapter_id}')">Edit</button>
+        <button class="btn btn-sm btn-unpublish" onclick="unpublishChapter('${ch.chapter_id}')">Unpublish</button>
+        <button class="btn btn-sm btn-delete" onclick="deleteChapter('${ch.chapter_id}')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// RENDER PENDING
+const pendingList = document.getElementById('pending-list');
+if (submitted.length === 0) {
+  pendingList.innerHTML = '<div class="empty-state">No pending chapters for review</div>';
+} else {
+  pendingList.innerHTML = submitted.map(ch => `
+    <div class="activity-item">
+      <div>📤</div>
+      <div style="flex:1;">
+        <strong>${ch.title}</strong><br>
+        <small>Class ${ch.class} • ${ch.subject}</small>
+      </div>
+      <button class="btn btn-sm btn-primary" onclick="approveChapter('${ch.chapter_id}')">Approve</button>
+      <button class="btn btn-sm btn-delete" onclick="rejectChapter('${ch.chapter_id}')">Reject</button>
+    </div>
+  `).join('');
+}
+
+// FUNCTIONS
+function editChapter(id) {
+  alert('Edit feature coming soon! You can delete and recreate the chapter.');
+}
+
+function unpublishChapter(id) {
+  if (confirm('Move to draft? Chapter will no longer be visible to students.')) {
+    const ch = getFromStore('ss_chapters', id);
+    if (ch) {
+      ch.status = 'draft';
+      addToStore('ss_chapters', id, ch);
+      location.reload();
+    }
+  }
+}
+
+function deleteChapter(id) {
+  if (confirm('Delete chapter permanently? This cannot be undone!')) {
+    const chapters = getStore('ss_chapters');
+    delete chapters[id];
+    localStorage.setItem('ss_chapters', JSON.stringify(chapters));
+    location.reload();
+  }
+}
+
+function approveChapter(id) {
+  if (confirm('Publish this chapter?')) {
+    const ch = getFromStore('ss_chapters', id);
+    if (ch) {
+      const newVersion = (ch.current_version || 0) + 1;
+      if (!ch.versions) ch.versions = [];
+      ch.versions.push({
+        version: newVersion,
+        status: 'published',
+        published_at: new Date().toISOString()
+      });
+      ch.current_version = newVersion;
+      ch.status = 'published';
+      ch.approved_at = new Date().toISOString();
+      ch.approved_by = user.user_id;
+      addToStore('ss_chapters', id, ch);
+      location.reload();
+    }
+  }
+}
+
+function rejectChapter(id) {
+  const feedback = prompt('Rejection feedback:');
+  if (feedback) {
+    const ch = getFromStore('ss_chapters', id);
+    if (ch) {
+      ch.status = 'draft';
+      ch.rejection_feedback = feedback;
+      addToStore('ss_chapters', id, ch);
+      location.reload();
+    }
+  }
+}
+
+function logout() {
+  logoutUser();
+  window.location.href = 'cms-login.html';
+}
+
+function getFromStore(key, id) {
+  try {
+    const store = JSON.parse(localStorage.getItem(key)) || {};
+    return store[id];
+  } catch {
+    return null;
+  }
+}
+
+function addToStore(key, id, data) {
+  try {
+    const store = JSON.parse(localStorage.getItem(key)) || {};
+    store[id] = data;
+    localStorage.setItem(key, JSON.stringify(store));
+  } catch (e) {
+    console.error('Storage error:', e);
+  }
+}
+</script>
 </body>
 </html>
