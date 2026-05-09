@@ -65,6 +65,7 @@ footer { background: var(--text); color: white; text-align: center; padding: 2re
 </footer>
 
 <script src="data-layer.js"></script>
+<script src="data-layer.js"></script>
 <script>
 // Helper functions for storage operations
 function getFromStore(key, id) {
@@ -123,6 +124,7 @@ if (drafts.length === 0) {
       <div class="draft-actions">
         ${ch.status === 'published' ? `<button class="btn btn-edit" onclick="editPublishedChapter('${ch.chapter_id}')">📝 Create New Version</button>` : `<button class="btn btn-edit" onclick="editChapter('${ch.chapter_id}')">Edit</button>`}
         ${ch.status === 'draft' ? `<button class="btn btn-submit" onclick="submitChapter('${ch.chapter_id}')">Submit</button>` : ch.status === 'submitted' ? '<span style="font-size:0.9rem;color:var(--text-muted);">Awaiting Review</span>' : '<span style="font-size:0.9rem;color:var(--teal);font-weight:700;">✅ Published</span>'}
+        <button class="btn btn-delete" style="background:#ffe5e5;border:2px solid #ffb3b3;color:#b30000;" onclick="deleteChapter('${ch.chapter_id}')">Delete</button>
       </div>
     </div>
   `).join('');
@@ -133,13 +135,17 @@ function editChapter(id) {
 }
 
 function editPublishedChapter(id) {
-  if (confirm('Create a new version for editing?\n\nYour changes will need admin approval before publishing.')) {
+  if (confirm('Create a new version for editing?
+
+Your changes will need admin approval before publishing.')) {
     window.location.href = `cms-editor.html?editVersion=${id}`;
   }
 }
 
 function submitChapter(chapterId) {
-  if (confirm('Submit this chapter for admin review?\n\nOnce submitted, an admin will review and approve it for publication.')) {
+  if (confirm('Submit this chapter for admin review?
+
+Once submitted, an admin will review and approve it for publication.')) {
     const chapter = getFromStore('ss_chapters', chapterId);
     if (chapter) {
       chapter.status = 'submitted';
@@ -151,7 +157,22 @@ function submitChapter(chapterId) {
         title: chapter.title
       });
       
-      alert('✅ Chapter submitted for review!\n\nThe admin will review your chapter and either approve it or provide feedback.');
+      alert('✅ Chapter submitted for review!
+
+The admin will review your chapter and either approve it or provide feedback.');
+      location.reload();
+    }
+  }
+}
+
+function deleteChapter(chapterId) {
+  if (confirm('⚠️ Delete this chapter?
+
+This action cannot be undone.')) {
+    const chapters = getStore('ss_chapters');
+    if (chapters[chapterId]) {
+      delete chapters[chapterId];
+      localStorage.setItem('ss_chapters', JSON.stringify(chapters));
       location.reload();
     }
   }
