@@ -67,6 +67,14 @@ document.getElementById('total-score').textContent = getTotalScore();
 const chapters = getChaptersForYearSubject(year, subject);
 const list = document.getElementById('chapters-list');
 
+const colorMap = {
+  'Science': '#1D9E75',
+  'Maths': '#7F77DD',
+  'English': '#D4537E',
+  'Social Science': '#BA7517'
+};
+const accent = colorMap[subject] || '#7F77DD';
+
 chapters.forEach((ch, i) => {
   const bestScore = getChapterScore(year, subject, ch.chapter_id);
   const maxScore = (ch.question_ids || []).length * 20;
@@ -98,15 +106,7 @@ chapters.forEach((ch, i) => {
       </button>
     </div>
   `;
-  card.onclick = () => { 
-    // Auto-login student demo user if not logged in
-    if (!getCurrentUser()) {
-      const student = registerUser('Student Demo', 'student@smartspark.in', 'student123', 'student', 6);
-      loginUser('student@smartspark.in', 'student123');
-    }
-    setState({ chapter: ch.chapter_id }); 
-    window.location.href = 'learn.html'; 
-  };
+  card.onclick = () => { setState({ chapter: ch.chapter_id }); window.location.href = 'learn.html'; };
   list.appendChild(card);
 });
 

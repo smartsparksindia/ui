@@ -330,135 +330,40 @@ textarea {
 
 <script src="data-layer.js"></script>
 <script>
+// ============================================
+// STATE & INITIALIZATION
+// ============================================
 const user = getCurrentUser();
 if (!user || !['admin', 'contributor'].includes(user.role)) {
   window.location.href = 'cms-login.html';
 }
 
-// Check if editing existing chapter
 const urlParams = new URLSearchParams(window.location.search);
 const editChapterId = urlParams.get('edit');
 const editVersionChapterId = urlParams.get('editVersion');
-let isEditingChapter = false;
-let currentChapterId = null;
-let isCreatingNewVersion = false;
 
+let isEditingChapter = false;
+let isCreatingNewVersion = false;
+let currentChapterId = null;
 let flashcardsData = [];
 let questionsData = [];
 
-// Load existing chapter if editing
-if (editChapterId) {
-  isEditingChapter = true;
-  currentChapterId = editChapterId;
-  document.querySelector('.editor-title').textContent = '✏️ Edit Chapter';
-  
-  const chapter = getFromStore('ss_chapters', editChapterId);
-  if (!chapter) {
-    alert('Chapter not found');
-    window.location.href = 'cms-my-drafts.html';
-  }
-  
-  // Populate form
-  document.getElementById('class').value = chapter.class;
-  document.getElementById('subject').value = chapter.subject;
-  document.getElementById('title').value = chapter.title;
-  document.getElementById('description').value = chapter.description;
-  
-  // Load flashcards
-  if (chapter.flashcard_ids) {
-    chapter.flashcard_ids.forEach(fcId => {
-      const fc = getFromStore('ss_flashcards', fcId);
-      if (fc) {
-        flashcardsData.push({
-          id: fc.flashcard_id,
-          term: fc.term,
-          definition: fc.definition
-        });
-      }
-    });
-  }
-  
-  // Load questions
-  if (chapter.question_ids) {
-    chapter.question_ids.forEach(qId => {
-      const q = getFromStore('ss_question_bank', qId);
-      if (q) {
-        questionsData.push({
-          id: q.question_id,
-          question: q.question_text,
-          options: q.options,
-          correct: q.correct_option_index,
-          explanation: q.explanation
-        });
-      }
-    });
-  }
-}
-
-// Load published chapter for creating new version
-if (editVersionChapterId) {
-  isCreatingNewVersion = true;
-  currentChapterId = editVersionChapterId;
-  document.querySelector('.editor-title').textContent = '✏️ Create New Version';
-  
-  const chapter = getFromStore('ss_chapters', editVersionChapterId);
-  if (!chapter) {
-    alert('Chapter not found');
-    window.location.href = 'cms-my-drafts.html';
-  }
-  
-  // Populate form
-  document.getElementById('class').value = chapter.class;
-  document.getElementById('subject').value = chapter.subject;
-  document.getElementById('title').value = chapter.title;
-  document.getElementById('description').value = chapter.description;
-  
-  // Load flashcards
-  if (chapter.flashcard_ids) {
-    chapter.flashcard_ids.forEach(fcId => {
-      const fc = getFromStore('ss_flashcards', fcId);
-      if (fc) {
-        flashcardsData.push({
-          id: fc.flashcard_id,
-          term: fc.term,
-          definition: fc.definition
-        });
-      }
-    });
-  }
-  
-  // Load questions
-  if (chapter.question_ids) {
-    chapter.question_ids.forEach(qId => {
-      const q = getFromStore('ss_question_bank', qId);
-      if (q) {
-        questionsData.push({
-          id: q.question_id,
-          question: q.question_text,
-          options: q.options,
-          correct: q.correct_option_index,
-          explanation: q.explanation
-        });
-      }
-    });
-  }
-}
-
-// Helper to get from store
-function getFromStore(key, id) {
-  const store = getStore(key);
-  return store[id];
-}
-
+// ============================================
+// FLASHCARD FUNCTIONS
+// ============================================
 function addFlashcard() {
-  const id = 'fc_' + Date.now();
-  flashcardsData.push({ id, term: '', definition: '' });
+  flashcardsData.push({ id: 'fc_' + Date.now(), term: '', definition: '' });
   renderFlashcards();
 }
 
 function removeFlashcard(id) {
   flashcardsData = flashcardsData.filter(fc => fc.id !== id);
   renderFlashcards();
+}
+
+function updateFlashcard(id, field, value) {
+  const fc = flashcardsData.find(f => f.id === id);
+  if (fc) fc[field] = value;
 }
 
 function renderFlashcards() {
@@ -475,15 +380,12 @@ function renderFlashcards() {
   `).join('');
 }
 
-function updateFlashcard(id, field, value) {
-  const fc = flashcardsData.find(f => f.id === id);
-  if (fc) fc[field] = value;
-}
-
+// ============================================
+// QUESTION FUNCTIONS
+// ============================================
 function addQuestion() {
-  const id = 'q_' + Date.now();
   questionsData.push({
-    id,
+    id: 'q_' + Date.now(),
     question: '',
     options: ['', '', '', ''],
     correct: 0,
@@ -497,31 +399,6 @@ function removeQuestion(id) {
   renderQuestions();
 }
 
-function renderQuestions() {
-  const list = document.getElementById('questions-list');
-  list.innerHTML = questionsData.map((q, idx) => `
-    <div class="item-card">
-      <div class="item-content" style="width:100%;">
-        <div class="item-label">Question ${idx + 1}</div>
-        <input type="text" placeholder="Question" value="${q.question}" style="margin:0.5rem 0;" onchange="updateQuestion('${q.id}', 'question', this.value)">
-        
-        <div style="margin:0.8rem 0;">
-          <label style="font-size:0.8rem;color:var(--text-muted);">Options:</label>
-          ${q.options.map((opt, i) => `
-            <div style="display:flex;gap:0.5rem;margin-top:0.3rem;align-items:center;">
-              <input type="text" placeholder="Option ${i+1}" value="${opt}" style="flex:1;" onchange="updateQuestionOption('${q.id}', ${i}, this.value)">
-              <input type="radio" name="correct_${q.id}" value="${i}" ${q.correct == i ? 'checked' : ''} onchange="updateQuestion('${q.id}', 'correct', ${i})">
-            </div>
-          `).join('')}
-        </div>
-        
-        <textarea placeholder="Explanation" style="margin:0.5rem 0;" onchange="updateQuestion('${q.id}', 'explanation', this.value)">${q.explanation}</textarea>
-      </div>
-      <button type="button" class="btn btn-remove" onclick="removeQuestion('${q.id}')">Remove</button>
-    </div>
-  `).join('');
-}
-
 function updateQuestion(id, field, value) {
   const q = questionsData.find(x => x.id === id);
   if (q) q[field] = value;
@@ -532,6 +409,150 @@ function updateQuestionOption(id, idx, value) {
   if (q) q.options[idx] = value;
 }
 
+function renderQuestions() {
+  const list = document.getElementById('questions-list');
+  list.innerHTML = questionsData.map((q, idx) => `
+    <div class="item-card">
+      <div class="item-content" style="width:100%;">
+        <div class="item-label">Question ${idx + 1}</div>
+        <input type="text" placeholder="Question" value="${q.question}" style="margin:0.5rem 0;" onchange="updateQuestion('${q.id}', 'question', this.value)">
+        <div style="margin:0.8rem 0;">
+          <label style="font-size:0.8rem;color:var(--text-muted);">Options:</label>
+          ${q.options.map((opt, i) => `
+            <div style="display:flex;gap:0.5rem;margin-top:0.3rem;align-items:center;">
+              <input type="text" placeholder="Option ${i+1}" value="${opt}" style="flex:1;" onchange="updateQuestionOption('${q.id}', ${i}, this.value)">
+              <input type="radio" name="correct_${q.id}" value="${i}" ${q.correct == i ? 'checked' : ''} onchange="updateQuestion('${q.id}', 'correct', ${i})">
+            </div>
+          `).join('')}
+        </div>
+        <textarea placeholder="Explanation" style="margin:0.5rem 0;" onchange="updateQuestion('${q.id}', 'explanation', this.value)">${q.explanation}</textarea>
+      </div>
+      <button type="button" class="btn btn-remove" onclick="removeQuestion('${q.id}')">Remove</button>
+    </div>
+  `).join('');
+}
+
+// ============================================
+// CSV FUNCTIONS
+// ============================================
+function downloadCSVTemplate() {
+  const csv = `question,option1,option2,option3,option4,correct,explanation
+What is H2O?,Water,Oxygen,Hydrogen,Salt,1,H2O is water molecule
+What is photosynthesis?,Plant food making,Animal breathing,Water cycle,Soil formation,0,Photosynthesis is the process by which plants convert sunlight into chemical energy
+Which planet is closest to sun?,Mercury,Venus,Earth,Mars,0,Mercury is the closest planet to the sun
+What does DNA stand for?,Deoxyribonucleic acid,Dynamic neutral acid,Diatomic nitrogen acid,Data natural acid,0,DNA stands for Deoxyribonucleic acid`;
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'SmartSpark-Questions-Template.csv';
+  a.click();
+  window.URL.revokeObjectURL(url);
+}
+
+function importCSV(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const csv = e.target.result;
+      const lines = csv.trim().split('\n');
+      const headers = lines[0].split(',').map(h => h.trim());
+      const required = ['question', 'option1', 'option2', 'option3', 'option4', 'correct', 'explanation'];
+      if (!required.every(h => headers.includes(h))) {
+        alert('❌ CSV must have columns: ' + required.join(', '));
+        return;
+      }
+      let imported = 0;
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        const values = lines[i].split(',').map(v => v.trim());
+        const question = {
+          id: 'q_' + Date.now() + '_' + i,
+          question: values[0],
+          options: [values[1], values[2], values[3], values[4]],
+          correct: parseInt(values[5]) || 0,
+          explanation: values[6] || ''
+        };
+        if (!question.question || question.options.some(o => !o)) {
+          console.warn('Skipping invalid row:', i);
+          continue;
+        }
+        questionsData.push(question);
+        imported++;
+      }
+      renderQuestions();
+      document.getElementById('csv-status').innerHTML = `✅ Imported ${imported} question${imported !== 1 ? 's' : ''}!`;
+      document.getElementById('csv-file').value = '';
+      setTimeout(() => { document.getElementById('csv-status').innerHTML = ''; }, 3000);
+    } catch (error) {
+      alert('❌ Error reading CSV: ' + error.message);
+      console.error(error);
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ============================================
+// LOAD EXISTING CHAPTER DATA IF EDITING
+// ============================================
+if (editChapterId || editVersionChapterId) {
+  isEditingChapter = editChapterId ? true : false;
+  isCreatingNewVersion = editVersionChapterId ? true : false;
+  currentChapterId = editChapterId || editVersionChapterId;
+  
+  const title = isEditingChapter ? '✏️ Edit Chapter' : '✏️ Create New Version';
+  document.querySelector('.editor-title').textContent = title;
+  
+  const chapters = getStore('ss_chapters');
+  const chapter = chapters[currentChapterId];
+  
+  if (!chapter) {
+    alert('Chapter not found');
+    window.location.href = 'cms-my-drafts.html';
+  }
+  
+  // Populate form
+  document.getElementById('class').value = chapter.class;
+  document.getElementById('subject').value = chapter.subject;
+  document.getElementById('title').value = chapter.title;
+  document.getElementById('description').value = chapter.description;
+  document.getElementById('objectives').value = (chapter.learning_objectives || []).join(', ');
+  document.getElementById('time').value = chapter.estimated_time_minutes || 45;
+  
+  // Load flashcards
+  if (chapter.flashcard_ids && chapter.flashcard_ids.length > 0) {
+    const fcs = getStore('ss_flashcards');
+    chapter.flashcard_ids.forEach(fcId => {
+      const fc = fcs[fcId];
+      if (fc) {
+        flashcardsData.push({ id: fcId, term: fc.term, definition: fc.definition });
+      }
+    });
+  }
+  
+  // Load questions
+  if (chapter.question_ids && chapter.question_ids.length > 0) {
+    const qb = getStore('ss_question_bank');
+    chapter.question_ids.forEach(qId => {
+      const q = qb[qId];
+      if (q) {
+        questionsData.push({
+          id: qId,
+          question: q.question_text,
+          options: q.options,
+          correct: q.correct_option_index,
+          explanation: q.explanation
+        });
+      }
+    });
+  }
+}
+
+// ============================================
+// FORM SUBMISSION
+// ============================================
 document.getElementById('editor-form').addEventListener('submit', (e) => {
   e.preventDefault();
 
@@ -540,25 +561,24 @@ document.getElementById('editor-form').addEventListener('submit', (e) => {
   const title = document.getElementById('title').value;
   const description = document.getElementById('description').value;
 
-  // Flashcards are now OPTIONAL
   if (!classNum || !subject || !title || questionsData.length === 0) {
     alert('Please fill in: Class, Subject, Title, Description, and at least 1 question');
     return;
   }
 
-  // If editing existing chapter, update it
   if (isEditingChapter || isCreatingNewVersion) {
-    const chapter = getFromStore('ss_chapters', currentChapterId);
+    // UPDATE EXISTING CHAPTER OR CREATE NEW VERSION
+    const chapters = getStore('ss_chapters');
+    const chapter = chapters[currentChapterId];
     
-    // Create new draft version based on existing chapter
     const newChapter = {
       chapter_id: currentChapterId,
       class: classNum,
       subject: subject,
       title: title,
       description: description,
-      learning_objectives: chapter.learning_objectives || [],
-      estimated_time_minutes: 45,
+      learning_objectives: document.getElementById('objectives').value.split(',').map(o => o.trim()).filter(o => o),
+      estimated_time_minutes: parseInt(document.getElementById('time').value) || 45,
       current_version: chapter.current_version,
       versions: chapter.versions || [],
       status: isCreatingNewVersion ? 'draft' : chapter.status,
@@ -571,13 +591,12 @@ document.getElementById('editor-form').addEventListener('submit', (e) => {
       flashcard_ids: []
     };
     
-    // Save updated chapter
     addToStore('ss_chapters', currentChapterId, newChapter);
     
-    // Update flashcards (add new ones, keep existing)
+    // Update flashcards
+    const fcs = getStore('ss_flashcards');
     flashcardsData.forEach((fc, idx) => {
       if (fc.id.startsWith('fc_')) {
-        // New flashcard
         const newFcId = `fc_${currentChapterId}_${idx}_${Date.now()}`;
         const flashcard = {
           flashcard_id: newFcId,
@@ -592,15 +611,14 @@ document.getElementById('editor-form').addEventListener('submit', (e) => {
         addToStore('ss_flashcards', newFcId, flashcard);
         newChapter.flashcard_ids.push(newFcId);
       } else {
-        // Existing flashcard
         newChapter.flashcard_ids.push(fc.id);
       }
     });
     
     // Update questions
+    const qb = getStore('ss_question_bank');
     questionsData.forEach((q) => {
       if (q.id.startsWith('q_')) {
-        // New question
         const newQId = `q_${currentChapterId}_${Date.now()}`;
         const question = {
           question_id: newQId,
@@ -624,220 +642,44 @@ document.getElementById('editor-form').addEventListener('submit', (e) => {
         addToStore('ss_question_bank', newQId, question);
         newChapter.question_ids.push(newQId);
       } else {
-        // Existing question
         newChapter.question_ids.push(q.id);
       }
     });
     
-    // Save final chapter
     addToStore('ss_chapters', currentChapterId, newChapter);
     
-    // Record event
-    if (isCreatingNewVersion) {
-      recordAnalyticsEvent(user.user_id, 'chapter_new_version', {
-        chapter_id: currentChapterId,
-        title: title,
-        from_version: chapter.current_version
-      });
-    } else {
-      recordAnalyticsEvent(user.user_id, 'chapter_edited', {
-        chapter_id: currentChapterId,
-        title: title
-      });
-    }
+    const eventType = isCreatingNewVersion ? 'chapter_new_version' : 'chapter_edited';
+    recordAnalyticsEvent(user.user_id, eventType, {
+      chapter_id: currentChapterId,
+      title: title
+    });
     
     document.getElementById('editor-form').style.display = 'none';
     document.getElementById('success-alert').style.display = 'block';
-    
-    setTimeout(() => {
-      window.location.href = 'cms-my-drafts.html';
-    }, 2000);
-    
+    setTimeout(() => { window.location.href = 'cms-my-drafts.html'; }, 2000);
   } else {
-    // Create new chapter
+    // CREATE NEW CHAPTER
     const chapter = createChapter(classNum, subject, title, description);
-
-    // Add flashcards
     flashcardsData.forEach(fc => {
       addFlashcardToChapter(chapter.chapter_id, fc.term, fc.definition);
     });
-
-    // Add/create questions
     questionsData.forEach(q => {
-      const question = createQuestion(
-        classNum,
-        subject,
-        title,
-        q.question,
-        q.options,
-        parseInt(q.correct),
-        q.explanation
-      );
+      const question = createQuestion(classNum, subject, title, q.question, q.options, parseInt(q.correct), q.explanation);
       linkQuestionToChapter(question.question_id, chapter.chapter_id);
     });
-
-    // Show success
+    
     document.getElementById('editor-form').style.display = 'none';
     document.getElementById('success-alert').style.display = 'block';
-
-    setTimeout(() => {
-      window.location.href = 'cms-dashboard.html';
-    }, 2000);
+    setTimeout(() => { window.location.href = 'cms-dashboard.html'; }, 2000);
   }
 });
 
-// Initialize
+// ============================================
+// INITIALIZE RENDERS
+// ============================================
 renderFlashcards();
 renderQuestions();
-              <input type="radio" name="correct_${q.id}" value="${i}" ${q.correct == i ? 'checked' : ''} onchange="updateQuestion('${q.id}', 'correct', ${i})">
-              <span style="font-size:0.75rem;color:var(--text-muted);">Correct</span>
-            </div>
-          `).join('')}
-        </div>
-
-        <textarea placeholder="Explanation" style="margin:0.5rem 0;" onchange="updateQuestion('${q.id}', 'explanation', this.value)">${q.explanation}</textarea>
-      </div>
-      <button type="button" class="btn btn-remove" onclick="removeQuestion('${q.id}')">Remove</button>
-    </div>
-  `).join('');
-}
-
-function updateQuestion(id, field, value) {
-  const q = questionsData.find(x => x.id === id);
-  if (q) q[field] = value;
-}
-
-function updateQuestionOption(id, idx, value) {
-  const q = questionsData.find(x => x.id === id);
-  if (q) q.options[idx] = value;
-}
-
-document.getElementById('editor-form').addEventListener('submit', (e) => {
-  e.preventDefault();
-
-  const classNum = parseInt(document.getElementById('class').value);
-  const subject = document.getElementById('subject').value;
-  const title = document.getElementById('title').value;
-  const description = document.getElementById('description').value;
-
-  // Flashcards are now OPTIONAL
-  if (!classNum || !subject || !title || questionsData.length === 0) {
-    alert('Please fill in: Class, Subject, Title, Description, and at least 1 question');
-    return;
-  }
-
-  // Create chapter
-  const chapter = createChapter(classNum, subject, title, description);
-
-  // Add flashcards
-  flashcardsData.forEach(fc => {
-    addFlashcardToChapter(chapter.chapter_id, fc.term, fc.definition);
-  });
-
-  // Add/create questions
-  questionsData.forEach(q => {
-    const question = createQuestion(
-      classNum,
-      subject,
-      title,
-      q.question,
-      q.options,
-      parseInt(q.correct),
-      q.explanation
-    );
-    linkQuestionToChapter(question.question_id, chapter.chapter_id);
-  });
-
-  // Show success
-  document.getElementById('editor-form').style.display = 'none';
-  document.getElementById('success-alert').style.display = 'block';
-
-  setTimeout(() => {
-    window.location.href = 'cms-dashboard.html';
-  }, 2000);
-});
-
-// Initialize
-renderFlashcards();
-renderQuestions();
-
-// CSV TEMPLATE DOWNLOAD
-function downloadCSVTemplate() {
-  const csv = `question,option1,option2,option3,option4,correct,explanation
-What is H2O?,Water,Oxygen,Hydrogen,Salt,1,H2O is water molecule
-What is photosynthesis?,Plant food making,Animal breathing,Water cycle,Soil formation,0,Photosynthesis is the process by which plants convert sunlight into chemical energy
-Which planet is closest to sun?,Mercury,Venus,Earth,Mars,0,Mercury is the closest planet to the sun
-What does DNA stand for?,Deoxyribonucleic acid,Dynamic neutral acid,Diatomic nitrogen acid,Data natural acid,0,DNA stands for Deoxyribonucleic acid`;
-  
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'SmartSpark-Questions-Template.csv';
-  a.click();
-  window.URL.revokeObjectURL(url);
-}
-
-// CSV IMPORT
-function importCSV(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const csv = e.target.result;
-      const lines = csv.trim().split('\n');
-      const headers = lines[0].split(',').map(h => h.trim());
-      
-      // Validate headers
-      const required = ['question', 'option1', 'option2', 'option3', 'option4', 'correct', 'explanation'];
-      const hasAll = required.every(h => headers.includes(h));
-      
-      if (!hasAll) {
-        alert('❌ CSV must have columns: ' + required.join(', '));
-        return;
-      }
-      
-      // Parse data
-      let imported = 0;
-      for (let i = 1; i < lines.length; i++) {
-        if (!lines[i].trim()) continue;
-        
-        const values = lines[i].split(',').map(v => v.trim());
-        const question = {
-          id: 'q_' + Date.now() + '_' + i,
-          question: values[0],
-          options: [values[1], values[2], values[3], values[4]],
-          correct: parseInt(values[5]) || 0,
-          explanation: values[6] || ''
-        };
-        
-        // Validate
-        if (!question.question || question.options.some(o => !o)) {
-          console.warn('Skipping invalid row:', i);
-          continue;
-        }
-        
-        questionsData.push(question);
-        imported++;
-      }
-      
-      renderQuestions();
-      document.getElementById('csv-status').innerHTML = `✅ Imported ${imported} question${imported !== 1 ? 's' : ''}!`;
-      document.getElementById('csv-file').value = '';
-      
-      setTimeout(() => {
-        document.getElementById('csv-status').innerHTML = '';
-      }, 3000);
-      
-    } catch (error) {
-      alert('❌ Error reading CSV: ' + error.message);
-      console.error(error);
-    }
-  };
-  reader.readAsText(file);
-}
+</script>
 </script>
 </body>
 </html>
