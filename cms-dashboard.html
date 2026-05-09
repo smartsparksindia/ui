@@ -27,7 +27,13 @@ body {
   color: var(--text);
   overflow-x: hidden;
 }
-.cms-container { display: flex; min-height: 100vh; width: 100%; }
+
+.cms-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
 .cms-sidebar {
   background: rgba(255,255,255,0.94);
   border-right: 1px solid rgba(240,235,224,0.8);
@@ -39,6 +45,7 @@ body {
   box-shadow: 0 0 30px rgba(127,119,221,0.06);
   backdrop-filter: blur(18px);
 }
+
 .cms-logo {
   padding: 0 1.5rem;
   margin-bottom: 2rem;
@@ -47,7 +54,13 @@ body {
   color: var(--purple);
 }
 .cms-logo span { color: var(--coral); }
-.cms-nav { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.cms-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .cms-nav-item {
   padding: 0.9rem 1.5rem;
   text-decoration: none;
@@ -59,19 +72,31 @@ body {
   align-items: center;
   gap: 0.8rem;
 }
-.cms-nav-item:hover { background: var(--purple-light); color: var(--purple); }
+
+.cms-nav-item:hover {
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
 .cms-nav-item.active {
   background: var(--purple);
   color: white;
   border-left: 4px solid var(--coral);
 }
+
 .cms-main {
   flex: 1;
   margin-left: 250px;
   padding: 2rem 2rem 3rem;
   max-width: calc(100vw - 250px);
 }
-.cms-main-inner { width: 100%; max-width: 1400px; margin: 0 auto; }
+
+.cms-main-inner {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
 .cms-topbar {
   background: #FFFFFF;
   padding: 1.5rem 2rem;
@@ -83,11 +108,16 @@ body {
   border-radius: 28px;
   box-shadow: 0 10px 35px rgba(127,119,221,0.08);
 }
-.cms-topbar .btn-primary { margin-left: auto; }
+
+.cms-topbar .btn-primary {
+  margin-left: auto;
+}
+
 .cms-title {
   font-family: 'Fredoka One', cursive;
   font-size: 1.8rem;
 }
+
 .btn {
   padding: 0.8rem 1.5rem;
   border-radius: var(--radius-sm);
@@ -96,17 +126,26 @@ body {
   cursor: pointer;
   font-size: 0.9rem;
 }
+
 .btn-primary {
   background: linear-gradient(135deg, var(--purple), #968DFF);
   color: white;
   box-shadow: 0 10px 20px rgba(127,119,221,0.22);
+  transition: all 0.2s ease;
 }
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 24px rgba(127,119,221,0.28);
+}
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1.4rem;
   margin-bottom: 2rem;
 }
+
 .stat-card {
   background: #FFFFFF;
   border-radius: 24px;
@@ -118,13 +157,33 @@ body {
   position: relative;
   overflow: hidden;
 }
-.stat-card:hover { transform: translateY(-4px); }
+
+.stat-card::after {
+  content: '→';
+  position: absolute;
+  right: 1.4rem;
+  top: 1.4rem;
+  font-size: 1.1rem;
+  color: rgba(127,119,221,0.4);
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover::after {
+  transform: translateX(4px);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(127,119,221,0.12);
+}
+
 .stat-value {
   font-family: 'Fredoka One', cursive;
   font-size: 2.2rem;
   color: var(--purple);
   margin-top: 0.4rem;
 }
+
 .cms-section {
   background: #FFFFFF;
   border-radius: 28px;
@@ -133,39 +192,115 @@ body {
   border: 1px solid #F3EEFF;
   box-shadow: 0 12px 36px rgba(127,119,221,0.07);
 }
+
 .section-title {
   font-family: 'Fredoka One', cursive;
   font-size: 1.4rem;
   margin-bottom: 1rem;
 }
-table { width: 100%; border-collapse: collapse; }
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
 th, td {
   padding: 1rem;
   text-align: left;
   border-bottom: 1px solid #F0EBE0;
 }
-.chapter-row { cursor: pointer; }
-.chapter-row:hover { background: #FAF7FF; }
+
+.status-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.status-published {
+  background: var(--teal-light);
+  color: var(--teal);
+}
+
 .activity-item {
-  padding: 1rem;
+  padding: 1rem 1rem;
   border: 1px solid #F0EBE0;
   border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   margin-bottom: 1rem;
   background: linear-gradient(to right, #ffffff, #faf7ff);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
+
+.activity-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(127,119,221,0.08);
+}
+
+.chapter-row {
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.chapter-row:hover {
+  background: #FAF7FF;
+  transform: scale(1.01);
+}
+
+.chapter-title {
+  font-weight: 800;
+  color: var(--purple-dark);
+}
+
+.chapter-subject {
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.edit-hint {
+  font-size: 0.8rem;
+  color: var(--purple);
+  font-weight: 700;
+}
+
+
 @media (max-width: 768px) {
-  .cms-container { flex-direction: column; }
+  .cms-container {
+    flex-direction: column;
+  }
+
   .cms-sidebar {
     width: 100%;
     height: auto;
     position: relative;
   }
+
   .cms-main {
     margin-left: 0;
     max-width: 100%;
     padding: 1rem;
   }
-  .stats-grid { grid-template-columns: 1fr; }
+
+  .cms-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cms-section {
+    padding: 1.25rem;
+  }
 }
 </style>
 </head>
@@ -173,15 +308,96 @@ th, td {
 <div class="cms-container">
   <aside class="cms-sidebar">
     <div class="cms-logo">Smart<span>Spark</span> CMS</div>
+    <nav class="cms-nav">
+      <a href="#" class="cms-nav-item active">📊 Dashboard</a>
+      <a href="#" class="cms-nav-item">✏️ Create Chapter</a>
+      <a href="#" class="cms-nav-item">📝 Edit Chapter</a>
+      <a href="#" class="cms-nav-item">✅ Approval Queue</a>
+      <a href="#" class="cms-nav-item">🏦 Question Bank</a>
+      <a href="#" class="cms-nav-item">📈 Analytics</a>
+    </nav>
   </aside>
 
   <main class="cms-main">
     <div class="cms-main-inner">
-      <div class="cms-topbar">
-        <h1 class="cms-title">Dashboard</h1>
-        <button class="btn btn-primary">+ Create New Chapter</button>
+    <div class="cms-topbar">
+      <h1 class="cms-title">Dashboard</h1>
+      <button class="btn btn-primary">+ Create New Chapter</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card" onclick="window.location.href='cms-edit-chapter.html'">
+        <div>Published Chapters</div>
+        <div class="stat-value">24</div>
+      </div>
+      <div class="stat-card" onclick="window.location.href='cms-edit-chapter.html'">
+        <div>Your Drafts</div>
+        <div class="stat-value">7</div>
+      </div>
+      <div class="stat-card" onclick="window.location.href='cms-approval-queue.html'">
+        <div>Pending Review</div>
+        <div class="stat-value">5</div>
+      </div>
+      <div class="stat-card" onclick="window.location.href='cms-question-bank.html'">
+        <div>Questions in Bank</div>
+        <div class="stat-value">312</div>
       </div>
     </div>
+
+    <div class="cms-section">
+      <h2 class="section-title">📝 Edit Your Recent Chapters</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Chapter</th>
+              <th>Subject</th>
+              <th>Status</th>
+              <th>Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="chapter-row" onclick="window.location.href='cms-edit-chapter.html'">
+              <td>
+                <div class="chapter-title">Introduction to Algebra</div>
+                <div class="edit-hint">Click to edit chapter →</div>
+              </td>
+              <td><span class="chapter-subject">Math</span></td>
+              <td><span class="status-badge status-published">Published</span></td>
+              <td>May 9, 2026</td>
+            </tr>
+            <tr class="chapter-row" onclick="window.location.href='cms-edit-chapter.html'">
+              <td>
+                <div class="chapter-title">Photosynthesis</div>
+                <div class="edit-hint">Click to edit chapter →</div>
+              </td>
+              <td><span class="chapter-subject">Science</span></td>
+              <td><span class="status-badge status-published">Published</span></td>
+              <td>May 8, 2026</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="cms-section">
+      <h2 class="section-title">🔔 Recent Activity</h2>
+      <div class="activity-item">
+        <div>📤</div>
+        <div>
+          <strong>Chapter submitted for review</strong><br>
+          <small>2 hours ago</small>
+        </div>
+      </div>
+      <div class="activity-item">
+        <div>✅</div>
+        <div>
+          <strong>Chapter published</strong><br>
+          <small>Yesterday</small>
+        </div>
+      </div>
+    </div>
+      </div>
   </main>
 </div>
 </body>
