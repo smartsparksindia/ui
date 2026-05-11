@@ -164,6 +164,14 @@ if (!user || !chapterId) {
 }
 
 let chapter = getFromStore('ss_chapters', chapterId);
+
+// Check if chapter exists
+if (!chapter) {
+  console.error('Chapter not found:', chapterId);
+  alert('Failed to load chapter. Please go back and select again.');
+  window.location.href = 'chapters.html';
+}
+
 let flashcards = [];
 let questions = [];
 let currentPhase = 'choice';
@@ -180,6 +188,8 @@ function init() {
   flashcards = getChapterFlashcards(chapterId);
   questions = getChapterQuestions(chapterId);
   totalQuestions = questions.length;
+  
+  console.log('Learn.html init:', { chapterId, chapter: chapter?.title, flashcards: flashcards.length, questions: questions.length });
   
   document.getElementById('chapter-title').textContent = chapter.title;
   document.getElementById('target').textContent = totalQuestions * 20;  // 20 pts per question
@@ -264,7 +274,10 @@ function flipCard() {
 // ─────────────────────────────────────────────────────────────────
 
 function startQuiz() {
+  console.log('Starting quiz with', questions.length, 'questions');
+  
   if (questions.length === 0) {
+    console.error('No questions found for this chapter!');
     showPhase('results');
     renderResults();
     return;
