@@ -704,10 +704,10 @@ subjects.forEach(subject => {
   card.innerHTML = html;
 
   card.onclick = () => {
-
     setState({
       subject: subject.trim()
     });
+    window.location.href = 'chapters.html';
   };
 
   grid.appendChild(card);
