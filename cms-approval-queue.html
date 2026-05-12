@@ -40,6 +40,206 @@ nav { background: white; padding: 1.2rem 3rem; display: flex; justify-content: s
 .empty { text-align: center; padding: 3rem; color: var(--text-muted); }
 
 footer { background: var(--text); color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
+
+/* MODAL STYLES */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+}
+
+.modal.show {
+  display: block;
+}
+
+.modal-content {
+  background: white;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #F0EBE0;
+  padding-bottom: 1rem;
+}
+
+.modal-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.8rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.modal-close:hover {
+  color: var(--text);
+}
+
+.modal-section {
+  margin-bottom: 2rem;
+}
+
+.modal-section-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: var(--purple);
+  border-bottom: 2px solid #F0EBE0;
+  padding-bottom: 0.5rem;
+}
+
+.flashcard {
+  background: linear-gradient(135deg, white 60%, #f5f5f5);
+  border: 2px solid #F0EBE0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.flashcard:hover {
+  border-color: var(--purple);
+  box-shadow: 0 4px 12px rgba(127, 119, 221, 0.1);
+}
+
+.flashcard-front, .flashcard-back {
+  display: block;
+}
+
+.flashcard-back {
+  display: none;
+}
+
+.flashcard.flipped .flashcard-front {
+  display: none;
+}
+
+.flashcard.flipped .flashcard-back {
+  display: block;
+}
+
+.flashcard-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.flashcard-text {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.flashcard-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.8rem;
+  font-style: italic;
+}
+
+.question {
+  background: #FAFAF8;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.question-text {
+  font-weight: 800;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.question-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.option {
+  padding: 0.8rem;
+  border: 2px solid #F0EBE0;
+  border-radius: 8px;
+  background: white;
+}
+
+.option.correct {
+  background: #E1F5EE;
+  border-color: var(--teal);
+  font-weight: 700;
+}
+
+.option.correct::before {
+  content: '✅ ';
+  color: var(--teal);
+}
+
+.question-explanation {
+  background: #EEEDFE;
+  border-left: 4px solid var(--purple);
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.meta-info {
+  background: #FAFAF8;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.meta-item {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.meta-label {
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+@media(max-width:600px) {
+  .modal-content {
+    width: 95%;
+    margin: 1rem auto;
+    padding: 1.5rem;
+  }
+
+  .modal-title {
+    font-size: 1.4rem;
+  }
+}
 </style>
 </head>
 <body>
@@ -56,13 +256,45 @@ footer { background: var(--text); color: white; text-align: center; padding: 2re
   <div id="queue-list"></div>
 </div>
 
+<!-- PREVIEW MODAL -->
+<div id="preview-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title" id="preview-title">Chapter Preview</h2>
+      <button class="modal-close" onclick="closePreview()">&times;</button>
+    </div>
+
+    <div class="meta-info">
+      <div class="meta-item"><span class="meta-label">Class</span> <span id="preview-class"></span></div>
+      <div class="meta-item"><span class="meta-label">Subject</span> <span id="preview-subject"></span></div>
+      <div class="meta-item"><span class="meta-label">Created By</span> <span id="preview-creator"></span></div>
+      <div class="meta-item"><span class="meta-label">Submitted</span> <span id="preview-submitted"></span></div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">📝 Description</div>
+      <div id="preview-description" style="font-size:0.95rem;line-height:1.6;"></div>
+    </div>
+
+    <div class="modal-section" id="flashcards-section" style="display:none;">
+      <div class="modal-section-title">🃏 Flashcards (<span id="fc-count">0</span>)</div>
+      <div id="preview-flashcards"></div>
+      <p style="color:var(--text-muted);font-size:0.85rem;font-style:italic;">Click flashcard to flip</p>
+    </div>
+
+    <div class="modal-section" id="questions-section" style="display:none;">
+      <div class="modal-section-title">❓ Questions (<span id="q-count">0</span>)</div>
+      <div id="preview-questions"></div>
+    </div>
+  </div>
+</div>
+
 <footer>
   <p>SmartSpark CMS — Manage Content Effectively</p>
 </footer>
 
 <script src="data-layer.js"></script>
 <script>
-// Helper functions for storage operations
 function getFromStore(key, id) {
   try {
     const store = JSON.parse(localStorage.getItem(key)) || {};
@@ -127,10 +359,104 @@ if (pending.length === 0) {
       <div class="action-buttons">
         <button class="btn btn-approve" onclick="approveChapter('${ch.chapter_id}')">✅ Approve</button>
         <button class="btn btn-reject" onclick="rejectChapter('${ch.chapter_id}')">❌ Reject</button>
-        <button class="btn btn-preview" onclick="viewDetails('${ch.chapter_id}')">👁️ Preview</button>
+        <button class="btn btn-preview" onclick="openPreview('${ch.chapter_id}')">👁️ Preview</button>
       </div>
     </div>
   `).join('');
+}
+
+// PREVIEW FUNCTIONALITY
+function openPreview(chapterId) {
+  const chapter = getFromStore('ss_chapters', chapterId);
+  if (!chapter) {
+    alert('Chapter not found');
+    return;
+  }
+
+  // Set metadata
+  document.getElementById('preview-title').textContent = chapter.title;
+  document.getElementById('preview-class').textContent = `Class ${chapter.class}`;
+  document.getElementById('preview-subject').textContent = chapter.subject;
+  document.getElementById('preview-creator').textContent = chapter.created_by;
+  document.getElementById('preview-submitted').textContent = new Date(chapter.submitted_at).toLocaleDateString();
+  document.getElementById('preview-description').textContent = chapter.description;
+
+  // FLASHCARDS
+  const flashcardIds = chapter.flashcard_ids || [];
+  const flashcardsSection = document.getElementById('flashcards-section');
+  const previewFlashcards = document.getElementById('preview-flashcards');
+  
+  if (flashcardIds.length === 0) {
+    flashcardsSection.style.display = 'none';
+  } else {
+    flashcardsSection.style.display = 'block';
+    document.getElementById('fc-count').textContent = flashcardIds.length;
+    const fcs = getStore('ss_flashcards');
+    previewFlashcards.innerHTML = flashcardIds.map((fcId, idx) => {
+      const fc = fcs[fcId];
+      if (!fc) return '';
+      return `
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-front">
+            <div class="flashcard-label">Term ${idx + 1}</div>
+            <div class="flashcard-text">${fc.term}</div>
+            <div class="flashcard-hint">Click to reveal definition</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="flashcard-label">Definition ${idx + 1}</div>
+            <div class="flashcard-text">${fc.definition}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // QUESTIONS
+  const questionIds = chapter.question_ids || [];
+  const questionsSection = document.getElementById('questions-section');
+  const previewQuestions = document.getElementById('preview-questions');
+
+  if (questionIds.length === 0) {
+    questionsSection.style.display = 'none';
+  } else {
+    questionsSection.style.display = 'block';
+    document.getElementById('q-count').textContent = questionIds.length;
+    const qb = getStore('ss_question_bank');
+    previewQuestions.innerHTML = questionIds.map((qId, idx) => {
+      const q = qb[qId];
+      if (!q) return '';
+      return `
+        <div class="question">
+          <div class="question-text">Q${idx + 1}. ${q.question_text}</div>
+          <div class="question-options">
+            ${q.options.map((opt, i) => `
+              <div class="option ${i === q.correct_option_index ? 'correct' : ''}">
+                ${opt}
+              </div>
+            `).join('')}
+          </div>
+          <div class="question-explanation">
+            <strong>Explanation:</strong> ${q.explanation}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Show modal
+  document.getElementById('preview-modal').classList.add('show');
+}
+
+function closePreview() {
+  document.getElementById('preview-modal').classList.remove('show');
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+  const modal = document.getElementById('preview-modal');
+  if (event.target === modal) {
+    modal.classList.remove('show');
+  }
 }
 
 function approveChapter(chapterId) {
@@ -138,7 +464,6 @@ function approveChapter(chapterId) {
     const chapter = getFromStore('ss_chapters', chapterId);
     if (!chapter) { alert('❌ Chapter not found'); return; }
     
-    // Create immutable published version
     const new_version = (chapter.current_version || 0) + 1;
     const published_snapshot = {
       version: new_version,
@@ -191,10 +516,6 @@ function rejectChapter(chapterId) {
     alert(`❌ Chapter rejected!\n\nFeedback sent to contributor: "${feedback}"\n\nThey can revise and resubmit.`);
     location.reload();
   }
-}
-
-function viewDetails(chapterId) {
-  alert('Preview feature coming soon!');
 }
 </script>
 </body>

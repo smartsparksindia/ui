@@ -223,7 +223,6 @@ th {
 }
 
 .chapter-row {
-  cursor: pointer;
   transition: background 0.2s ease;
 }
 
@@ -336,9 +335,13 @@ if (!user || !['admin', 'contributor'].includes(user.role)) {
 }
 
 // GET DATA
-const chapters = getStore('ss_chapters');
-const published = Object.values(chapters).filter(ch => ch.status === 'published').sort((a, b) => new Date(b.approved_at) - new Date(a.approved_at));
+function getAllPublishedChapters() {
+  const chapters = getStore('ss_chapters');
+  console.log('All chapters:', chapters); // DEBUG
+  return Object.values(chapters).filter(ch => ch.status === 'published').sort((a, b) => new Date(b.approved_at) - new Date(a.approved_at));
+}
 
+const published = getAllPublishedChapters();
 console.log('Published chapters:', published); // DEBUG
 
 // RENDER CHAPTERS
@@ -366,7 +369,8 @@ if (published.length === 0) {
 
 // FUNCTIONS
 function editChapter(id) {
-  alert('Edit feature coming soon! You can unpublish and recreate the chapter.');
+  // Open cms-editor.html with editVersion parameter (creates new version)
+  window.location.href = `cms-editor.html?editVersion=${id}`;
 }
 
 function unpublishChapter(id) {
@@ -383,9 +387,11 @@ function unpublishChapter(id) {
 function deleteChapter(id) {
   if (confirm('Delete chapter permanently? This cannot be undone!')) {
     const chapters = getStore('ss_chapters');
-    delete chapters[id];
-    localStorage.setItem('ss_chapters', JSON.stringify(chapters));
-    location.reload();
+    if (chapters[id]) {
+      delete chapters[id];
+      localStorage.setItem('ss_chapters', JSON.stringify(chapters));
+      location.reload();
+    }
   }
 }
 
