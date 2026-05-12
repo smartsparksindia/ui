@@ -77,44 +77,20 @@ footer { background: var(--text); color: white; text-align: center; padding: 2re
 
 <script src="data-layer.js"></script>
 <script>
-// Helper functions for storage operations
-function getFromStore(key, id) {
-  try {
-    const store = JSON.parse(localStorage.getItem(key)) || {};
-    return store[id];
-  } catch {
-    return null;
-  }
-}
-
-function addToStore(key, id, item) {
-  try {
-    const store = JSON.parse(localStorage.getItem(key)) || {};
-    store[id] = item;
-    localStorage.setItem(key, JSON.stringify(store));
-    return item;
-  } catch (e) {
-    console.error('Storage error:', e);
-    return null;
-  }
-}
-
-function getStore(key) {
-  try {
-    return JSON.parse(localStorage.getItem(key)) || {};
-  } catch {
-    return {};
-  }
-}
-
 const user = getCurrentUser();
 if (!user || !['admin', 'contributor'].includes(user.role)) {
   window.location.href = 'cms-login.html';
 }
 
-// GET ALL CHAPTERS FROM SYSTEM (not just user's)
-const chapters = getStore('ss_chapters');
-const allChapters = Object.values(chapters).filter(ch => ['draft', 'submitted', 'published'].includes(ch.status)).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+// GET ALL CHAPTERS FROM SYSTEM using data-layer.js getStore
+function getAllDraftChapters() {
+  const chapters = getStore('ss_chapters');
+  console.log('All chapters:', chapters); // DEBUG
+  return Object.values(chapters).filter(ch => ['draft', 'submitted', 'published'].includes(ch.status)).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+}
+
+const allChapters = getAllDraftChapters();
+console.log('Filtered chapters:', allChapters); // DEBUG
 
 const list = document.getElementById('drafts-list');
 
@@ -126,15 +102,15 @@ if (allChapters.length === 0) {
       <div class="draft-info">
         <div class="draft-title">${ch.title}</div>
         <div class="draft-meta">Class ${ch.class} • ${ch.subject}</div>
-        <div class="draft-creator">By: ${ch.created_by}</div>
+        <div class="draft-creator">By: ${ch.created_by || 'Unknown'}</div>
         <div style="margin-top:0.5rem;">
           <span class="draft-status status-${ch.status}">${ch.status}</span>
           ${ch.status === 'published' ? `<span style="margin-left:0.5rem;font-size:0.75rem;color:var(--teal);font-weight:800;">v${ch.current_version || 1}</span>` : ''}
         </div>
       </div>
       <div class="draft-actions">
-        ${ch.status === 'published' ? `<button class="btn btn-edit" onclick="editPublishedChapter('${ch.chapter_id}')">📝 Create New Version</button>` : `<button class="btn btn-edit" onclick="editChapter('${ch.chapter_id}')">Edit</button>`}
-        ${ch.status === 'draft' ? `<button class="btn btn-submit" onclick="submitChapter('${ch.chapter_id}')">Submit</button>` : ch.status === 'submitted' ? '<span style="font-size:0.9rem;color:var(--text-muted);">⏳ Awaiting Review</span>' : '<span style="font-size:0.9rem;color:var(--teal);font-weight:700;">✅ Published</span>'}
+        ${ch.status === 'published' ? `<button class="btn btn-edit" onclick="editPublishedChapter('${ch.chapter_id}')">📝 New Version</button>` : `<button class="btn btn-edit" onclick="editChapter('${ch.chapter_id}')">Edit</button>`}
+        ${ch.status === 'draft' ? `<button class="btn btn-submit" onclick="submitChapter('${ch.chapter_id}')">Submit</button>` : ch.status === 'submitted' ? '<span style="font-size:0.9rem;color:var(--text-muted);">⏳ Awaiting</span>' : '<span style="font-size:0.9rem;color:var(--teal);font-weight:700;">✅ Published</span>'}
         <button class="btn btn-delete" onclick="deleteChapter('${ch.chapter_id}')">Delete</button>
       </div>
     </div>
@@ -180,3 +156,6 @@ function deleteChapter(chapterId) {
     }
   }
 }
+</script>
+</body>
+</html>

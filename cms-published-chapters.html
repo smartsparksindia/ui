@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartSpark CMS — Edit Published Chapters</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple: #7F77DD; --purple-light: #EEEDFE; --purple-dark: #3C3489;
+  --teal: #1D9E75; --teal-light: #E1F5EE;
+  --coral: #D85A30; --coral-light: #FAECE7;
+  --amber: #BA7517; --amber-light: #FAEEDA;
+  --pink: #D4537E; --pink-light: #FBEAF0;
+  --blue: #378ADD; --blue-light: #E6F1FB;
+  --green: #639922; --green-light: #EAF3DE;
+  --bg: #FFF9F0; --card-bg: #FFFFFF;
+  --text: #2C2C2A; --text-muted: #888780;
+  --radius: 20px; --radius-sm: 12px;
+  --error: #E84040; --success: #1D9E75;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(180deg, #FFF9F0 0%, #F6F2FF 100%);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+.cms-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.cms-sidebar {
+  background: rgba(255,255,255,0.94);
+  border-right: 1px solid rgba(240,235,224,0.8);
+  padding: 2rem 0;
+  position: fixed;
+  width: 250px;
+  height: 100vh;
+  overflow-y: auto;
+  box-shadow: 0 0 30px rgba(127,119,221,0.06);
+  backdrop-filter: blur(18px);
+  display: flex;
+  flex-direction: column;
+}
+
+.cms-logo {
+  padding: 0 1.5rem;
+  margin-bottom: 2rem;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.4rem;
+  color: var(--purple);
+}
+.cms-logo span { color: var(--coral); }
+
+.cms-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.cms-nav-item {
+  padding: 0.9rem 1.5rem;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.cms-nav-item:hover {
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
+.cms-nav-item.active {
+  background: var(--purple);
+  color: white;
+  border-left: 4px solid var(--coral);
+}
+
+.cms-nav-item.logout {
+  margin-top: auto;
+  color: var(--error);
+  border-top: 1px solid #F0EBE0;
+  padding-top: 1rem;
+}
+
+.cms-nav-item.logout:hover {
+  background: #FFCDD2;
+  color: #C62828;
+}
+
+.cms-main {
+  flex: 1;
+  margin-left: 250px;
+  padding: 2rem 2rem 3rem;
+  max-width: calc(100vw - 250px);
+}
+
+.cms-main-inner {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.cms-topbar {
+  background: #FFFFFF;
+  padding: 1.5rem 2rem;
+  border: 1px solid #F1ECFF;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-radius: 28px;
+  box-shadow: 0 10px 35px rgba(127,119,221,0.08);
+}
+
+.cms-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.8rem;
+}
+
+.btn {
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--purple), #968DFF);
+  color: white;
+  box-shadow: 0 10px 20px rgba(127,119,221,0.22);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 24px rgba(127,119,221,0.28);
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  margin: 0 0.3rem;
+}
+
+.btn-edit {
+  background: var(--purple);
+  color: white;
+}
+
+.btn-unpublish {
+  background: #FFB74D;
+  color: #5D4037;
+}
+
+.btn-delete {
+  background: #EF5350;
+  color: white;
+}
+
+.cms-section {
+  background: #FFFFFF;
+  border-radius: 28px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid #F3EEFF;
+  box-shadow: 0 12px 36px rgba(127,119,221,0.07);
+}
+
+.section-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #F0EBE0;
+}
+
+th {
+  background: #FAFAF8;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.status-published {
+  background: var(--teal-light);
+  color: var(--teal);
+}
+
+.chapter-row {
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.chapter-row:hover {
+  background: #FAF7FF;
+}
+
+.chapter-title {
+  font-weight: 800;
+  color: var(--purple-dark);
+}
+
+.chapter-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+  .cms-container {
+    flex-direction: column;
+  }
+
+  .cms-sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  .cms-main {
+    margin-left: 0;
+    max-width: 100%;
+    padding: 1rem;
+  }
+
+  .cms-section {
+    padding: 1.25rem;
+  }
+
+  table {
+    font-size: 0.85rem;
+  }
+
+  .btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.7rem;
+  }
+}
+</style>
+</head>
+<body>
+<div class="cms-container">
+  <aside class="cms-sidebar">
+    <div class="cms-logo">Smart<span>Spark</span> CMS</div>
+    <nav class="cms-nav">
+      <a href="cms-dashboard.html" class="cms-nav-item">📊 Dashboard</a>
+      <a href="cms-editor.html" class="cms-nav-item">✏️ Create Chapter</a>
+      <a href="cms-edit-chapter.html" class="cms-nav-item">📝 My Drafts</a>
+      <a href="cms-published-chapters.html" class="cms-nav-item active">📖 Edit Chapters</a>
+      <a href="cms-approval-queue.html" class="cms-nav-item">✅ Approval Queue</a>
+      <a href="cms-question-bank.html" class="cms-nav-item">🏦 Question Bank</a>
+      <a href="cms-analytics.html" class="cms-nav-item">📈 Analytics</a>
+      <a href="cms-export.html" class="cms-nav-item">💾 Backup</a>
+      <a href="cms-login.html" class="cms-nav-item logout" onclick="logout()">🚪 Logout</a>
+    </nav>
+  </aside>
+
+  <main class="cms-main">
+    <div class="cms-main-inner">
+      <div class="cms-topbar">
+        <h1 class="cms-title">Edit Published Chapters</h1>
+      </div>
+
+      <div class="cms-section">
+        <h2 class="section-title">📖 Published Chapters</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Chapter</th>
+                <th>Subject</th>
+                <th>Status</th>
+                <th>Published</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="chapters-tbody">
+              <tr>
+                <td colspan="5" class="empty-state">Loading chapters...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="data-layer.js"></script>
+<script>
+const user = getCurrentUser();
+if (!user || !['admin', 'contributor'].includes(user.role)) {
+  window.location.href = 'cms-login.html';
+}
+
+// GET DATA
+const chapters = getStore('ss_chapters');
+const published = Object.values(chapters).filter(ch => ch.status === 'published').sort((a, b) => new Date(b.approved_at) - new Date(a.approved_at));
+
+console.log('Published chapters:', published); // DEBUG
+
+// RENDER CHAPTERS
+const tbody = document.getElementById('chapters-tbody');
+if (published.length === 0) {
+  tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No published chapters yet</td></tr>';
+} else {
+  tbody.innerHTML = published.map(ch => `
+    <tr class="chapter-row">
+      <td>
+        <div class="chapter-title">${ch.title}</div>
+        <div class="chapter-meta">Class ${ch.class}</div>
+      </td>
+      <td>${ch.subject}</td>
+      <td><span class="status-badge status-published">Published</span></td>
+      <td>${new Date(ch.approved_at).toLocaleDateString()}</td>
+      <td>
+        <button class="btn btn-sm btn-edit" onclick="editChapter('${ch.chapter_id}')">Edit</button>
+        <button class="btn btn-sm btn-unpublish" onclick="unpublishChapter('${ch.chapter_id}')">Unpublish</button>
+        <button class="btn btn-sm btn-delete" onclick="deleteChapter('${ch.chapter_id}')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// FUNCTIONS
+function editChapter(id) {
+  alert('Edit feature coming soon! You can unpublish and recreate the chapter.');
+}
+
+function unpublishChapter(id) {
+  if (confirm('Move to draft? Chapter will no longer be visible to students.')) {
+    const ch = getFromStore('ss_chapters', id);
+    if (ch) {
+      ch.status = 'draft';
+      addToStore('ss_chapters', id, ch);
+      location.reload();
+    }
+  }
+}
+
+function deleteChapter(id) {
+  if (confirm('Delete chapter permanently? This cannot be undone!')) {
+    const chapters = getStore('ss_chapters');
+    delete chapters[id];
+    localStorage.setItem('ss_chapters', JSON.stringify(chapters));
+    location.reload();
+  }
+}
+
+function logout() {
+  logoutUser();
+  window.location.href = 'cms-login.html';
+}
+
+function getFromStore(key, id) {
+  try {
+    const store = JSON.parse(localStorage.getItem(key)) || {};
+    return store[id];
+  } catch {
+    return null;
+  }
+}
+
+function addToStore(key, id, data) {
+  try {
+    const store = JSON.parse(localStorage.getItem(key)) || {};
+    store[id] = data;
+    localStorage.setItem(key, JSON.stringify(store));
+  } catch (e) {
+    console.error('Storage error:', e);
+  }
+}
+
+function getStore(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key)) || {};
+  } catch {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
