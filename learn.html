@@ -179,12 +179,24 @@ let sessionScore = 0;
 let correctAnswers = 0;
 let totalQuestions = 0;
 let fcIndex = 0;
+let revisionViewed = false;  // Track if user viewed flashcards before quiz
 
 // ─────────────────────────────────────────────────────────────────
 // INITIALIZATION
 // ─────────────────────────────────────────────────────────────────
 
 function init() {
+  // Initialize user progress if it doesn't exist
+  const currentUser = getCurrentUser();
+  if (currentUser) {
+    let progress = getUserProgress(currentUser.user_id);
+    if (!progress) {
+      // Create progress record if it doesn't exist
+      console.log('Creating user progress for:', currentUser.user_id);
+      initUserProgress(currentUser.user_id, currentUser.username, currentUser.class);
+    }
+  }
+  
   flashcards = getChapterFlashcards(chapterId);
   questions = getChapterQuestions(chapterId);
   totalQuestions = questions.length;
@@ -221,6 +233,7 @@ function startRevision() {
   const currentUser = getCurrentUser();
   if (currentUser) {
     recordFlashcardView(currentUser.user_id, chapterId);
+    revisionViewed = true;  // Mark that user viewed flashcards
   }
   fcIndex = 0;
   renderFlashcard();
@@ -321,13 +334,13 @@ function startQuiz() {
           sessionScore += 20;  // ⭐ 20 POINTS PER CORRECT!
           correctAnswers++;
           const currentUser = getCurrentUser();
-          if (currentUser) recordQuizAttempt(currentUser.user_id, chapterId, q.question_id, true);
+          if (currentUser) recordQuizAttempt(currentUser.user_id, chapterId, q.question_id, true, revisionViewed);
         } else {
           btn.classList.add('wrong');
           const correct = document.querySelectorAll('.option')[q.correct_option_index];
           correct.classList.add('correct');
           const currentUser = getCurrentUser();
-          if (currentUser) recordQuizAttempt(currentUser.user_id, chapterId, q.question_id, false);
+          if (currentUser) recordQuizAttempt(currentUser.user_id, chapterId, q.question_id, false, revisionViewed);
         }
         
         document.querySelectorAll('.option').forEach(b => b.style.pointerEvents = 'none');
@@ -370,14 +383,19 @@ function renderResults() {
   const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
   const isAllCorrect = correctAnswers === totalQuestions && totalQuestions > 0;
   
+  const currentUser = getCurrentUser();
+  
   // Mark chapter complete if 100%
-  if (isAllCorrect) {
-    const currentUser = getCurrentUser();
-    if (currentUser) markChapterComplete(currentUser.user_id, chapterId);
+  if (isAllCorrect && currentUser) {
+    markChapterComplete(currentUser.user_id, chapterId);
   }
   
-  // Update total score
-  updateTotalScore(sessionScore);
+  // Points are already saved via recordQuizAttempt() calls during quiz
+  // Just verify they're persisted
+  if (currentUser) {
+    const progress = getUserProgress(currentUser.user_id);
+    console.log('Quiz completed. User progress:', progress?.total_points);
+  }
   
   document.getElementById('final-score').textContent = `${correctAnswers} / ${totalQuestions}`;
   document.getElementById('session-score').textContent = sessionScore;
