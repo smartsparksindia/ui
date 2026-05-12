@@ -301,6 +301,7 @@ function startQuiz() {
         <div class="q-number">Question ${qIndex + 1} of ${questions.length}</div>
         <div class="question-text">${q.question_text}</div>
         <div class="options" id="options"></div>
+        <div id="next-container" style="display:none;margin-top:2rem;"></div>
       </div>
     `;
     
@@ -340,10 +341,18 @@ function startQuiz() {
         
         document.getElementById('session-score').textContent = sessionScore;
         
-        setTimeout(() => {
+        // Show Next button
+        const nextContainer = document.getElementById('next-container');
+        nextContainer.style.display = 'block';
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'choice-btn btn-quiz';
+        nextBtn.textContent = qIndex === questions.length - 1 ? 'Finish Quiz ✓' : 'Next Question →';
+        nextBtn.style.marginTop = '1rem';
+        nextBtn.onclick = () => {
           qIndex++;
           renderQuestion();
-        }, 3000);
+        };
+        nextContainer.appendChild(nextBtn);
       };
       optionsDiv.appendChild(btn);
     });
