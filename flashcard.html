@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartSpark — Flashcards</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root { --purple: #7F77DD; --teal: #1D9E75; --coral: #D85A30; --bg: #FFF9F0; --text: #2C2C2A; --text-muted: #888780; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+nav { background: white; padding: 1rem 2.5rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #F0EBE0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.logo { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--purple); text-decoration: none; }
+.logo span { color: var(--coral); }
+.nav-right { display: flex; align-items: center; gap: 1rem; }
+.score-pill { background: #FAEEDA; color: var(--coral); padding: 0.4rem 1rem; border-radius: 50px; font-weight: 800; }
+.back-btn { color: var(--text-muted); text-decoration: none; font-weight: 700; }
+
+.breadcrumb { padding: 1.5rem 2.5rem 0; font-size: 0.85rem; color: var(--text-muted); }
+.breadcrumb a { color: var(--purple); text-decoration: none; }
+
+.header { text-align: center; padding: 2.5rem 2rem; }
+.header h1 { font-family: 'Fredoka One', cursive; font-size: 2.2rem; margin-bottom: 0.6rem; }
+.header p { color: var(--text-muted); font-weight: 600; }
+
+.flashcards-wrap { max-width: 700px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+.counter { text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2rem; }
+
+.flashcard {
+  background: linear-gradient(135deg, white 60%, #f5f5f5);
+  border: 3px solid var(--teal);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  cursor: pointer;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  perspective: 1000px;
+}
+
+.flashcard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(29, 158, 117, 0.2);
+}
+
+.flashcard.flipped {
+  border-color: var(--purple);
+}
+
+.flashcard-inner {
+  text-align: center;
+  width: 100%;
+}
+
+.flashcard-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.flashcard-content {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.flashcard-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 1.5rem;
+  font-style: italic;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.8rem 1.6rem;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-prev, .btn-next {
+  background: var(--teal);
+  color: white;
+}
+
+.btn-prev:hover, .btn-next:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(29, 158, 117, 0.2);
+}
+
+.btn-quiz {
+  background: var(--purple);
+  color: white;
+}
+
+.btn-quiz:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(127, 119, 221, 0.2);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--text-muted);
+}
+
+footer { background: var(--text); color: white; text-align: center; padding: 2.5rem 2rem; }
+footer p { color: rgba(255,255,255,0.45); margin-top: 0.4rem; }
+
+@media(max-width: 600px) {
+  .flashcard {
+    padding: 1.5rem;
+    min-height: 150px;
+  }
+
+  .flashcard-content {
+    font-size: 1.3rem;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Smart<span>Spark</span> ⚡</a>
+  <div class="nav-right">
+    <div class="score-pill">🃏 <span id="card-count">0</span> cards</div>
+    <a href="chapters.html" class="back-btn">← Chapters</a>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="index.html">Home</a> › <a href="chapters.html">Chapters</a> › <span id="bc-unit">Unit 1</span>
+</div>
+
+<div class="header">
+  <h1>🃏 Flashcards</h1>
+  <p>Click card to reveal definition</p>
+</div>
+
+<div class="flashcards-wrap">
+  <div class="counter">
+    <span id="current-index">1</span> / <span id="total-count">0</span>
+  </div>
+
+  <div id="flashcard-container"></div>
+
+  <div class="controls">
+    <button class="btn btn-prev" onclick="prevCard()" id="prev-btn">← Previous</button>
+    <button class="btn btn-quiz" onclick="goToQuiz()">Start Quiz ❓</button>
+    <button class="btn btn-next" onclick="nextCard()" id="next-btn">Next →</button>
+  </div>
+</div>
+
+<footer>
+  <div style="font-family:'Fredoka One',cursive;font-size:1.8rem;margin-bottom:0.4rem;">Smart<span style="color:#F0997B;">Spark</span> ⚡</div>
+  <p>Master the basics with flashcards 🇮🇳</p>
+</footer>
+
+<script src="data-layer.js"></script>
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const chapterNum = parseInt(urlParams.get('chapter'));
+const unitNum = parseInt(urlParams.get('unit'));
+
+// Get flashcards filtered by chapter + unit
+const allFlashcards = getStore('ss_flashcards');
+const flashcards = Object.values(allFlashcards).filter(fc => fc.chapter === chapterNum && fc.unit === unitNum);
+
+document.getElementById('bc-unit').textContent = `Chapter ${chapterNum} - Unit ${unitNum}`;
+document.getElementById('card-count').textContent = flashcards.length;
+document.getElementById('total-count').textContent = flashcards.length;
+
+let currentIndex = 0;
+
+function renderFlashcard() {
+  const container = document.getElementById('flashcard-container');
+  
+  if (flashcards.length === 0) {
+    container.innerHTML = '<div class="empty-state"><h3>No flashcards</h3><p>Check back later for content!</p></div>';
+    return;
+  }
+
+  const fc = flashcards[currentIndex];
+  const isFlipped = container.dataset.flipped === 'true';
+  
+  container.innerHTML = `
+    <div class="flashcard ${isFlipped ? 'flipped' : ''}" onclick="flipCard(this)">
+      <div class="flashcard-inner">
+        <div class="flashcard-label">${isFlipped ? 'Definition' : 'Term'}</div>
+        <div class="flashcard-content">${isFlipped ? fc.definition : fc.term}</div>
+        <div class="flashcard-hint">${isFlipped ? 'Click to see term' : 'Click to reveal definition'}</div>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('current-index').textContent = currentIndex + 1;
+  document.getElementById('prev-btn').disabled = currentIndex === 0;
+  document.getElementById('next-btn').disabled = currentIndex === flashcards.length - 1;
+}
+
+function flipCard(element) {
+  element.classList.toggle('flipped');
+  const container = document.getElementById('flashcard-container');
+  container.dataset.flipped = element.classList.contains('flipped');
+}
+
+function prevCard() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    document.getElementById('flashcard-container').dataset.flipped = 'false';
+    renderFlashcard();
+  }
+}
+
+function nextCard() {
+  if (currentIndex < flashcards.length - 1) {
+    currentIndex++;
+    document.getElementById('flashcard-container').dataset.flipped = 'false';
+    renderFlashcard();
+  }
+}
+
+function goToQuiz() {
+  window.location.href = `quiz.html?chapter=${chapterNum}&unit=${unitNum}`;
+}
+
+function getStore(key) {
+  try { return JSON.parse(localStorage.getItem(key)) || {}; }
+  catch { return {}; }
+}
+
+renderFlashcard();
+</script>
+</body>
+</html>

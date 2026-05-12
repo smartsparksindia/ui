@@ -287,6 +287,41 @@ textarea {
         </div>
       </div>
 
+      <div class="form-row">
+        <div class="form-group">
+          <label for="chapter-number">Chapter Number</label>
+          <select id="chapter-number" required>
+            <option value="">Select chapter</option>
+            <option value="1">Chapter 1</option>
+            <option value="2">Chapter 2</option>
+            <option value="3">Chapter 3</option>
+            <option value="4">Chapter 4</option>
+            <option value="5">Chapter 5</option>
+            <option value="6">Chapter 6</option>
+            <option value="7">Chapter 7</option>
+            <option value="8">Chapter 8</option>
+            <option value="9">Chapter 9</option>
+            <option value="10">Chapter 10</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="unit-number">Unit Number</label>
+          <select id="unit-number" required>
+            <option value="">Select unit</option>
+            <option value="1">Unit 1</option>
+            <option value="2">Unit 2</option>
+            <option value="3">Unit 3</option>
+            <option value="4">Unit 4</option>
+            <option value="5">Unit 5</option>
+            <option value="6">Unit 6</option>
+            <option value="7">Unit 7</option>
+            <option value="8">Unit 8</option>
+            <option value="9">Unit 9</option>
+            <option value="10">Unit 10</option>
+          </select>
+        </div>
+      </div>
+
       <div class="form-group">
         <label for="title">Chapter Title</label>
         <input type="text" id="title" placeholder="e.g., Photosynthesis" required>
@@ -648,20 +683,22 @@ document.getElementById('editor-form').addEventListener('submit', (e) => {
 
   const classNum = parseInt(document.getElementById('class').value);
   const subject = document.getElementById('subject').value;
+  const chapterNum = parseInt(document.getElementById('chapter-number').value);
+  const unitNum = parseInt(document.getElementById('unit-number').value);
   const title = document.getElementById('title').value;
   const description = document.getElementById('description').value;
 
-  if (!classNum || !subject || !title || questionsData.length === 0) {
-    alert('Please fill in: Class, Subject, Title, Description, and at least 1 question');
+  if (!classNum || !subject || !chapterNum || !unitNum || !title || questionsData.length === 0) {
+    alert('Please fill in: Class, Subject, Chapter Number, Unit Number, Title, Description, and at least 1 question');
     return;
   }
 
   const chapter = createChapter(classNum, subject, title, description);
   flashcardsData.forEach(fc => {
-    addFlashcardToChapter(chapter.chapter_id, fc.term, fc.definition);
+    addFlashcardToChapter(chapter.chapter_id, fc.term, fc.definition, chapterNum, unitNum);
   });
   questionsData.forEach(q => {
-    const question = createQuestion(classNum, subject, title, q.question, q.options, parseInt(q.correct), q.explanation);
+    const question = createQuestion(classNum, subject, title, q.question, q.options, parseInt(q.correct), q.explanation, chapterNum, unitNum);
     linkQuestionToChapter(question.question_id, chapter.chapter_id);
   });
 

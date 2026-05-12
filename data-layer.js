@@ -72,7 +72,7 @@ function createChapter(class_no, subject, title, description) {
   return addToStore(STORE.CHAPTERS, chapter_id, chapter);
 }
 
-function addFlashcardToChapter(chapter_id, term, definition, image_url = null) {
+function addFlashcardToChapter(chapter_id, term, definition, chapter_num = null, unit_num = null, image_url = null) {
   const chapter = getFromStore(STORE.CHAPTERS, chapter_id);
   if (!chapter || chapter.status !== 'draft') return null;
   
@@ -80,6 +80,8 @@ function addFlashcardToChapter(chapter_id, term, definition, image_url = null) {
   const flashcard = {
     flashcard_id,
     chapter_id,
+    chapter: chapter_num,
+    unit: unit_num,
     version: 0, // Will be set when published
     term,
     definition,
@@ -147,13 +149,15 @@ function getAllChapters(class_no, subject, onlyPublished = true) {
 // QUESTION BANK (Reusable Questions)
 // ─────────────────────────────────────────────────────────────────────────────
 
-function createQuestion(class_no, subject, topic, question_text, options, correct_option_index, explanation) {
+function createQuestion(class_no, subject, topic, question_text, options, correct_option_index, explanation, chapter_num = null, unit_num = null) {
   const question_id = `q_${subject.toLowerCase()}_${Date.now()}`;
   const question = {
     question_id,
     class: class_no,
     subject,
     topic,
+    chapter: chapter_num,
+    unit: unit_num,
     difficulty: 'medium', // easy, medium, hard
     question_text,
     options, // Array of 4 strings

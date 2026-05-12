@@ -9,32 +9,198 @@
 :root { --purple: #7F77DD; --purple-light: #EEEDFE; --teal: #1D9E75; --teal-light: #E1F5EE; --coral: #D85A30; --coral-light: #FAECE7; --amber: #BA7517; --amber-light: #FAEEDA; --pink: #D4537E; --pink-light: #FBEAF0; --bg: #FFF9F0; --card-bg: #FFFFFF; --text: #2C2C2A; --text-muted: #888780; --radius: 20px; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
 nav { background: white; padding: 1rem 2.5rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #F0EBE0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
 .logo { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--purple); text-decoration: none; }
 .logo span { color: var(--coral); }
 .nav-right { display: flex; align-items: center; gap: 1rem; }
 .score-pill { background: var(--amber-light); color: var(--amber); padding: 0.4rem 1rem; border-radius: 50px; font-weight: 800; }
 .back-btn { color: var(--text-muted); text-decoration: none; font-weight: 700; }
+
 .breadcrumb { padding: 1.5rem 2.5rem 0; font-size: 0.85rem; color: var(--text-muted); }
 .breadcrumb a { color: var(--purple); text-decoration: none; }
+
 .header { text-align: center; padding: 2.5rem 2rem; }
 .header h1 { font-family: 'Fredoka One', cursive; font-size: 2.2rem; margin-bottom: 0.6rem; }
 .header p { color: var(--text-muted); font-weight: 600; }
-.chapters-wrap { max-width: 800px; margin: 0 auto; padding: 0 2rem 4rem; }
-.chapter-card { background: white; border-radius: var(--radius); padding: 1.5rem 2rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 1.5rem; text-decoration: none; color: var(--text); cursor: pointer; transition: transform 0.2s; }
-.chapter-card:hover { transform: translateX(6px); }
-.ch-num { font-family: 'Fredoka One', cursive; font-size: 1.8rem; min-width: 3rem; text-align: center; opacity: 0.35; }
-.ch-info { flex: 1; }
-.ch-name { font-family: 'Fredoka One', cursive; font-size: 1.2rem; margin-bottom: 0.3rem; }
-.ch-meta { display: flex; gap: 1rem; font-size: 0.8rem; color: var(--text-muted); }
-.ch-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; }
-.ch-badge { font-size: 0.78rem; font-weight: 800; padding: 0.25rem 0.8rem; border-radius: 50px; }
-.ch-status { font-size: 1.2rem; }
+
+.chapters-wrap { max-width: 900px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+/* ACCORDION STYLES */
+.chapter-group { margin-bottom: 1.5rem; }
+
+.chapter-header {
+  background: white;
+  border-radius: var(--radius);
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid #F0EBE0;
+  user-select: none;
+}
+
+.chapter-header:hover {
+  box-shadow: 0 4px 12px rgba(127, 119, 221, 0.1);
+  transform: translateY(-2px);
+}
+
+.chapter-header.active {
+  border-color: var(--purple);
+}
+
+.chapter-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.3rem;
+  color: var(--text);
+}
+
+.chapter-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+}
+
+.chapter-toggle {
+  font-size: 1.5rem;
+  transition: transform 0.2s;
+}
+
+.chapter-header.active .chapter-toggle {
+  transform: rotate(180deg);
+}
+
+.units-container {
+  display: none;
+  background: #FAFAF8;
+  padding: 1.5rem;
+  border: 2px solid #F0EBE0;
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.units-container.active {
+  display: block;
+}
+
+.unit-item {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--purple);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.unit-item:hover {
+  box-shadow: 0 4px 12px rgba(127, 119, 221, 0.1);
+  transform: translateY(-2px);
+}
+
+.unit-info {
+  flex: 1;
+}
+
+.unit-name {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+}
+
+.unit-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.unit-buttons {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.7rem 1.4rem;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-flashcard {
+  background: linear-gradient(135deg, #E1F5EE, #B2DFDB);
+  color: var(--teal);
+  border: 2px solid var(--teal);
+}
+
+.btn-flashcard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(29, 158, 117, 0.2);
+}
+
+.btn-quiz {
+  background: linear-gradient(135deg, #EEEDFE, #D1CCFA);
+  color: var(--purple);
+  border: 2px solid var(--purple);
+}
+
+.btn-quiz:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(127, 119, 221, 0.2);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--text-muted);
+}
+
+.empty-state h3 {
+  font-family: 'Fredoka One', cursive;
+  margin-bottom: 0.5rem;
+}
+
 footer { background: var(--text); color: white; text-align: center; padding: 2.5rem 2rem; }
 footer p { color: rgba(255,255,255,0.45); margin-top: 0.4rem; }
+
+@media(max-width: 600px) {
+  .unit-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .unit-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
 </style>
 </head>
 <body>
+
 <nav>
   <a href="index.html" class="logo">Smart<span>Spark</span> ⚡</a>
   <div class="nav-right">
@@ -42,77 +208,130 @@ footer p { color: rgba(255,255,255,0.45); margin-top: 0.4rem; }
     <a href="subjects.html" class="back-btn">← Subjects</a>
   </div>
 </nav>
-<div class="breadcrumb"><a href="index.html">Home</a> › <a href="subjects.html" id="bc-year">Class 6</a> › <span id="bc-subject">—</span></div>
-<div class="header">
-  <h1>Choose a Chapter</h1>
-  <p>Master one chapter at a time — learn first, then quiz!</p>
+
+<div class="breadcrumb">
+  <a href="index.html">Home</a> › <a href="subjects.html" id="bc-year">Class 6</a> › <span id="bc-subject">—</span>
 </div>
-<div class="chapters-wrap" id="chapters-list"></div>
+
+<div class="header">
+  <h1>📚 Learn by Units</h1>
+  <p>Expand chapters to explore units and choose flashcard or quiz mode</p>
+</div>
+
+<div class="chapters-wrap" id="chapters-container"></div>
+
 <footer>
   <div style="font-family:'Fredoka One',cursive;font-size:1.8rem;margin-bottom:0.4rem;">Smart<span style="color:#F0997B;">Spark</span> ⚡</div>
   <p>Free learning for Indian students 🇮🇳</p>
 </footer>
+
 <script src="data-layer.js"></script>
 <script>
 const state = getState();
 const year = state.year || 6;
 const subject = state.subject || 'Science';
-const colorMap = { 'Science': '#1D9E75', 'Maths': '#7F77DD', 'English': '#D4537E', 'Social Science': '#BA7517' };
-const accent = colorMap[subject] || '#7F77DD';
 
 document.getElementById('bc-year').textContent = `Class ${year}`;
 document.getElementById('bc-subject').textContent = subject;
 document.getElementById('total-score').textContent = getTotalScore();
 
-const chapters = getChaptersForYearSubject(year, subject);
-const list = document.getElementById('chapters-list');
+// Get all flashcards and questions
+const flashcards = getStore('ss_flashcards');
+const questions = getStore('ss_question_bank');
 
-chapters.forEach((ch, i) => {
-  const bestScore = getChapterScore(year, subject, ch.chapter_id);
-  const maxScore = (ch.question_ids || []).length * 20;
-  const accuracy = maxScore > 0 ? Math.round((bestScore / maxScore) * 100) : 0;
-  const done = bestScore > 0;
-  const isAced = accuracy === 100 && done;
-  const flashcardCount = (ch.flashcard_ids || []).length;
-  const questionCount = (ch.question_ids || []).length;
-  
-  const card = document.createElement('div');
-  card.className = 'chapter-card';
-  card.style.borderLeft = `3px solid ${accent}44`;
-  card.innerHTML = `
-    <div class="ch-num" style="color:${accent}">${String(i+1).padStart(2,'0')}</div>
-    <div class="ch-info">
-      <div class="ch-name">
-        ${ch.title}
-        ${isAced ? '<span style="margin-left:0.5rem;font-size:1.1rem;">⭐</span>' : ''}
-      </div>
-      <div class="ch-meta">
-        ${flashcardCount > 0 ? `<span>🃏 ${flashcardCount} flashcard${flashcardCount !== 1 ? 's' : ''}</span>` : ''}
-        <span>❓ ${questionCount} question${questionCount !== 1 ? 's' : ''}</span>
-      </div>
-    </div>
-    <div class="ch-right">
-      ${done ? `<div class="ch-badge" style="background:${accent}22;color:${accent}">⭐ ${bestScore} pts (${accuracy}%)</div>` : `<div class="ch-status">🔓</div>`}
-      <button class="ch-btn" style="background:${accent};color:#fff;border:none;padding:0.5rem 1.2rem;border-radius:8px;font-weight:700;cursor:pointer;">
-        ${done ? '🔄 Retry' : '▶ Start'}
-      </button>
-    </div>
-  `;
-  card.onclick = () => { setState({ chapter: ch.chapter_id }); window.location.href = 'learn.html'; };
-  list.appendChild(card);
+// Group by chapter > unit
+const unitsByChapter = {};
+
+// Process flashcards
+Object.values(flashcards).forEach(fc => {
+  if (fc.chapter && fc.unit) {
+    if (!unitsByChapter[fc.chapter]) unitsByChapter[fc.chapter] = {};
+    if (!unitsByChapter[fc.chapter][fc.unit]) {
+      unitsByChapter[fc.chapter][fc.unit] = { flashcards: [], questions: [] };
+    }
+    unitsByChapter[fc.chapter][fc.unit].flashcards.push(fc);
+  }
 });
 
-function getChaptersForYearSubject(year, subject) {
-  const chapters = getStore('ss_chapters');
-  return Object.values(chapters).filter(ch => ch.class === year && ch.subject === subject && ch.status === 'published');
+// Process questions
+Object.values(questions).forEach(q => {
+  if (q.chapter && q.unit && q.subject === subject && q.class === year) {
+    if (!unitsByChapter[q.chapter]) unitsByChapter[q.chapter] = {};
+    if (!unitsByChapter[q.chapter][q.unit]) {
+      unitsByChapter[q.chapter][q.unit] = { flashcards: [], questions: [] };
+    }
+    unitsByChapter[q.chapter][q.unit].questions.push(q);
+  }
+});
+
+// Render chapters
+const container = document.getElementById('chapters-container');
+
+if (Object.keys(unitsByChapter).length === 0) {
+  container.innerHTML = '<div class="empty-state"><h3>No units available yet</h3><p>Content is being prepared for this subject.</p></div>';
+} else {
+  const chapters = Object.keys(unitsByChapter).sort((a, b) => parseInt(a) - parseInt(b));
+  
+  chapters.forEach(chapterNum => {
+    const units = unitsByChapter[chapterNum];
+    const unitNums = Object.keys(units).sort((a, b) => parseInt(a) - parseInt(b));
+    
+    const chapterDiv = document.createElement('div');
+    chapterDiv.className = 'chapter-group';
+    
+    const headerDiv = document.createElement('div');
+    headerDiv.className = 'chapter-header';
+    headerDiv.innerHTML = `
+      <div>
+        <div class="chapter-title">Chapter ${chapterNum}</div>
+        <div class="chapter-meta">${unitNums.length} unit${unitNums.length !== 1 ? 's' : ''}</div>
+      </div>
+      <div class="chapter-toggle">▼</div>
+    `;
+    
+    const unitsDiv = document.createElement('div');
+    unitsDiv.className = 'units-container';
+    
+    unitNums.forEach(unitNum => {
+      const unitData = units[unitNum];
+      const fcCount = unitData.flashcards.length;
+      const qCount = unitData.questions.length;
+      
+      const unitDiv = document.createElement('div');
+      unitDiv.className = 'unit-item';
+      unitDiv.innerHTML = `
+        <div class="unit-info">
+          <div class="unit-name">Unit ${unitNum}</div>
+          <div class="unit-meta">🃏 ${fcCount} flashcard${fcCount !== 1 ? 's' : ''} • ❓ ${qCount} question${qCount !== 1 ? 's' : ''}</div>
+        </div>
+        <div class="unit-buttons">
+          <a href="flashcard.html?chapter=${chapterNum}&unit=${unitNum}" class="btn btn-flashcard" ${fcCount === 0 ? 'disabled' : ''}>
+            🃏 Flashcard
+          </a>
+          <a href="quiz.html?chapter=${chapterNum}&unit=${unitNum}" class="btn btn-quiz" ${qCount === 0 ? 'disabled' : ''}>
+            ❓ Quiz
+          </a>
+        </div>
+      `;
+      
+      unitsDiv.appendChild(unitDiv);
+    });
+    
+    // Toggle functionality
+    headerDiv.addEventListener('click', () => {
+      headerDiv.classList.toggle('active');
+      unitsDiv.classList.toggle('active');
+    });
+    
+    chapterDiv.appendChild(headerDiv);
+    chapterDiv.appendChild(unitsDiv);
+    container.appendChild(chapterDiv);
+  });
 }
 
-function getChapterScore(year, subject, chapterId) {
-  const user = getCurrentUser();
-  if (!user) return 0;
-  const progress = getUserProgress(user.user_id);
-  if (!progress || !progress.chapters_progress[chapterId]) return 0;
-  return progress.chapters_progress[chapterId].points_earned || 0;
+function getState() {
+  try { return JSON.parse(sessionStorage.getItem('ss_state')) || {}; }
+  catch { return {}; }
 }
 
 function getTotalScore() {
@@ -122,8 +341,10 @@ function getTotalScore() {
   return progress?.total_points || 0;
 }
 
-function getState() { try { return JSON.parse(sessionStorage.getItem('ss_state')) || {}; } catch { return {}; } }
-function setState(patch) { const s = { ...getState(), ...patch }; sessionStorage.setItem('ss_state', JSON.stringify(s)); }
+function getStore(key) {
+  try { return JSON.parse(localStorage.getItem(key)) || {}; }
+  catch { return {}; }
+}
 </script>
 </body>
 </html>
