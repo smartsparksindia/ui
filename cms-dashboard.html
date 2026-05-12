@@ -156,27 +156,6 @@ body {
   box-shadow: 0 14px 24px rgba(127,119,221,0.28);
 }
 
-.btn-sm {
-  padding: 0.5rem 1rem;
-  font-size: 0.8rem;
-  margin: 0 0.3rem;
-}
-
-.btn-edit {
-  background: var(--purple);
-  color: white;
-}
-
-.btn-unpublish {
-  background: #FFB74D;
-  color: #5D4037;
-}
-
-.btn-delete {
-  background: #EF5350;
-  color: white;
-}
-
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -237,64 +216,6 @@ body {
   margin-bottom: 1rem;
 }
 
-.table-wrap {
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid #F0EBE0;
-}
-
-.status-badge {
-  display: inline-block;
-  padding: 0.3rem 0.8rem;
-  border-radius: 50px;
-  font-size: 0.75rem;
-  font-weight: 800;
-}
-
-.status-published {
-  background: var(--teal-light);
-  color: var(--teal);
-}
-
-.status-draft {
-  background: var(--amber-light);
-  color: var(--amber);
-}
-
-.status-submitted {
-  background: var(--blue-light);
-  color: var(--blue);
-}
-
-.chapter-row {
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.chapter-row:hover {
-  background: #FAF7FF;
-}
-
-.chapter-title {
-  font-weight: 800;
-  color: var(--purple-dark);
-}
-
-.chapter-meta {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-top: 0.3rem;
-}
-
 .activity-item {
   padding: 1rem 1rem;
   border: 1px solid #F0EBE0;
@@ -353,6 +274,7 @@ th, td {
       <a href="cms-dashboard.html" class="cms-nav-item active">📊 Dashboard</a>
       <a href="cms-editor.html" class="cms-nav-item">✏️ Create Chapter</a>
       <a href="cms-edit-chapter.html" class="cms-nav-item">📝 My Drafts</a>
+      <a href="cms-published-chapters.html" class="cms-nav-item">📖 Edit Chapters</a>
       <a href="cms-approval-queue.html" class="cms-nav-item">✅ Approval Queue</a>
       <a href="cms-question-bank.html" class="cms-nav-item">🏦 Question Bank</a>
       <a href="cms-analytics.html" class="cms-nav-item">📈 Analytics</a>
@@ -369,7 +291,7 @@ th, td {
       </div>
 
       <div class="stats-grid">
-        <div class="stat-card" onclick="window.location.href='cms-analytics.html'">
+        <div class="stat-card" onclick="window.location.href='cms-published-chapters.html'">
           <div>Published Chapters</div>
           <div class="stat-value" id="stat-published">0</div>
         </div>
@@ -384,27 +306,6 @@ th, td {
         <div class="stat-card" onclick="window.location.href='cms-question-bank.html'">
           <div>Total Questions</div>
           <div class="stat-value" id="stat-questions">0</div>
-        </div>
-      </div>
-
-      <div class="cms-section">
-        <h2 class="section-title">📖 Published Chapters</h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Chapter</th>
-                <th>Subject</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="chapters-tbody">
-              <tr>
-                <td colspan="4" class="empty-state">Loading chapters...</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
 
@@ -436,28 +337,6 @@ document.getElementById('stat-drafts').textContent = drafts.length;
 document.getElementById('stat-pending').textContent = submitted.length;
 document.getElementById('stat-questions').textContent = Object.keys(qb).length;
 
-// RENDER CHAPTERS
-const tbody = document.getElementById('chapters-tbody');
-if (published.length === 0) {
-  tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No published chapters yet</td></tr>';
-} else {
-  tbody.innerHTML = published.map(ch => `
-    <tr class="chapter-row">
-      <td>
-        <div class="chapter-title">${ch.title}</div>
-        <div class="chapter-meta">Class ${ch.class}</div>
-      </td>
-      <td>${ch.subject}</td>
-      <td><span class="status-badge status-published">Published</span></td>
-      <td>
-        <button class="btn btn-sm btn-edit" onclick="editChapter('${ch.chapter_id}')">Edit</button>
-        <button class="btn btn-sm btn-unpublish" onclick="unpublishChapter('${ch.chapter_id}')">Unpublish</button>
-        <button class="btn btn-sm btn-delete" onclick="deleteChapter('${ch.chapter_id}')">Delete</button>
-      </td>
-    </tr>
-  `).join('');
-}
-
 // RENDER PENDING
 const pendingList = document.getElementById('pending-list');
 if (submitted.length === 0) {
@@ -471,36 +350,12 @@ if (submitted.length === 0) {
         <small>Class ${ch.class} • ${ch.subject}</small>
       </div>
       <button class="btn btn-sm btn-primary" onclick="approveChapter('${ch.chapter_id}')">Approve</button>
-      <button class="btn btn-sm btn-delete" onclick="rejectChapter('${ch.chapter_id}')">Reject</button>
+      <button class="btn btn-sm btn-delete" style="background:#EF5350;color:white;padding:0.5rem 1rem;font-size:0.8rem;" onclick="rejectChapter('${ch.chapter_id}')">Reject</button>
     </div>
   `).join('');
 }
 
 // FUNCTIONS
-function editChapter(id) {
-  alert('Edit feature coming soon! You can delete and recreate the chapter.');
-}
-
-function unpublishChapter(id) {
-  if (confirm('Move to draft? Chapter will no longer be visible to students.')) {
-    const ch = getFromStore('ss_chapters', id);
-    if (ch) {
-      ch.status = 'draft';
-      addToStore('ss_chapters', id, ch);
-      location.reload();
-    }
-  }
-}
-
-function deleteChapter(id) {
-  if (confirm('Delete chapter permanently? This cannot be undone!')) {
-    const chapters = getStore('ss_chapters');
-    delete chapters[id];
-    localStorage.setItem('ss_chapters', JSON.stringify(chapters));
-    location.reload();
-  }
-}
-
 function approveChapter(id) {
   if (confirm('Publish this chapter?')) {
     const ch = getFromStore('ss_chapters', id);
@@ -556,6 +411,14 @@ function addToStore(key, id, data) {
     localStorage.setItem(key, JSON.stringify(store));
   } catch (e) {
     console.error('Storage error:', e);
+  }
+}
+
+function getStore(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key)) || {};
+  } catch {
+    return {};
   }
 }
 </script>
