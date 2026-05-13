@@ -77,7 +77,7 @@ function createChapter(class_no, subject, subject_area, title, description, chap
 
 function addFlashcardToChapter(chapter_id, term, definition, chapter_num = null, unit_num = null, image_url = null, subject_area = null) {
   const chapter = getFromStore(STORE.CHAPTERS, chapter_id);
-  if (!chapter || chapter.status !== 'draft') return null;
+  if (!chapter) return null;
   
   const flashcard_id = `fc_${chapter_id}_${Date.now()}`;
   const flashcard = {

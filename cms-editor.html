@@ -701,13 +701,24 @@ document.getElementById('editor-form').addEventListener('submit', (e) => {
   }
 
   const chapter = createChapter(classNum, subject, subjectArea, title, description, chapterNum, unitNum);
+  console.log('DEBUG - Created chapter:', { id: chapter.chapter_id, subject, subjectArea, status: chapter.status });
+  
   flashcardsData.forEach(fc => {
-    addFlashcardToChapter(chapter.chapter_id, fc.term, fc.definition, chapterNum, unitNum, null, subjectArea);
+    const result = addFlashcardToChapter(chapter.chapter_id, fc.term, fc.definition, chapterNum, unitNum, null, subjectArea);
+    console.log('DEBUG - Added flashcard:', { flashcard_id: result?.flashcard_id, subject_area: result?.subject_area });
   });
   questionsData.forEach(q => {
     const question = createQuestion(classNum, subject, subjectArea, title, q.question, q.options, parseInt(q.correct), q.explanation, chapterNum, unitNum);
+    console.log('DEBUG - Created question:', { question_id: question.question_id, subject_area: question.subject_area });
     linkQuestionToChapter(question.question_id, chapter.chapter_id);
   });
+
+  // Publish chapter immediately
+  chapter.status = 'published';
+  chapter.approved_at = new Date().toISOString();
+  chapter.approved_by = getCurrentUserId();
+  const publishedChapter = addToStore('ss_chapters', chapter.chapter_id, chapter);
+  console.log('DEBUG - Published chapter:', { id: publishedChapter.chapter_id, status: publishedChapter.status, subject_area: publishedChapter.subject_area });
 
   document.getElementById('editor-form').style.display = 'none';
   document.getElementById('success-alert').style.display = 'block';
