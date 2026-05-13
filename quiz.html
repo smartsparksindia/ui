@@ -69,16 +69,6 @@ nav { background: white; padding: 1rem 2.5rem; display: flex; align-items: cente
   background: #EEEDFE;
 }
 
-.option.correct {
-  border-color: var(--teal);
-  background: #E1F5EE;
-}
-
-.option.incorrect {
-  border-color: var(--coral);
-  background: #FAECE7;
-}
-
 .controls {
   display: flex;
   gap: 1rem;
@@ -194,8 +184,35 @@ const urlParams = new URLSearchParams(window.location.search);
 const chapterNum = parseInt(urlParams.get('chapter'));
 const unitNum = parseInt(urlParams.get('unit'));
 
+// Get all questions and filter by chapter/unit
 const allQuestions = getStore('ss_question_bank');
-const questions = Object.values(allQuestions).filter(q => q.chapter === chapterNum && q.unit === unitNum);
+const state = getState();
+const year = state.year || 6;
+const subject = state.subject || 'Science';
+
+// Get questions for this chapter/unit
+// Questions are divided into units by index (5 per unit)
+const relevantQuestions = Object.values(allQuestions).filter(q => q.class === year && q.subject === subject);
+
+// Filter by chapter (extract from topic)
+const chapterQuestions = relevantQuestions.filter(q => {
+  if (q.chapter) return q.chapter === chapterNum;
+  if (q.topic && q.topic.includes('Chapter')) {
+    const match = q.topic.match(/Chapter\s+(\d+)/i);
+    if (match) return parseInt(match[1]) === chapterNum;
+  }
+  return false;
+});
+
+// Divide questions into units (5 questions per unit)
+const questionsPerUnit = 5;
+const questions = [];
+chapterQuestions.forEach((q, idx) => {
+  const qUnitNum = Math.floor(idx / questionsPerUnit) + 1;
+  if (qUnitNum === unitNum) {
+    questions.push(q);
+  }
+});
 
 document.getElementById('bc-unit').textContent = `Chapter ${chapterNum} - Unit ${unitNum}`;
 
@@ -208,6 +225,7 @@ function renderQuestion() {
   
   if (questions.length === 0) {
     container.innerHTML = '<div class="empty-state"><h3>No questions</h3><p>Check back later for content!</p></div>';
+    document.querySelector('.controls').style.display = 'none';
     return;
   }
 
@@ -271,12 +289,32 @@ function nextQuestion() {
 
 function calculateScore() {
   sessionScore = 0;
+  let correctCount = 0;
+  
   Object.keys(answers).forEach(idx => {
     const q = questions[idx];
     if (answers[idx] === q.correct_option_index) {
       sessionScore += 10;
+      correctCount++;
     }
   });
+  
+  // Save score to user progress
+  const user = getCurrentUser();
+  if (user) {
+    const chapterId = `ch_${chapterNum}_${urlParams.get('subject') || 'general'}`;
+    const points = sessionScore;
+    const accuracy = Math.round((correctCount / questions.length) * 100);
+    
+    // Record the quiz attempt for each question
+    questions.forEach((q, idx) => {
+      const isCorrect = answers[idx] === q.correct_option_index;
+      recordQuizAttempt(user.user_id, chapterId, q.question_id, isCorrect, false);
+    });
+    
+    console.log(`Quiz completed: ${sessionScore}/${questions.length * 10} points, ${accuracy}% accuracy`);
+  }
+  
   document.getElementById('session-score').textContent = sessionScore;
   showResults();
 }
@@ -285,6 +323,54 @@ function showResults() {
   const quizContainer = document.getElementById('quiz-container');
   const resultsContainer = document.getElementById('results-container');
   const percentage = Math.round((sessionScore / (questions.length * 10)) * 100);
+  
+  // SAVE SCORE TO USER PROGRESS
+  const user = getCurrentUser();
+  if (user) {
+    let progress = getUserProgress(user.user_id);
+    if (!progress) {
+      progress = {
+        user_id: user.user_id,
+        total_points: 0,
+        chapters_progress: {},
+        current_streak: 0,
+        longest_streak: 0,
+        last_activity: new Date().toISOString()
+      };
+    }
+    
+    // Create a unit key for tracking
+    const unitKey = `ch_${chapterNum}_u_${unitNum}`;
+    if (!progress.chapters_progress[unitKey]) {
+      progress.chapters_progress[unitKey] = {
+        points_earned: 0,
+        accuracy_pct: 0,
+        attempts: 0,
+        status: 'in_progress'
+      };
+    }
+    
+    // Update with best score
+    if (sessionScore > (progress.chapters_progress[unitKey].points_earned || 0)) {
+      progress.chapters_progress[unitKey].points_earned = sessionScore;
+      progress.chapters_progress[unitKey].accuracy_pct = percentage;
+    }
+    
+    progress.chapters_progress[unitKey].attempts = (progress.chapters_progress[unitKey].attempts || 0) + 1;
+    progress.chapters_progress[unitKey].last_attempt = new Date().toISOString();
+    
+    // Mark as completed if 100%
+    if (percentage === 100) {
+      progress.chapters_progress[unitKey].status = 'completed';
+    }
+    
+    // Update total points
+    progress.total_points = Object.values(progress.chapters_progress).reduce((sum, cp) => sum + (cp.points_earned || 0), 0);
+    progress.last_activity = new Date().toISOString();
+    
+    // Save to localStorage
+    addToStore('ss_user_progress', user.user_id, progress);
+  }
   
   let message = '';
   if (percentage === 100) message = '🏆 Perfect score! You\'re a star!';
@@ -307,6 +393,11 @@ function showResults() {
 
 function goBack() {
   window.location.href = 'chapters.html';
+}
+
+function getState() {
+  try { return JSON.parse(sessionStorage.getItem('ss_state')) || {}; }
+  catch { return {}; }
 }
 
 function getStore(key) {
