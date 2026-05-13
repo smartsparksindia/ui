@@ -82,6 +82,8 @@ function addFlashcardToChapter(chapter_id, term, definition, chapter_num = null,
   const flashcard = {
     flashcard_id,
     chapter_id,
+    class: chapter.class,
+    subject: chapter.subject,
     chapter: chapter_num,
     unit: unit_num,
     version: 0, // Will be set when published
