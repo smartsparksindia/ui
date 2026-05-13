@@ -693,7 +693,7 @@ document.getElementById('editor-form').addEventListener('submit', (e) => {
     return;
   }
 
-  const chapter = createChapter(classNum, subject, title, description);
+  const chapter = createChapter(classNum, subject, title, description, chapterNum, unitNum);
   flashcardsData.forEach(fc => {
     addFlashcardToChapter(chapter.chapter_id, fc.term, fc.definition, chapterNum, unitNum);
   });
