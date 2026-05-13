@@ -275,8 +275,21 @@ textarea {
           </select>
         </div>
         <div class="form-group">
-          <label for="subject">Subject Area</label>
-          <input type="text" id="subject" placeholder="e.g., History, Geography, Biology" required>
+          <label for="subject">Subject</label>
+          <select id="subject" required>
+            <option value="">Select subject</option>
+            <option value="Science">Science</option>
+            <option value="Maths">Maths</option>
+            <option value="English">English</option>
+            <option value="Social Science">Social Science</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="subject-area">Subject Area</label>
+          <input type="text" id="subject-area" placeholder="e.g., History, Geography, Biology, Physics" required>
         </div>
       </div>
 
@@ -676,22 +689,23 @@ document.getElementById('editor-form').addEventListener('submit', (e) => {
 
   const classNum = parseInt(document.getElementById('class').value);
   const subject = document.getElementById('subject').value;
+  const subjectArea = document.getElementById('subject-area').value;
   const chapterNum = parseInt(document.getElementById('chapter-number').value);
   const unitNum = parseInt(document.getElementById('unit-number').value);
   const title = document.getElementById('title').value;
   const description = document.getElementById('description').value;
 
-  if (!classNum || !subject || !chapterNum || !unitNum || !title || questionsData.length === 0) {
-    alert('Please fill in: Class, Subject, Chapter Number, Unit Number, Title, Description, and at least 1 question');
+  if (!classNum || !subject || !subjectArea || !chapterNum || !unitNum || !title || questionsData.length === 0) {
+    alert('Please fill in: Class, Subject, Subject Area, Chapter Number, Unit Number, Title, Description, and at least 1 question');
     return;
   }
 
-  const chapter = createChapter(classNum, subject, title, description, chapterNum, unitNum);
+  const chapter = createChapter(classNum, subject, subjectArea, title, description, chapterNum, unitNum);
   flashcardsData.forEach(fc => {
-    addFlashcardToChapter(chapter.chapter_id, fc.term, fc.definition, chapterNum, unitNum);
+    addFlashcardToChapter(chapter.chapter_id, fc.term, fc.definition, chapterNum, unitNum, null, subjectArea);
   });
   questionsData.forEach(q => {
-    const question = createQuestion(classNum, subject, title, q.question, q.options, parseInt(q.correct), q.explanation, chapterNum, unitNum);
+    const question = createQuestion(classNum, subject, subjectArea, title, q.question, q.options, parseInt(q.correct), q.explanation, chapterNum, unitNum);
     linkQuestionToChapter(question.question_id, chapter.chapter_id);
   });
 

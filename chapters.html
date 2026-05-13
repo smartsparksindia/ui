@@ -24,39 +24,12 @@ nav { background: white; padding: 1rem 2.5rem; display: flex; align-items: cente
 .header h1 { font-family: 'Fredoka One', cursive; font-size: 1.6rem; margin-bottom: 0.4rem; }
 .header p { color: var(--text-muted); font-weight: 600; font-size: 0.9rem; }
 
-.subject-area-header {
-  background: white;
-  border-radius: var(--radius);
-  padding: 1.2rem 1.5rem;
-  margin: 0 2rem 1.5rem;
-  border-left: 6px solid var(--purple);
-  box-shadow: 0 2px 8px rgba(127, 119, 221, 0.08);
-}
-
-.subject-area-header h2 {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.1rem;
-  color: var(--purple);
-  margin: 0 0 0.3rem 0;
-}
-
-.subject-area-header #subject-area-value {
-  color: var(--coral);
-  font-weight: 900;
-}
-
-.subject-area-header p {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin: 0;
-}
-
 .chapters-wrap { max-width: 900px; margin: 0 auto; padding: 0 2rem 2rem; }
 
-/* ACCORDION STYLES */
-.chapter-group { margin-bottom: 1rem; }
+/* SUBJECT AREA STYLES */
+.subject-area-group { margin-bottom: 1.5rem; }
 
-.chapter-header {
+.subject-area-header {
   background: white;
   border-radius: var(--radius);
   padding: 1rem 1.5rem;
@@ -66,6 +39,69 @@ nav { background: white; padding: 1rem 2.5rem; display: flex; align-items: cente
   cursor: pointer;
   transition: all 0.2s;
   border: 2px solid #F0EBE0;
+  user-select: none;
+  border-left: 6px solid var(--coral);
+}
+
+.subject-area-header:hover {
+  box-shadow: 0 4px 12px rgba(216, 90, 48, 0.1);
+  transform: translateY(-2px);
+}
+
+.subject-area-header.active {
+  border-color: var(--coral);
+}
+
+.subject-area-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  color: var(--coral);
+  font-weight: 900;
+  margin: 0;
+}
+
+.subject-area-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+  margin: 0;
+}
+
+.subject-area-toggle {
+  font-size: 1.2rem;
+  transition: transform 0.2s;
+  color: var(--coral);
+}
+
+.subject-area-header.active .subject-area-toggle {
+  transform: rotate(180deg);
+}
+
+.chapters-container {
+  display: none;
+  background: #FAFAF8;
+  padding: 1rem;
+  border: 2px solid #F0EBE0;
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  border-left: 6px solid var(--coral);
+}
+
+.chapters-wrap { max-width: 900px; margin: 0 auto; padding: 0 2rem 2rem; }
+
+/* ACCORDION STYLES */
+.chapter-group { margin-bottom: 0.8rem; }
+
+.chapter-header {
+  background: white;
+  border-radius: 8px;
+  padding: 0.9rem 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid #E8E3DB;
   user-select: none;
 }
 
@@ -80,19 +116,19 @@ nav { background: white; padding: 1rem 2.5rem; display: flex; align-items: cente
 
 .chapter-title {
   font-family: 'Fredoka One', cursive;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--text);
   font-weight: 800;
 }
 
 .chapter-meta {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
   margin-top: 0.2rem;
 }
 
 .chapter-toggle {
-  font-size: 1.2rem;
+  font-size: 1rem;
   transition: transform 0.2s;
   color: var(--purple);
 }
@@ -103,11 +139,11 @@ nav { background: white; padding: 1rem 2.5rem; display: flex; align-items: cente
 
 .units-container {
   display: none;
-  background: #FAFAF8;
-  padding: 1rem;
-  border: 2px solid #F0EBE0;
+  background: white;
+  padding: 0.8rem;
+  border: 2px solid #E8E3DB;
   border-top: none;
-  border-radius: 0 0 var(--radius) var(--radius);
+  border-radius: 0 0 8px 8px;
 }
 
 .units-container.active {
@@ -115,10 +151,10 @@ nav { background: white; padding: 1rem 2.5rem; display: flex; align-items: cente
 }
 
 .unit-item {
-  background: white;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 0.7rem;
+  background: #FAFAF8;
+  border-radius: 6px;
+  padding: 0.8rem;
+  margin-bottom: 0.6rem;
   border-left: 4px solid var(--teal);
   display: flex;
   justify-content: space-between;
@@ -137,36 +173,36 @@ nav { background: white; padding: 1rem 2.5rem; display: flex; align-items: cente
 
 .unit-name {
   font-family: 'Fredoka One', cursive;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 800;
   color: var(--text);
   margin-bottom: 0.2rem;
 }
 
 .unit-meta {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
 }
 
 .unit-buttons {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
   flex-wrap: wrap;
 }
 
 .btn {
-  padding: 0.5rem 1rem;
+  padding: 0.45rem 0.9rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   font-family: 'Nunito', sans-serif;
   font-weight: 800;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   cursor: pointer;
   text-decoration: none;
   transition: all 0.2s;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.3rem;
   white-space: nowrap;
 }
 
@@ -245,13 +281,8 @@ footer p { color: rgba(255,255,255,0.45); margin-top: 0.3rem; }
 </div>
 
 <div class="header">
-  <h1>📚 Learn by Units</h1>
-  <p>Expand to see chapters, then expand chapters to see units</p>
-</div>
-
-<div class="subject-area-header">
-  <h2 id="subject-area-title">Subject Area: <span id="subject-area-value">History</span></h2>
-  <p>Expand chapters below to explore units with flashcards and quizzes</p>
+  <h1>📚 Learn</h1>
+  <p>Select a Subject Area, expand chapters, and explore units</p>
 </div>
 
 <div class="chapters-wrap" id="chapters-container"></div>
@@ -264,12 +295,11 @@ footer p { color: rgba(255,255,255,0.45); margin-top: 0.3rem; }
 <script src="data-layer.js"></script>
 <script>
 const state = getState();
-let year = state.year || 6;
-let subject = state.subject || 'History';
+const year = state.year || 6;
+const subject = state.subject || 'Science';
 
 document.getElementById('bc-year').textContent = `Class ${year}`;
 document.getElementById('bc-subject').textContent = subject;
-document.getElementById('subject-area-value').textContent = subject;
 document.getElementById('total-score').textContent = getTotalScore();
 
 // Get all flashcards and questions
@@ -277,94 +307,130 @@ const allFlashcards = getStore('ss_flashcards');
 const allQuestions = getStore('ss_question_bank');
 
 function renderChapters() {
-  // Group by chapter > unit for selected subject
-  const unitsByChapter = {};
+  // Group by subject_area > chapter > unit for selected subject
+  const areasBySubject = {};
 
   // Process flashcards
   Object.values(allFlashcards).forEach(fc => {
     if (fc.chapter && fc.unit && fc.subject === subject && fc.class === year) {
-      if (!unitsByChapter[fc.chapter]) unitsByChapter[fc.chapter] = {};
-      if (!unitsByChapter[fc.chapter][fc.unit]) {
-        unitsByChapter[fc.chapter][fc.unit] = { flashcards: [], questions: [] };
+      const area = fc.subject_area || 'Uncategorized';
+      if (!areasBySubject[area]) areasBySubject[area] = {};
+      if (!areasBySubject[area][fc.chapter]) areasBySubject[area][fc.chapter] = {};
+      if (!areasBySubject[area][fc.chapter][fc.unit]) {
+        areasBySubject[area][fc.chapter][fc.unit] = { flashcards: [], questions: [] };
       }
-      unitsByChapter[fc.chapter][fc.unit].flashcards.push(fc);
+      areasBySubject[area][fc.chapter][fc.unit].flashcards.push(fc);
     }
   });
 
   // Process questions
   Object.values(allQuestions).forEach(q => {
     if (q.chapter && q.unit && q.subject === subject && q.class === year) {
-      if (!unitsByChapter[q.chapter]) unitsByChapter[q.chapter] = {};
-      if (!unitsByChapter[q.chapter][q.unit]) {
-        unitsByChapter[q.chapter][q.unit] = { flashcards: [], questions: [] };
+      const area = q.subject_area || 'Uncategorized';
+      if (!areasBySubject[area]) areasBySubject[area] = {};
+      if (!areasBySubject[area][q.chapter]) areasBySubject[area][q.chapter] = {};
+      if (!areasBySubject[area][q.chapter][q.unit]) {
+        areasBySubject[area][q.chapter][q.unit] = { flashcards: [], questions: [] };
       }
-      unitsByChapter[q.chapter][q.unit].questions.push(q);
+      areasBySubject[area][q.chapter][q.unit].questions.push(q);
     }
   });
 
-  // Render chapters
+  // Render subject areas
   const container = document.getElementById('chapters-container');
 
-  if (Object.keys(unitsByChapter).length === 0) {
-    container.innerHTML = '<div class="empty-state"><h3>No units available yet</h3><p>Content is being prepared for this subject area.</p></div>';
+  if (Object.keys(areasBySubject).length === 0) {
+    container.innerHTML = '<div class="empty-state"><h3>No content available yet</h3><p>Content for ' + subject + ' is being prepared.</p></div>';
   } else {
     container.innerHTML = '';
-    const chapters = Object.keys(unitsByChapter).sort((a, b) => parseInt(a) - parseInt(b));
+    const areas = Object.keys(areasBySubject).sort();
     
-    chapters.forEach(chapterNum => {
-      const units = unitsByChapter[chapterNum];
-      const unitNums = Object.keys(units).sort((a, b) => parseInt(a) - parseInt(b));
+    areas.forEach(areaName => {
+      const chapters = areasBySubject[areaName];
+      const chapterNums = Object.keys(chapters).sort((a, b) => parseInt(a) - parseInt(b));
       
-      const chapterDiv = document.createElement('div');
-      chapterDiv.className = 'chapter-group';
+      // Subject Area Group
+      const areaGroupDiv = document.createElement('div');
+      areaGroupDiv.className = 'subject-area-group';
       
-      const headerDiv = document.createElement('div');
-      headerDiv.className = 'chapter-header';
-      headerDiv.innerHTML = `
+      const areaHeaderDiv = document.createElement('div');
+      areaHeaderDiv.className = 'subject-area-header';
+      areaHeaderDiv.innerHTML = `
         <div>
-          <div class="chapter-title">Chapter ${chapterNum}</div>
-          <div class="chapter-meta">${unitNums.length} unit${unitNums.length !== 1 ? 's' : ''}</div>
+          <h3 class="subject-area-title">${areaName}</h3>
+          <p class="subject-area-meta">${chapterNums.length} chapter${chapterNums.length !== 1 ? 's' : ''}</p>
         </div>
-        <div class="chapter-toggle">▼</div>
+        <div class="subject-area-toggle">▼</div>
       `;
       
-      const unitsDiv = document.createElement('div');
-      unitsDiv.className = 'units-container';
+      const chaptersDiv = document.createElement('div');
+      chaptersDiv.className = 'chapters-container';
       
-      unitNums.forEach(unitNum => {
-        const unitData = units[unitNum];
-        const fcCount = unitData.flashcards.length;
-        const qCount = unitData.questions.length;
+      chapterNums.forEach(chapterNum => {
+        const units = chapters[chapterNum];
+        const unitNums = Object.keys(units).sort((a, b) => parseInt(a) - parseInt(b));
         
-        const unitDiv = document.createElement('div');
-        unitDiv.className = 'unit-item';
-        unitDiv.innerHTML = `
-          <div class="unit-info">
-            <div class="unit-name">Unit ${unitNum}</div>
-            <div class="unit-meta">🃏 ${fcCount} flashcard${fcCount !== 1 ? 's' : ''} • ❓ ${qCount} question${qCount !== 1 ? 's' : ''}</div>
+        const chapterDiv = document.createElement('div');
+        chapterDiv.className = 'chapter-group';
+        
+        const chapterHeaderDiv = document.createElement('div');
+        chapterHeaderDiv.className = 'chapter-header';
+        chapterHeaderDiv.innerHTML = `
+          <div>
+            <div class="chapter-title">Chapter ${chapterNum}</div>
+            <div class="chapter-meta">${unitNums.length} unit${unitNums.length !== 1 ? 's' : ''}</div>
           </div>
-          <div class="unit-buttons">
-            <a href="flashcard.html?chapter=${chapterNum}&unit=${unitNum}" class="btn btn-flashcard" ${fcCount === 0 ? 'disabled' : ''}>
-              🃏 Flashcard
-            </a>
-            <a href="quiz.html?chapter=${chapterNum}&unit=${unitNum}" class="btn btn-quiz" ${qCount === 0 ? 'disabled' : ''}>
-              ❓ Quiz
-            </a>
-          </div>
+          <div class="chapter-toggle">▼</div>
         `;
         
-        unitsDiv.appendChild(unitDiv);
+        const unitsDiv = document.createElement('div');
+        unitsDiv.className = 'units-container';
+        
+        unitNums.forEach(unitNum => {
+          const unitData = units[unitNum];
+          const fcCount = unitData.flashcards.length;
+          const qCount = unitData.questions.length;
+          
+          const unitDiv = document.createElement('div');
+          unitDiv.className = 'unit-item';
+          unitDiv.innerHTML = `
+            <div class="unit-info">
+              <div class="unit-name">Unit ${unitNum}</div>
+              <div class="unit-meta">🃏 ${fcCount} flashcard${fcCount !== 1 ? 's' : ''} • ❓ ${qCount} question${qCount !== 1 ? 's' : ''}</div>
+            </div>
+            <div class="unit-buttons">
+              <a href="flashcard.html?chapter=${chapterNum}&unit=${unitNum}" class="btn btn-flashcard" ${fcCount === 0 ? 'disabled' : ''}>
+                🃏 Flashcard
+              </a>
+              <a href="quiz.html?chapter=${chapterNum}&unit=${unitNum}" class="btn btn-quiz" ${qCount === 0 ? 'disabled' : ''}>
+                ❓ Quiz
+              </a>
+            </div>
+          `;
+          
+          unitsDiv.appendChild(unitDiv);
+        });
+        
+        // Chapter toggle
+        chapterHeaderDiv.addEventListener('click', () => {
+          chapterHeaderDiv.classList.toggle('active');
+          unitsDiv.classList.toggle('active');
+        });
+        
+        chapterDiv.appendChild(chapterHeaderDiv);
+        chapterDiv.appendChild(unitsDiv);
+        chaptersDiv.appendChild(chapterDiv);
       });
       
-      // Toggle functionality
-      headerDiv.addEventListener('click', () => {
-        headerDiv.classList.toggle('active');
-        unitsDiv.classList.toggle('active');
+      // Subject Area toggle
+      areaHeaderDiv.addEventListener('click', () => {
+        areaHeaderDiv.classList.toggle('active');
+        chaptersDiv.classList.toggle('active');
       });
       
-      chapterDiv.appendChild(headerDiv);
-      chapterDiv.appendChild(unitsDiv);
-      container.appendChild(chapterDiv);
+      areaGroupDiv.appendChild(areaHeaderDiv);
+      areaGroupDiv.appendChild(chaptersDiv);
+      container.appendChild(areaGroupDiv);
     });
   }
 }

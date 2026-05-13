@@ -50,12 +50,13 @@ function getFromStore(key, id) {
 // CHAPTER MANAGEMENT (Versioned)
 // ─────────────────────────────────────────────────────────────────────────────
 
-function createChapter(class_no, subject, title, description, chapter_num = null, unit_num = null) {
+function createChapter(class_no, subject, subject_area, title, description, chapter_num = null, unit_num = null) {
   const chapter_id = `ch_${class_no}_${subject.toLowerCase()}_${Date.now()}`;
   const chapter = {
     chapter_id,
     class: class_no,
     subject,
+    subject_area,
     chapter: chapter_num,
     unit: unit_num,
     title,
@@ -74,7 +75,7 @@ function createChapter(class_no, subject, title, description, chapter_num = null
   return addToStore(STORE.CHAPTERS, chapter_id, chapter);
 }
 
-function addFlashcardToChapter(chapter_id, term, definition, chapter_num = null, unit_num = null, image_url = null) {
+function addFlashcardToChapter(chapter_id, term, definition, chapter_num = null, unit_num = null, image_url = null, subject_area = null) {
   const chapter = getFromStore(STORE.CHAPTERS, chapter_id);
   if (!chapter || chapter.status !== 'draft') return null;
   
@@ -84,6 +85,7 @@ function addFlashcardToChapter(chapter_id, term, definition, chapter_num = null,
     chapter_id,
     class: chapter.class,
     subject: chapter.subject,
+    subject_area: subject_area || chapter.subject_area,
     chapter: chapter_num,
     unit: unit_num,
     version: 0, // Will be set when published
@@ -153,12 +155,13 @@ function getAllChapters(class_no, subject, onlyPublished = true) {
 // QUESTION BANK (Reusable Questions)
 // ─────────────────────────────────────────────────────────────────────────────
 
-function createQuestion(class_no, subject, topic, question_text, options, correct_option_index, explanation, chapter_num = null, unit_num = null) {
+function createQuestion(class_no, subject, subject_area, topic, question_text, options, correct_option_index, explanation, chapter_num = null, unit_num = null) {
   const question_id = `q_${subject.toLowerCase()}_${Date.now()}`;
   const question = {
     question_id,
     class: class_no,
     subject,
+    subject_area,
     topic,
     chapter: chapter_num,
     unit: unit_num,
@@ -670,36 +673,36 @@ function initializeSystemWithDemoContent() {
   console.log('Creating demo chapters, questions, and flashcards...');
   
   const demoChapters = [
-    { class: 6, subject: 'Maths', title: 'Chapter 1: Numbers and Operations', desc: 'Learn about numbers, place value, and basic arithmetic operations' },
-    { class: 6, subject: 'Maths', title: 'Chapter 2: Fractions and Decimals', desc: 'Understand fractions, decimals, and their applications' },
-    { class: 6, subject: 'Science', title: 'Chapter 1: Living World', desc: 'Explore living organisms and their characteristics' },
-    { class: 6, subject: 'Science', title: 'Chapter 2: Human Body', desc: 'Learn about human anatomy and body systems' },
-    { class: 6, subject: 'English', title: 'Chapter 1: Reading Comprehension', desc: 'Improve reading skills and comprehension' },
-    { class: 6, subject: 'Social Science', title: 'Chapter 1: The Earth', desc: 'Learn about our planet and its geography' },
-    { class: 7, subject: 'Maths', title: 'Chapter 1: Integers', desc: 'Understand positive and negative integers' },
-    { class: 7, subject: 'Maths', title: 'Chapter 2: Fractions', desc: 'Master fractions and rational numbers' },
-    { class: 7, subject: 'Science', title: 'Chapter 1: Motion and Forces', desc: 'Learn about motion, speed, and forces' },
-    { class: 7, subject: 'Science', title: 'Chapter 2: Heat and Energy', desc: 'Understand temperature, heat transfer, and energy' },
-    { class: 7, subject: 'English', title: 'Chapter 1: Poetry Appreciation', desc: 'Explore poems and literary devices' },
-    { class: 7, subject: 'Social Science', title: 'Chapter 1: Ancient India', desc: 'Learn about early Indian civilizations' },
-    { class: 8, subject: 'Maths', title: 'Chapter 1: Rational Numbers', desc: 'Understand rational numbers and operations' },
-    { class: 8, subject: 'Maths', title: 'Chapter 2: Squares and Square Roots', desc: 'Master squares, cubes, and roots' },
-    { class: 8, subject: 'Science', title: 'Chapter 1: Matter in Our Surroundings', desc: 'Learn about states of matter and properties' },
-    { class: 8, subject: 'Science', title: 'Chapter 2: Cell Structure and Function', desc: 'Understand cells and living organisms' },
-    { class: 8, subject: 'English', title: 'Chapter 1: Prose and Drama', desc: 'Study prose pieces and dramatic works' },
-    { class: 8, subject: 'Social Science', title: 'Chapter 1: Medieval India', desc: 'Explore medieval Indian history' },
-    { class: 9, subject: 'Maths', title: 'Chapter 1: Number Systems', desc: 'Deep dive into number systems and real numbers' },
-    { class: 9, subject: 'Maths', title: 'Chapter 2: Polynomials', desc: 'Master polynomial expressions and factorization' },
-    { class: 9, subject: 'Science', title: 'Chapter 1: Matter in Our Surroundings', desc: 'Advanced concepts of matter and properties' },
-    { class: 9, subject: 'Science', title: 'Chapter 2: Atoms and Molecules', desc: 'Understand atomic structure and bonding' },
-    { class: 9, subject: 'English', title: 'Chapter 1: Fiction and Literature', desc: 'Analyze literary texts and narrative techniques' },
-    { class: 9, subject: 'Social Science', title: 'Chapter 1: India and the World', desc: 'Explore India in global context' },
-    { class: 10, subject: 'Maths', title: 'Chapter 1: Real Numbers', desc: 'Master real number systems and properties' },
-    { class: 10, subject: 'Maths', title: 'Chapter 2: Polynomials and Division', desc: 'Advanced polynomial operations and theorems' },
-    { class: 10, subject: 'Science', title: 'Chapter 1: Chemical Reactions', desc: 'Understand chemical reactions and equations' },
-    { class: 10, subject: 'Science', title: 'Chapter 2: Periodic Table', desc: 'Master periodic table and element properties' },
-    { class: 10, subject: 'English', title: 'Chapter 1: Board Exam Preparation', desc: 'Prepare for board exams with comprehensive content' },
-    { class: 10, subject: 'Social Science', title: 'Chapter 1: Modern India', desc: 'Study modern Indian history and governance' }
+    { class: 6, subject: 'Maths', subject_area: 'Arithmetic', title: 'Chapter 1: Numbers and Operations', desc: 'Learn about numbers, place value, and basic arithmetic operations' },
+    { class: 6, subject: 'Maths', subject_area: 'Arithmetic', title: 'Chapter 2: Fractions and Decimals', desc: 'Understand fractions, decimals, and their applications' },
+    { class: 6, subject: 'Science', subject_area: 'Biology', title: 'Chapter 1: Living World', desc: 'Explore living organisms and their characteristics' },
+    { class: 6, subject: 'Science', subject_area: 'Biology', title: 'Chapter 2: Human Body', desc: 'Learn about human anatomy and body systems' },
+    { class: 6, subject: 'English', subject_area: 'Literature', title: 'Chapter 1: Reading Comprehension', desc: 'Improve reading skills and comprehension' },
+    { class: 6, subject: 'Social Science', subject_area: 'Geography', title: 'Chapter 1: The Earth', desc: 'Learn about our planet and its geography' },
+    { class: 7, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 1: Integers', desc: 'Understand positive and negative integers' },
+    { class: 7, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 2: Fractions', desc: 'Master fractions and rational numbers' },
+    { class: 7, subject: 'Science', subject_area: 'Physics', title: 'Chapter 1: Motion and Forces', desc: 'Learn about motion, speed, and forces' },
+    { class: 7, subject: 'Science', subject_area: 'Physics', title: 'Chapter 2: Heat and Energy', desc: 'Understand temperature, heat transfer, and energy' },
+    { class: 7, subject: 'English', subject_area: 'Literature', title: 'Chapter 1: Poetry Appreciation', desc: 'Explore poems and literary devices' },
+    { class: 7, subject: 'Social Science', subject_area: 'History', title: 'Chapter 1: Ancient India', desc: 'Learn about early Indian civilizations' },
+    { class: 8, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 1: Rational Numbers', desc: 'Understand rational numbers and operations' },
+    { class: 8, subject: 'Maths', subject_area: 'Geometry', title: 'Chapter 2: Squares and Square Roots', desc: 'Master squares, cubes, and roots' },
+    { class: 8, subject: 'Science', subject_area: 'Chemistry', title: 'Chapter 1: Matter in Our Surroundings', desc: 'Learn about states of matter and properties' },
+    { class: 8, subject: 'Science', subject_area: 'Biology', title: 'Chapter 2: Cell Structure and Function', desc: 'Understand cells and living organisms' },
+    { class: 8, subject: 'English', subject_area: 'Literature', title: 'Chapter 1: Prose and Drama', desc: 'Study prose pieces and dramatic works' },
+    { class: 8, subject: 'Social Science', subject_area: 'History', title: 'Chapter 1: Medieval India', desc: 'Explore medieval Indian history' },
+    { class: 9, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 1: Number Systems', desc: 'Deep dive into number systems and real numbers' },
+    { class: 9, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 2: Polynomials', desc: 'Master polynomial expressions and factorization' },
+    { class: 9, subject: 'Science', subject_area: 'Chemistry', title: 'Chapter 1: Matter in Our Surroundings', desc: 'Advanced concepts of matter and properties' },
+    { class: 9, subject: 'Science', subject_area: 'Chemistry', title: 'Chapter 2: Atoms and Molecules', desc: 'Understand atomic structure and bonding' },
+    { class: 9, subject: 'English', subject_area: 'Literature', title: 'Chapter 1: Fiction and Literature', desc: 'Analyze literary texts and narrative techniques' },
+    { class: 9, subject: 'Social Science', subject_area: 'History', title: 'Chapter 1: India and the World', desc: 'Explore India in global context' },
+    { class: 10, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 1: Real Numbers', desc: 'Master real number systems and properties' },
+    { class: 10, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 2: Polynomials and Division', desc: 'Advanced polynomial operations and theorems' },
+    { class: 10, subject: 'Science', subject_area: 'Chemistry', title: 'Chapter 1: Chemical Reactions', desc: 'Understand chemical reactions and equations' },
+    { class: 10, subject: 'Science', subject_area: 'Chemistry', title: 'Chapter 2: Periodic Table', desc: 'Master periodic table and element properties' },
+    { class: 10, subject: 'English', subject_area: 'Literature', title: 'Chapter 1: Board Exam Preparation', desc: 'Prepare for board exams with comprehensive content' },
+    { class: 10, subject: 'Social Science', subject_area: 'History', title: 'Chapter 1: Modern India', desc: 'Study modern Indian history and governance' }
   ];
   
   const chapters = getStore(STORE.CHAPTERS);
@@ -714,6 +717,7 @@ function initializeSystemWithDemoContent() {
       chapter_id,
       class: demoChap.class,
       subject: demoChap.subject,
+      subject_area: demoChap.subject_area,
       title: demoChap.title,
       description: demoChap.desc,
       learning_objectives: [],
@@ -739,7 +743,10 @@ function initializeSystemWithDemoContent() {
         question_id,
         class: demoChap.class,
         subject: demoChap.subject,
+        subject_area: demoChap.subject_area,
         topic: demoChap.title,
+        chapter: (idx % 10) + 1,
+        unit: (idx % 5) + 1,
         difficulty: ['easy', 'medium', 'hard'][q % 3],
         question_text: `Sample Question ${q + 1} for ${demoChap.title}`,
         options: ['Option A', 'Option B', 'Option C', 'Option D'],
@@ -769,6 +776,11 @@ function initializeSystemWithDemoContent() {
       const flashcard = {
         flashcard_id,
         chapter_id,
+        class: demoChap.class,
+        subject: demoChap.subject,
+        subject_area: demoChap.subject_area,
+        chapter: (idx % 10) + 1,
+        unit: (idx % 5) + 1,
         version: 1,
         term: `Term ${f + 1}`,
         definition: `Definition for term ${f + 1}`,
