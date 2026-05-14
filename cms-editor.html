@@ -713,15 +713,12 @@ document.getElementById('editor-form').addEventListener('submit', (e) => {
     linkQuestionToChapter(question.question_id, chapter.chapter_id);
   });
 
-  // Publish chapter immediately
-  chapter.status = 'published';
-  chapter.approved_at = new Date().toISOString();
-  chapter.approved_by = getCurrentUserId();
-  const publishedChapter = addToStore('ss_chapters', chapter.chapter_id, chapter);
-  console.log('DEBUG - Published chapter:', { id: publishedChapter.chapter_id, status: publishedChapter.status, subject_area: publishedChapter.subject_area });
+  // Chapter remains in draft status - admin must approve and publish separately
+  console.log('DEBUG - Chapter saved as DRAFT:', { id: chapter.chapter_id, status: chapter.status, subject_area: chapter.subject_area });
 
   document.getElementById('editor-form').style.display = 'none';
   document.getElementById('success-alert').style.display = 'block';
+  document.getElementById('success-alert').innerHTML = '✅ Chapter saved! Awaiting admin approval...';
   setTimeout(() => { window.location.href = 'cms-dashboard.html'; }, 2000);
 });
 

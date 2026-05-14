@@ -245,12 +245,29 @@ document.getElementById('total-score').textContent = getTotalScore();
 // Get all flashcards and questions
 const allFlashcards = getStore('ss_flashcards');
 const allQuestions = getStore('ss_question_bank');
+const allChapters = getStore('ss_chapters');
+const publishedChapterIds = new Set(
+  Object.values(allChapters)
+    .filter(ch => ch.subject === subject && ch.class === year && ch.status === 'published')
+    .map(ch => ch.chapter_id)
+);
+// Build chapter title map for student view
+const chapterTitleMap = {};
+Object.values(allChapters)
+  .filter(ch => ch.subject === subject && ch.class === year && ch.status === 'published')
+  .forEach(ch => {
+    if (ch.chapter) {
+      chapterTitleMap[ch.chapter] = ch.title;
+    }
+  });
 
 // DEBUG: Log flashcard data structure
 console.log('DEBUG - First flashcard:', Object.values(allFlashcards)[0]);
 console.log('DEBUG - First question:', Object.values(allQuestions)[0]);
 console.log('DEBUG - Total flashcards:', Object.keys(allFlashcards).length);
 console.log('DEBUG - Total questions:', Object.keys(allQuestions).length);
+console.log('DEBUG - Published chapters for student view:', publishedChapterIds);
+console.log('DEBUG - Chapter title map:', chapterTitleMap);
 
 function renderChapters() {
   // Group by subject_area > chapter > unit for selected subject
@@ -326,9 +343,10 @@ function renderChapters() {
         
         const chapterHeaderDiv = document.createElement('div');
         chapterHeaderDiv.className = 'chapter-header';
+        const chapterTitle = chapterTitleMap[chapterNum] || `Chapter ${chapterNum}`;
         chapterHeaderDiv.innerHTML = `
           <div>
-            <div class="chapter-title">Chapter ${chapterNum}</div>
+            <div class="chapter-title">Chapter ${chapterNum}: ${chapterTitle}</div>
             <div class="chapter-meta">${unitNums.length} unit${unitNums.length !== 1 ? 's' : ''}</div>
           </div>
           <div class="chapter-toggle">▼</div>
