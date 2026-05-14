@@ -29,66 +29,6 @@ nav { background: white; padding: 1rem 2.5rem; display: flex; align-items: cente
 /* SUBJECT AREA STYLES */
 .subject-area-group { margin-bottom: 1.5rem; }
 
-.subject-area-header {
-  background: white;
-  border-radius: var(--radius);
-  padding: 1rem 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: 2px solid #F0EBE0;
-  user-select: none;
-  border-left: 6px solid var(--coral);
-}
-
-.subject-area-header:hover {
-  box-shadow: 0 4px 12px rgba(216, 90, 48, 0.1);
-  transform: translateY(-2px);
-}
-
-.subject-area-header.active {
-  border-color: var(--coral);
-}
-
-.subject-area-title {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.1rem;
-  color: var(--coral);
-  font-weight: 900;
-  margin: 0;
-}
-
-.subject-area-meta {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-top: 0.2rem;
-  margin: 0;
-}
-
-.subject-area-toggle {
-  font-size: 1.2rem;
-  transition: transform 0.2s;
-  color: var(--coral);
-}
-
-.subject-area-header.active .subject-area-toggle {
-  transform: rotate(180deg);
-}
-
-.chapters-container {
-  display: none;
-  background: #FAFAF8;
-  padding: 1rem;
-  border: 2px solid #F0EBE0;
-  border-top: none;
-  border-radius: 0 0 var(--radius) var(--radius);
-  border-left: 6px solid var(--coral);
-}
-
-.chapters-wrap { max-width: 900px; margin: 0 auto; padding: 0 2rem 2rem; }
-
 /* ACCORDION STYLES */
 .chapter-group { margin-bottom: 0.8rem; }
 
@@ -344,6 +284,9 @@ function renderChapters() {
 
   // Render subject areas
   const container = document.getElementById('chapters-container');
+  
+  console.log('DEBUG - areasBySubject structure:', areasBySubject);
+  console.log('DEBUG - Areas found:', Object.keys(areasBySubject));
 
   if (Object.keys(areasBySubject).length === 0) {
     container.innerHTML = '<div class="empty-state"><h3>No content available yet</h3><p>Content for ' + subject + ' is being prepared.</p></div>';
@@ -375,6 +318,8 @@ function renderChapters() {
       chapterNums.forEach(chapterNum => {
         const units = chapters[chapterNum];
         const unitNums = Object.keys(units).sort((a, b) => parseInt(a) - parseInt(b));
+        
+        console.log('DEBUG - Rendering chapter:', chapterNum, 'with units:', unitNums);
         
         const chapterDiv = document.createElement('div');
         chapterDiv.className = 'chapter-group';
