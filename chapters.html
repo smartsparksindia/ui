@@ -256,10 +256,17 @@ const chapterTitleMap = {};
 Object.values(allChapters)
   .filter(ch => ch.subject === subject && ch.class === year && ch.status === 'published')
   .forEach(ch => {
-    if (ch.chapter) {
-      chapterTitleMap[ch.chapter] = ch.title;
+    if (ch.chapter !== undefined && ch.chapter !== null) {
+      chapterTitleMap[String(ch.chapter)] = ch.title;
     }
   });
+
+function getChapterTitle(chapterNum) {
+  const key = String(chapterNum);
+  if (chapterTitleMap[key]) return chapterTitleMap[key];
+  const chapter = Object.values(allChapters).find(ch => ch.subject === subject && ch.class === year && String(ch.chapter) === key);
+  return chapter ? chapter.title : null;
+}
 
 // DEBUG: Log flashcard data structure
 console.log('DEBUG - First flashcard:', Object.values(allFlashcards)[0]);
@@ -343,7 +350,7 @@ function renderChapters() {
         
         const chapterHeaderDiv = document.createElement('div');
         chapterHeaderDiv.className = 'chapter-header';
-        const chapterTitle = chapterTitleMap[chapterNum] || `Chapter ${chapterNum}`;
+        const chapterTitle = getChapterTitle(chapterNum) || `Chapter ${chapterNum}`;
         chapterHeaderDiv.innerHTML = `
           <div>
             <div class="chapter-title">Chapter ${chapterNum}: ${chapterTitle}</div>
