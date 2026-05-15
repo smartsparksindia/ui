@@ -335,6 +335,9 @@ function startQuiz() {
           correctAnswers++;
           const currentUser = getCurrentUser();
           if (currentUser) recordQuizAttempt(currentUser.user_id, chapterId, q.question_id, true, revisionViewed);
+          
+          // Update total points display immediately
+          document.getElementById('total-pts').textContent = getTotalPoints();
         } else {
           btn.classList.add('wrong');
           const correct = document.querySelectorAll('.option')[q.correct_option_index];

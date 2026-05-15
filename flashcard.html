@@ -198,9 +198,28 @@ const urlParams = new URLSearchParams(window.location.search);
 const chapterNum = parseInt(urlParams.get('chapter'));
 const unitNum = parseInt(urlParams.get('unit'));
 
-// Get flashcards filtered by chapter + unit
+// Get current state (subject and class)
+const state = getState();
+const year = state.year || 6;
+const subject = state.subject || 'Science';
+
+// Get published chapters for filtering
+const allChapters = getStore('ss_chapters');
+const publishedChapterIds = new Set(
+  Object.values(allChapters)
+    .filter(ch => ch.subject === subject && ch.class === year && ch.status === 'published')
+    .map(ch => ch.chapter_id)
+);
+
+// Get flashcards filtered by subject, class, chapter, unit, and published status
 const allFlashcards = getStore('ss_flashcards');
-const flashcards = Object.values(allFlashcards).filter(fc => fc.chapter === chapterNum && fc.unit === unitNum);
+const flashcards = Object.values(allFlashcards).filter(fc => 
+  fc.chapter === chapterNum && 
+  fc.unit === unitNum && 
+  fc.subject === subject && 
+  fc.class === year &&
+  publishedChapterIds.has(fc.chapter_id)
+);
 
 document.getElementById('bc-unit').textContent = `Chapter ${chapterNum} - Unit ${unitNum}`;
 document.getElementById('card-count').textContent = flashcards.length;
@@ -262,6 +281,11 @@ function goToQuiz() {
 
 function getStore(key) {
   try { return JSON.parse(localStorage.getItem(key)) || {}; }
+  catch { return {}; }
+}
+
+function getState() {
+  try { return JSON.parse(sessionStorage.getItem('ss_state')) || {}; }
   catch { return {}; }
 }
 
