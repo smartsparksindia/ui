@@ -251,6 +251,7 @@ document.getElementById('bc-unit').textContent = `Chapter ${chapterNum} - Unit $
 let currentQuestion = 0;
 let sessionScore = 0;
 let answers = {};
+let scoredQuestions = {}; // Track which questions have been scored this attempt
 
 function renderQuestion() {
   const container = document.getElementById('quiz-container');
@@ -309,8 +310,11 @@ function selectOption(index) {
   const isCorrect = index === q.correct_option_index;
   const pointsEarned = isCorrect ? 10 : 0;
   
-  // Update session score immediately
-  sessionScore += pointsEarned;
+  // Only add points if this question hasn't been scored yet in this quiz attempt
+  if (!scoredQuestions[currentQuestion]) {
+    sessionScore += pointsEarned;
+    scoredQuestions[currentQuestion] = true; // Mark as scored
+  }
   
   // Disable all options
   options.forEach(opt => {
@@ -451,7 +455,7 @@ function showResults() {
       progress.chapters_progress[unitKey].status = 'completed';
     }
     
-    // Update total points
+    // Update total points - SUM of all unit best scores (not cumulative)
     progress.total_points = Object.values(progress.chapters_progress).reduce((sum, cp) => sum + (cp.points_earned || 0), 0);
     progress.last_activity = new Date().toISOString();
     
