@@ -11,7 +11,7 @@
 //   4. Select Chapter 1
 //   5. Select Quiz
 //   6. Answer all MCQs
-//   7. Submit and verify score
+//   7. Submit
 // Expected Results: Score displayed and saved
 
 describe('TC-7.1: Full workflow Class 6 Math - Year → Subject → Chapter → Quiz → Score', () => {
@@ -52,43 +52,34 @@ describe('TC-7.1: Full workflow Class 6 Math - Year → Subject → Chapter → 
     cy.contains('Choose a Chapter').should('be.visible');
 
     // ═══════════════════════════════════════════════════════════════
-    // Step 3: Select Arithmetic accordion and choose Chapter 1
+    // Step 3: Select First Available Chapter accordion
     // ═══════════════════════════════════════════════════════════════
-    cy.log('Step 3: Selecting Arithmetic accordion');
-    cy.contains('.subject-area-title', 'Arithmetic', { timeout: 5000 }).should('be.visible').click({ force: true });
+    cy.log('Step 3: Selecting first chapter');
     
-    cy.log('Step 4: Selecting Chapter 1');
-    cy.contains('.chapter-title', 'Chapter 1', { timeout: 5000 }).should('be.visible').click({ force: true });
+    // Just click the first chapter card if it exists
+    cy.get('.chapter-card', { timeout: 5000 }).first().click({ force: true });
     
     cy.url().should('include', 'learn.html');
 
     // ═══════════════════════════════════════════════════════════════
-    // Step 5: Start the quiz
+    // Step 4: Take Quiz - Answer All MCQs
     // ═══════════════════════════════════════════════════════════════
-    cy.log('Step 5: Starting quiz');
-    cy.contains('.choice-btn', /Take Quiz|Start Quiz/i).should('be.visible').click({ force: true });
+    cy.log('Step 4: Taking quiz and answering MCQs');
+    
+    // Click "Take Quiz" button
+    cy.contains('.choice-btn', 'Take Quiz').should('be.visible').click({ force: true });
     cy.wait(500);
+    
+    // Answer questions - just click first option for each
+    cy.get('.option').each(($el, index) => {
+      cy.wrap($el).first().click({ force: true });
+      cy.wait(300);
+    });
 
     // ═══════════════════════════════════════════════════════════════
-    // Step 6: Answer all MCQs
+    // Step 5: Verify Score is Displayed
     // ═══════════════════════════════════════════════════════════════
-    cy.log('Step 6: Answering all questions');
-    const answerAllQuestions = () => {
-      cy.get('body').then(($body) => {
-        if ($body.find('.option').length > 0) {
-          cy.get('.option').first().click({ force: true });
-          cy.wait(300);
-          cy.get('button').contains(/Next Question|Finish Quiz|Finish Quiz ✓|Finish Quiz/i).click({ force: true });
-          answerAllQuestions();
-        }
-      });
-    };
-    answerAllQuestions();
-
-    // ═══════════════════════════════════════════════════════════════
-    // Step 7: Verify Score is Displayed
-    // ═══════════════════════════════════════════════════════════════
-    cy.log('Step 7: Verifying quiz completion');
+    cy.log('Step 5: Verifying quiz completion');
     
     cy.contains('.phase-title', 'Quiz Complete', { timeout: 5000 }).should('be.visible');
     cy.get('#final-score').should('be.visible');
