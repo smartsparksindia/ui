@@ -75,7 +75,7 @@ function createChapter(class_no, subject, subject_area, title, description, chap
   return addToStore(STORE.CHAPTERS, chapter_id, chapter);
 }
 
-function addFlashcardToChapter(chapter_id, term, definition, chapter_num = null, unit_num = null, image_url = null, subject_area = null) {
+function addFlashcardToChapter(chapter_id, term, definition, chapter_num = null, unit_num = null, image_url = null, subject_area = null, unit_name = null) {
   const chapter = getFromStore(STORE.CHAPTERS, chapter_id);
   if (!chapter) return null;
   
@@ -88,6 +88,7 @@ function addFlashcardToChapter(chapter_id, term, definition, chapter_num = null,
     subject_area: subject_area || chapter.subject_area,
     chapter: chapter_num,
     unit: unit_num,
+    unit_name: unit_name,
     version: 0, // Will be set when published
     term,
     definition,
@@ -155,7 +156,7 @@ function getAllChapters(class_no, subject, onlyPublished = true) {
 // QUESTION BANK (Reusable Questions)
 // ─────────────────────────────────────────────────────────────────────────────
 
-function createQuestion(class_no, subject, subject_area, topic, question_text, options, correct_option_index, explanation, chapter_num = null, unit_num = null) {
+function createQuestion(class_no, subject, subject_area, topic, question_text, options, correct_option_index, explanation, chapter_num = null, unit_num = null, unit_name = null) {
   const question_id = `q_${subject.toLowerCase()}_${Date.now()}`;
   const question = {
     question_id,
@@ -165,6 +166,7 @@ function createQuestion(class_no, subject, subject_area, topic, question_text, o
     topic,
     chapter: chapter_num,
     unit: unit_num,
+    unit_name: unit_name,
     difficulty: 'medium', // easy, medium, hard
     question_text,
     options, // Array of 4 strings

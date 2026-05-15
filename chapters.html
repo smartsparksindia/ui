@@ -367,11 +367,20 @@ function renderChapters() {
           const fcCount = unitData.flashcards.length;
           const qCount = unitData.questions.length;
           
+          // Get unit name from first flashcard or question that has it
+          let unitName = null;
+          if (unitData.flashcards.length > 0 && unitData.flashcards[0].unit_name) {
+            unitName = unitData.flashcards[0].unit_name;
+          } else if (unitData.questions.length > 0 && unitData.questions[0].unit_name) {
+            unitName = unitData.questions[0].unit_name;
+          }
+          
           const unitDiv = document.createElement('div');
           unitDiv.className = 'unit-item';
+          const displayName = unitName ? `Unit ${unitNum} - ${unitName}` : `Unit ${unitNum}`;
           unitDiv.innerHTML = `
             <div class="unit-info">
-              <div class="unit-name">Unit ${unitNum}</div>
+              <div class="unit-name">${displayName}</div>
               <div class="unit-meta">🃏 ${fcCount} flashcard${fcCount !== 1 ? 's' : ''} • ❓ ${qCount} question${qCount !== 1 ? 's' : ''}</div>
             </div>
             <div class="unit-buttons">

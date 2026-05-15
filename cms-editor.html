@@ -326,6 +326,11 @@ textarea {
             <option value="10">Unit 10</option>
           </select>
         </div>
+
+        <div class="form-group">
+          <label for="unit-name">Unit Name (Optional)</label>
+          <input type="text" id="unit-name" placeholder="e.g., Age of Britain, French History">
+        </div>
       </div>
 
       <div class="form-group">
@@ -692,6 +697,7 @@ document.getElementById('editor-form').addEventListener('submit', (e) => {
   const subjectArea = document.getElementById('subject-area').value;
   const chapterNum = parseInt(document.getElementById('chapter-number').value);
   const unitNum = parseInt(document.getElementById('unit-number').value);
+  const unitName = document.getElementById('unit-name').value || null;
   const title = document.getElementById('title').value;
   const description = document.getElementById('description').value;
 
@@ -704,12 +710,12 @@ document.getElementById('editor-form').addEventListener('submit', (e) => {
   console.log('DEBUG - Created chapter:', { id: chapter.chapter_id, subject, subjectArea, status: chapter.status });
   
   flashcardsData.forEach(fc => {
-    const result = addFlashcardToChapter(chapter.chapter_id, fc.term, fc.definition, chapterNum, unitNum, null, subjectArea);
-    console.log('DEBUG - Added flashcard:', { flashcard_id: result?.flashcard_id, subject_area: result?.subject_area });
+    const result = addFlashcardToChapter(chapter.chapter_id, fc.term, fc.definition, chapterNum, unitNum, null, subjectArea, unitName);
+    console.log('DEBUG - Added flashcard:', { flashcard_id: result?.flashcard_id, subject_area: result?.subject_area, unit_name: result?.unit_name });
   });
   questionsData.forEach(q => {
-    const question = createQuestion(classNum, subject, subjectArea, title, q.question, q.options, parseInt(q.correct), q.explanation, chapterNum, unitNum);
-    console.log('DEBUG - Created question:', { question_id: question.question_id, subject_area: question.subject_area });
+    const question = createQuestion(classNum, subject, subjectArea, title, q.question, q.options, parseInt(q.correct), q.explanation, chapterNum, unitNum, unitName);
+    console.log('DEBUG - Created question:', { question_id: question.question_id, subject_area: question.subject_area, unit_name: question.unit_name });
     linkQuestionToChapter(question.question_id, chapter.chapter_id);
   });
 
