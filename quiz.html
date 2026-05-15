@@ -64,9 +64,41 @@ nav { background: white; padding: 1rem 2.5rem; display: flex; align-items: cente
   height: 20px;
 }
 
-.option.selected {
-  border-color: var(--purple);
-  background: #EEEDFE;
+.option.correct {
+  border-color: #4CAF50;
+  background: #E8F5E9;
+}
+
+.option.incorrect {
+  border-color: #F44336;
+  background: #FFEBEE;
+}
+
+.explanation {
+  background: #F5F5F5;
+  border-left: 4px solid var(--teal);
+  padding: 1.2rem;
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  display: none;
+}
+
+.explanation.show {
+  display: block;
+}
+
+.explanation-label {
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--teal);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.explanation-text {
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 0.95rem;
 }
 
 .controls {
@@ -244,17 +276,21 @@ function renderQuestion() {
       <div class="question-text">${q.question_text}</div>
       <div class="options" id="options">
         ${q.options.map((opt, i) => `
-          <label class="option ${answers[currentQuestion] === i ? 'selected' : ''}" onclick="selectOption(${i})">
+          <label class="option" data-index="${i}" onclick="selectOption(${i})">
             <input type="radio" name="option" value="${i}" ${answers[currentQuestion] === i ? 'checked' : ''}>
             <span>${opt}</span>
           </label>
         `).join('')}
       </div>
+      <div class="explanation" id="explanation">
+        <div class="explanation-label">💡 Explanation</div>
+        <div class="explanation-text">${q.explanation}</div>
+      </div>
     </div>
 
     <div class="controls">
       <button class="btn btn-primary" onclick="prevQuestion()" ${currentQuestion === 0 ? 'disabled' : ''}>← Previous</button>
-      <button class="btn btn-primary" onclick="nextQuestion()" ${answers[currentQuestion] === undefined ? 'disabled' : ''}>
+      <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" ${answers[currentQuestion] === undefined ? 'disabled' : ''} style="display:${answers[currentQuestion] !== undefined ? 'block' : 'none'}">
         ${currentQuestion === questions.length - 1 ? 'Submit Quiz' : 'Next →'}
       </button>
     </div>
@@ -263,12 +299,45 @@ function renderQuestion() {
 
 function selectOption(index) {
   answers[currentQuestion] = index;
+  const q = questions[currentQuestion];
   const options = document.querySelectorAll('.option');
-  options.forEach((opt, i) => {
-    opt.classList.toggle('selected', i === index);
+  const explanation = document.getElementById('explanation');
+  
+  // Disable all options
+  options.forEach(opt => {
+    opt.style.pointerEvents = 'none';
+    opt.style.opacity = '0.7';
   });
-  // Enable next button
-  document.querySelector('.btn-primary:last-of-type').disabled = false;
+  
+  // Show visual feedback
+  options.forEach((opt, i) => {
+    opt.classList.remove('selected', 'correct', 'incorrect');
+    
+    if (i === index) {
+      // User's answer
+      if (i === q.correct_option_index) {
+        opt.classList.add('correct');
+      } else {
+        opt.classList.add('incorrect');
+      }
+    }
+    
+    // Always highlight the correct answer
+    if (i === q.correct_option_index) {
+      opt.classList.add('correct');
+    }
+  });
+  
+  // Show explanation
+  if (explanation) {
+    explanation.classList.add('show');
+  }
+  
+  // Show next button
+  const nextBtn = document.getElementById('next-btn');
+  if (nextBtn) {
+    nextBtn.style.display = 'block';
+  }
 }
 
 function prevQuestion() {

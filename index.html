@@ -275,6 +275,17 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('stat-q').textContent = Object.keys(questions).length;
 });
 
+// Listen for storage changes (when quiz.html saves scores)
+window.addEventListener('storage', () => {
+  const user = getCurrentUser();
+  if (user) {
+    const progress = getUserProgress(user.user_id);
+    if (progress) {
+      document.getElementById('total-score').textContent = progress.total_points || 0;
+    }
+  }
+});
+
 function selectYear(year) {
   setState({ year, subject: null, chapter: null });
 }

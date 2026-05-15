@@ -41,6 +41,7 @@ nav { background: white; padding: 1rem 2.5rem; display: flex; align-items: cente
   justify-content: center;
   transition: all 0.3s;
   perspective: 1000px;
+  position: relative;
 }
 
 .flashcard:hover {
@@ -53,8 +54,33 @@ nav { background: white; padding: 1rem 2.5rem; display: flex; align-items: cente
 }
 
 .flashcard-inner {
-  text-align: center;
+  position: relative;
   width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flashcard.flipped .flashcard-inner {
+  transform: rotateY(180deg);
+}
+
+.flashcard-front,
+.flashcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.flashcard-back {
+  transform: rotateY(180deg);
 }
 
 .flashcard-label {
@@ -241,9 +267,16 @@ function renderFlashcard() {
   container.innerHTML = `
     <div class="flashcard ${isFlipped ? 'flipped' : ''}" onclick="flipCard(this)">
       <div class="flashcard-inner">
-        <div class="flashcard-label">${isFlipped ? 'Definition' : 'Term'}</div>
-        <div class="flashcard-content">${isFlipped ? fc.definition : fc.term}</div>
-        <div class="flashcard-hint">${isFlipped ? 'Click to see term' : 'Click to reveal definition'}</div>
+        <div class="flashcard-front">
+          <div class="flashcard-label">Term</div>
+          <div class="flashcard-content">${fc.term}</div>
+          <div class="flashcard-hint">👆 Click to reveal definition</div>
+        </div>
+        <div class="flashcard-back">
+          <div class="flashcard-label">Definition</div>
+          <div class="flashcard-content">${fc.definition}</div>
+          <div class="flashcard-hint">Click to see term</div>
+        </div>
       </div>
     </div>
   `;
