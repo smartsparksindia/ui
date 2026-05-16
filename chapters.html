@@ -375,9 +375,22 @@ function renderChapters() {
             unitName = unitData.questions[0].unit_name;
           }
           
+          // Check if unit is aced (>=80% accuracy)
+          const user = getCurrentUser();
+          let isAced = false;
+          if (user) {
+            const progress = getUserProgress(user.user_id);
+            const unitKey = `ch_${chapterNum}_u_${unitNum}`;
+            if (progress && progress.chapters_progress && progress.chapters_progress[unitKey]) {
+              const unitProgress = progress.chapters_progress[unitKey];
+              isAced = unitProgress.accuracy_pct >= 80;
+            }
+          }
+          
           const unitDiv = document.createElement('div');
           unitDiv.className = 'unit-item';
-          const displayName = unitName ? `Unit ${unitNum} - ${unitName}` : `Unit ${unitNum}`;
+          const crownPrefix = isAced ? '👑 ' : '';
+          const displayName = unitName ? `${crownPrefix}Unit ${unitNum} - ${unitName}` : `${crownPrefix}Unit ${unitNum}`;
           unitDiv.innerHTML = `
             <div class="unit-info">
               <div class="unit-name">${displayName}</div>
