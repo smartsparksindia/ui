@@ -278,17 +278,27 @@ console.log('DEBUG - Chapter title map:', chapterTitleMap);
 
 function renderChapters() {
   // Group by subject_area > chapter > unit for selected subject
+  // Create a completely fresh object each time to prevent data mutation/reuse
   const areasBySubject = {};
 
   // Process flashcards
   Object.values(allFlashcards).forEach(fc => {
     if (fc.chapter && fc.unit && fc.subject === subject && fc.class === year) {
       const area = fc.subject_area || 'Uncategorized';
-      if (!areasBySubject[area]) areasBySubject[area] = {};
-      if (!areasBySubject[area][fc.chapter]) areasBySubject[area][fc.chapter] = {};
+      
+      // Ensure fresh objects at each level
+      if (!areasBySubject[area]) {
+        areasBySubject[area] = {};
+      }
+      if (!areasBySubject[area][fc.chapter]) {
+        areasBySubject[area][fc.chapter] = {};
+      }
       if (!areasBySubject[area][fc.chapter][fc.unit]) {
+        // Create fresh arrays each time
         areasBySubject[area][fc.chapter][fc.unit] = { flashcards: [], questions: [] };
       }
+      
+      // Push to fresh array
       areasBySubject[area][fc.chapter][fc.unit].flashcards.push(fc);
     }
   });
@@ -297,11 +307,21 @@ function renderChapters() {
   Object.values(allQuestions).forEach(q => {
     if (q.chapter && q.unit && q.subject === subject && q.class === year) {
       const area = q.subject_area || 'Uncategorized';
-      if (!areasBySubject[area]) areasBySubject[area] = {};
-      if (!areasBySubject[area][q.chapter]) areasBySubject[area][q.chapter] = {};
+      
+      // Ensure fresh objects at each level
+      if (!areasBySubject[area]) {
+        areasBySubject[area] = {};
+      }
+      if (!areasBySubject[area][q.chapter]) {
+        areasBySubject[area][q.chapter] = {};
+      }
       if (!areasBySubject[area][q.chapter][q.unit]) {
+        // Create fresh arrays each time
         areasBySubject[area][q.chapter][q.unit] = { flashcards: [], questions: [] };
       }
+      
+      // Push to fresh array
+      console.log(`DEBUG - Adding question to ${area} > Ch${q.chapter} > U${q.unit}:`, q.question_id);
       areasBySubject[area][q.chapter][q.unit].questions.push(q);
     }
   });
