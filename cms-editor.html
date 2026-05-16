@@ -697,9 +697,12 @@ document.getElementById('editor-form').addEventListener('submit', (e) => {
   const subjectArea = document.getElementById('subject-area').value;
   const chapterNum = parseInt(document.getElementById('chapter-number').value);
   const unitNum = parseInt(document.getElementById('unit-number').value);
-  const unitName = document.getElementById('unit-name').value || null;
+  const unitNameInput = document.getElementById('unit-name');
+  const unitName = unitNameInput && unitNameInput.value && unitNameInput.value.trim() ? unitNameInput.value.trim() : null;
   const title = document.getElementById('title').value;
   const description = document.getElementById('description').value;
+  
+  console.log('DEBUG - Form values:', { classNum, subject, subjectArea, chapterNum, unitNum, unitName, title });
 
   if (!classNum || !subject || !subjectArea || !chapterNum || !unitNum || !title || questionsData.length === 0) {
     alert('Please fill in: Class, Subject, Subject Area, Chapter Number, Unit Number, Title, Description, and at least 1 question');
@@ -713,9 +716,10 @@ document.getElementById('editor-form').addEventListener('submit', (e) => {
     const result = addFlashcardToChapter(chapter.chapter_id, fc.term, fc.definition, chapterNum, unitNum, null, subjectArea, unitName);
     console.log('DEBUG - Added flashcard:', { flashcard_id: result?.flashcard_id, subject_area: result?.subject_area, unit_name: result?.unit_name });
   });
-  questionsData.forEach(q => {
+  questionsData.forEach((q, idx) => {
+    console.log(`DEBUG - Creating question ${idx}:`, { title, unitName, chapterNum, unitNum });
     const question = createQuestion(classNum, subject, subjectArea, title, q.question, q.options, parseInt(q.correct), q.explanation, chapterNum, unitNum, unitName);
-    console.log('DEBUG - Created question:', { question_id: question.question_id, subject_area: question.subject_area, unit_name: question.unit_name });
+    console.log('DEBUG - Created question:', { question_id: question.question_id, subject_area: question.subject_area, unit_name: question.unit_name, chapter: question.chapter, unit: question.unit });
     linkQuestionToChapter(question.question_id, chapter.chapter_id);
   });
 
