@@ -261,10 +261,15 @@ Object.values(allChapters)
     }
   });
 
-function getChapterTitle(chapterNum) {
+function getChapterTitle(chapterNum, areaName) {
   const key = String(chapterNum);
-  if (chapterTitleMap[key]) return chapterTitleMap[key];
-  const chapter = Object.values(allChapters).find(ch => ch.subject === subject && ch.class === year && String(ch.chapter) === key);
+  // Look for chapter that matches subject, year, chapter number, AND subject_area
+  const chapter = Object.values(allChapters).find(ch => 
+    ch.subject === subject && 
+    ch.class === year && 
+    String(ch.chapter) === key &&
+    ch.subject_area === areaName
+  );
   return chapter ? chapter.title : null;
 }
 
@@ -370,7 +375,7 @@ function renderChapters() {
         
         const chapterHeaderDiv = document.createElement('div');
         chapterHeaderDiv.className = 'chapter-header';
-        const chapterTitle = getChapterTitle(chapterNum) || `Chapter ${chapterNum}`;
+        const chapterTitle = getChapterTitle(chapterNum, areaName) || `Chapter ${chapterNum}`;
         chapterHeaderDiv.innerHTML = `
           <div>
             <div class="chapter-title">Chapter ${chapterNum}: ${chapterTitle}</div>
