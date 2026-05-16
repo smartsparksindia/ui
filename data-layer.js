@@ -50,7 +50,7 @@ function getFromStore(key, id) {
 // CHAPTER MANAGEMENT (Versioned)
 // ─────────────────────────────────────────────────────────────────────────────
 
-function createChapter(class_no, subject, subject_area, title, description, chapter_num = null, unit_num = null) {
+function createChapter(class_no, subject, subject_area, title, description, chapter_num = null, unit_num = null, unit_name = null) {
   const chapter_id = `ch_${class_no}_${subject.toLowerCase()}_${Date.now()}`;
   const chapter = {
     chapter_id,
@@ -59,6 +59,7 @@ function createChapter(class_no, subject, subject_area, title, description, chap
     subject_area,
     chapter: chapter_num,
     unit: unit_num,
+    unit_name,
     title,
     description,
     learning_objectives: [],

@@ -709,7 +709,7 @@ document.getElementById('editor-form').addEventListener('submit', (e) => {
     return;
   }
 
-  const chapter = createChapter(classNum, subject, subjectArea, title, description, chapterNum, unitNum);
+  const chapter = createChapter(classNum, subject, subjectArea, title, description, chapterNum, unitNum, unitName);
   console.log('DEBUG - Created chapter:', { id: chapter.chapter_id, subject, subjectArea, status: chapter.status });
   
   flashcardsData.forEach(fc => {
