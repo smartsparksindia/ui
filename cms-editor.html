@@ -650,7 +650,7 @@ function importCSV(event) {
     try {
       const csv = e.target.result;
       const lines = csv.trim().split('\n');
-      const headers = lines[0].split(',').map(h => h.trim());
+      const headers = parseCSVLine(lines[0]);
       const required = ['question', 'option1', 'option2', 'option3', 'option4', 'correct', 'explanation'];
       if (!required.every(h => headers.includes(h))) {
         alert('❌ CSV must have columns: ' + required.join(', '));
@@ -659,15 +659,25 @@ function importCSV(event) {
       let imported = 0;
       for (let i = 1; i < lines.length; i++) {
         if (!lines[i].trim()) continue;
-        const values = lines[i].split(',').map(v => v.trim());
+        const values = parseCSVLine(lines[i]);
+        
+        const qIdx = headers.indexOf('question');
+        const opt1Idx = headers.indexOf('option1');
+        const opt2Idx = headers.indexOf('option2');
+        const opt3Idx = headers.indexOf('option3');
+        const opt4Idx = headers.indexOf('option4');
+        const corrIdx = headers.indexOf('correct');
+        const expIdx = headers.indexOf('explanation');
+        
         const question = {
           id: 'q_' + Date.now() + '_' + i,
-          question: values[0],
-          options: [values[1], values[2], values[3], values[4]],
-          correct: parseInt(values[5]) || 0,
-          explanation: values[6] || ''
+          question: values[qIdx] || '',
+          options: [values[opt1Idx] || '', values[opt2Idx] || '', values[opt3Idx] || '', values[opt4Idx] || ''],
+          correct: parseInt(values[corrIdx]) || 0,
+          explanation: values[expIdx] || ''
         };
-        if (!question.question || question.options.some(o => !o)) {
+        
+        if (!question.question.trim() || question.options.some(o => !o.trim())) {
           console.warn('Skipping invalid row:', i);
           continue;
         }

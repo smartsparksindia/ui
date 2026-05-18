@@ -361,7 +361,7 @@ if (published.length === 0) {
       <td>
         <button class="btn btn-sm btn-edit" onclick="editChapter('${ch.chapter_id}')">Edit</button>
         <button class="btn btn-sm btn-unpublish" onclick="unpublishChapter('${ch.chapter_id}')">Unpublish</button>
-        <button class="btn btn-sm btn-delete" onclick="deleteChapter('${ch.chapter_id}')">Delete</button>
+        <button class="btn btn-sm btn-delete" onclick="performDeleteChapter('${ch.chapter_id}')">Delete</button>
       </td>
     </tr>
   `).join('');
@@ -384,13 +384,15 @@ function unpublishChapter(id) {
   }
 }
 
-function deleteChapter(id) {
-  if (confirm('Delete chapter permanently? This cannot be undone!')) {
-    const chapters = getStore('ss_chapters');
-    if (chapters[id]) {
-      delete chapters[id];
-      localStorage.setItem('ss_chapters', JSON.stringify(chapters));
+function performDeleteChapter(id) {
+  if (confirm('Delete chapter permanently? This will also delete all linked questions and flashcards. This cannot be undone!')) {
+    // Call the proper deleteChapter from data-layer.js which removes chapter + linked questions/flashcards
+    const success = deleteChapter(id);
+    if (success) {
+      alert('✅ Chapter and all linked content deleted successfully!');
       location.reload();
+    } else {
+      alert('❌ Error deleting chapter');
     }
   }
 }
@@ -398,33 +400,6 @@ function deleteChapter(id) {
 function logout() {
   logoutUser();
   window.location.href = 'cms-login.html';
-}
-
-function getFromStore(key, id) {
-  try {
-    const store = JSON.parse(localStorage.getItem(key)) || {};
-    return store[id];
-  } catch {
-    return null;
-  }
-}
-
-function addToStore(key, id, data) {
-  try {
-    const store = JSON.parse(localStorage.getItem(key)) || {};
-    store[id] = data;
-    localStorage.setItem(key, JSON.stringify(store));
-  } catch (e) {
-    console.error('Storage error:', e);
-  }
-}
-
-function getStore(key) {
-  try {
-    return JSON.parse(localStorage.getItem(key)) || {};
-  } catch {
-    return {};
-  }
 }
 </script>
 </body>
