@@ -904,3 +904,218 @@ if (typeof ENABLE_DEMO_ACCOUNTS !== 'undefined' && ENABLE_DEMO_ACCOUNTS) {
 if (typeof ENABLE_DEMO_CONTENT !== 'undefined' && ENABLE_DEMO_CONTENT) {
   initializeSystemWithDemoContent();
 }
+// ═════════════════════════════════════════════════════════════════════════════
+// PHASE 2 - EXPORT FUNCTIONS (NEW - NO CHANGES TO EXISTING CODE ABOVE)
+// ═════════════════════════════════════════════════════════════════════════════
+
+function exportSubjectAsJSON(year, subject, subject_area) {
+  const chapters = getStore(STORE.CHAPTERS);
+  const flashcards = getStore(STORE.FLASHCARDS);
+  const questions = getStore(STORE.QUESTION_BANK);
+  
+  // Filter published chapters for this year/subject/subject_area
+  const relevantChapters = Object.values(chapters).filter(ch => 
+    ch.class === year && 
+    ch.subject === subject && 
+    ch.subject_area === subject_area && 
+    ch.status === 'published'
+  );
+  
+  if (relevantChapters.length === 0) {
+    console.warn(`No published chapters found for year ${year}, ${subject}, ${subject_area}`);
+    return null;
+  }
+  
+  // Build nested structure
+  const nestedChapters = [];
+  
+  relevantChapters.forEach(ch => {
+    // Get flashcards for this chapter
+    const chapterFlashcards = Object.values(flashcards).filter(fc => 
+      fc.chapter_id === ch.chapter_id && fc.status !== 'draft'
+    );
+    
+    // Get questions for this chapter
+    const chapterQuestions = Object.values(questions).filter(q => 
+      q.used_in_chapters && q.used_in_chapters.some(uc => uc.chapter_id === ch.chapter_id)
+    );
+    
+    // Group flashcards and questions by unit
+    const unitMap = {};
+    
+    chapterFlashcards.forEach(fc => {
+      const unitKey = fc.unit || 1;
+      if (!unitMap[unitKey]) {
+        unitMap[unitKey] = { 
+          unit_num: unitKey, 
+          unit_name: fc.unit_name || `Unit ${unitKey}`,
+          flashcards: [], 
+          questions: [] 
+        };
+      }
+      unitMap[unitKey].flashcards.push({
+        flashcard_id: fc.flashcard_id,
+        term: fc.term,
+        definition: fc.definition,
+        image_url: fc.image_url
+      });
+    });
+    
+    chapterQuestions.forEach(q => {
+      const unitKey = q.unit || 1;
+      if (!unitMap[unitKey]) {
+        unitMap[unitKey] = { 
+          unit_num: unitKey, 
+          unit_name: q.unit_name || `Unit ${unitKey}`,
+          flashcards: [], 
+          questions: [] 
+        };
+      }
+      unitMap[unitKey].questions.push({
+        question_id: q.question_id,
+        question_text: q.question_text,
+        options: q.options,
+        correct_option_index: q.correct_option_index,
+        explanation: q.explanation,
+        difficulty: q.difficulty
+      });
+    });
+    
+    nestedChapters.push({
+      chapter_num: ch.chapter,
+      chapter_name: ch.title,
+      units: Object.values(unitMap)
+    });
+  });
+  
+  // Build final export object
+  const exportData = {
+    year,
+    subject,
+    subject_area,
+    last_updated: new Date().toISOString(),
+    chapters: nestedChapters
+  };
+  
+  return exportData;
+}
+
+function getNextVersion(subject_area) {
+  const key = `${subject_area.toLowerCase().replace(/\s+/g, '-')}`;
+  const existingVersionKey = `exported_version_${key}`;
+  const currentVersion = parseInt(localStorage.getItem(existingVersionKey) || '0');
+  return currentVersion + 1;
+}
+
+function downloadJSON(data, filename) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function downloadCSV(data, filename) {
+  const blob = new Blob([data], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function generateFlashcardsCSV(year, subject, subject_area) {
+  const chapters = getStore(STORE.CHAPTERS);
+  const flashcards = getStore(STORE.FLASHCARDS);
+  
+  const relevantChapters = Object.values(chapters).filter(ch => 
+    ch.class === year && 
+    ch.subject === subject && 
+    ch.subject_area === subject_area && 
+    ch.status === 'published'
+  );
+  
+  const relevantFlashcards = Object.values(flashcards).filter(fc => 
+    relevantChapters.some(rc => rc.chapter_id === fc.chapter_id)
+  );
+  
+  if (relevantFlashcards.length === 0) return '';
+  
+  let csv = 'term,definition\n';
+  relevantFlashcards.forEach(fc => {
+    const term = `"${fc.term.replace(/"/g, '""')}"`;
+    const definition = `"${fc.definition.replace(/"/g, '""')}"`;
+    csv += `${term},${definition}\n`;
+  });
+  
+  return csv;
+}
+
+function generateQuestionsCSV(year, subject, subject_area) {
+  const chapters = getStore(STORE.CHAPTERS);
+  const questions = getStore(STORE.QUESTION_BANK);
+  
+  const relevantChapters = Object.values(chapters).filter(ch => 
+    ch.class === year && 
+    ch.subject === subject && 
+    ch.subject_area === subject_area && 
+    ch.status === 'published'
+  );
+  
+  const relevantQuestions = Object.values(questions).filter(q => 
+    relevantChapters.some(rc => rc.question_ids && rc.question_ids.includes(q.question_id))
+  );
+  
+  if (relevantQuestions.length === 0) return '';
+  
+  let csv = 'question,option1,option2,option3,option4,correct,explanation\n';
+  relevantQuestions.forEach(q => {
+    const question = `"${q.question_text.replace(/"/g, '""')}"`;
+    const option1 = `"${q.options[0].replace(/"/g, '""')}"`;
+    const option2 = `"${q.options[1].replace(/"/g, '""')}"`;
+    const option3 = `"${q.options[2].replace(/"/g, '""')}"`;
+    const option4 = `"${q.options[3].replace(/"/g, '""')}"`;
+    const correct = q.correct_option_index;
+    const explanation = `"${q.explanation.replace(/"/g, '""')}"`;
+    csv += `${question},${option1},${option2},${option3},${option4},${correct},${explanation}\n`;
+  });
+  
+  return csv;
+}
+
+function performPhase2Export(year, subject, subject_area) {
+  const jsonData = exportSubjectAsJSON(year, subject, subject_area);
+  if (!jsonData) {
+    alert('❌ No published chapters found for this selection');
+    return;
+  }
+  
+  const version = getNextVersion(subject_area);
+  const safeSubjectArea = subject_area.toLowerCase().replace(/\s+/g, '-');
+  const baseFilename = `year-${year}-${subject.toLowerCase().replace(/\s+/g, '-')}-${safeSubjectArea}`;
+  
+  downloadJSON(jsonData, `${baseFilename}.json`);
+  downloadJSON(jsonData, `${baseFilename}-v${version}.json`);
+  
+  const flashcardsCSV = generateFlashcardsCSV(year, subject, subject_area);
+  if (flashcardsCSV) {
+    downloadCSV(flashcardsCSV, `${baseFilename}-flashcards.csv`);
+  }
+  
+  const questionsCSV = generateQuestionsCSV(year, subject, subject_area);
+  if (questionsCSV) {
+    downloadCSV(questionsCSV, `${baseFilename}-questions.csv`);
+  }
+  
+  const key = `exported_version_${safeSubjectArea}`;
+  localStorage.setItem(key, version.toString());
+  
+  alert(`✅ Exported successfully!\nVersion: ${version}\n\nFiles downloaded:\n- ${baseFilename}.json\n- ${baseFilename}-v${version}.json\n- Flashcards & Questions CSVs\n\nManually add to git and push.`);
+}
