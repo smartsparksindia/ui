@@ -459,6 +459,42 @@ window.onclick = function(event) {
   }
 }
 
+async function publishPublishedContent() {
+  const chapters = getStore('ss_chapters');
+  const flashcards = getStore('ss_flashcards');
+  const questions = getStore('ss_question_bank');
+  const publishedChapters = Object.values(chapters).filter(ch => ch.status === 'published');
+  const publishedChapterIds = new Set(publishedChapters.map(ch => ch.chapter_id));
+  const payload = {
+    exported_at: new Date().toISOString(),
+    chapters: publishedChapters,
+    flashcards: Object.values(flashcards).filter(fc => publishedChapterIds.has(fc.chapter_id)),
+    questions: Object.values(questions).filter(q => publishedChapterIds.has(q.used_in_chapters?.[0]?.chapter_id || q.chapter_id))
+  };
+
+  const publishUrl = window.PUBLISH_ENDPOINT || 'http://localhost:4000/publish';
+  const headers = { 'Content-Type': 'application/json' };
+  if (window.PUBLISH_SECRET) headers['X-PUBLISH-SECRET'] = window.PUBLISH_SECRET;
+
+  try {
+    const response = await fetch(publishUrl, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(payload)
+    });
+    const result = await response.json();
+    if (response.ok && result.ok) {
+      console.log('✅ Publish server saved published content.');
+      return true;
+    }
+    console.warn('Publish server responded with error:', result);
+    return false;
+  } catch (err) {
+    console.warn('Publish server unavailable:', err);
+    return false;
+  }
+}
+
 function approveChapter(chapterId) {
   if (confirm('✅ Publish this chapter? Students will be able to see it immediately.')) {
     const chapter = getFromStore('ss_chapters', chapterId);
@@ -489,9 +525,15 @@ function approveChapter(chapterId) {
       title: chapter.title,
       version: new_version
     });
-    
-    alert(`✅ Chapter "${chapter.title}" published!\n\nVersion: ${new_version}\n\nStudents can now see this chapter in the learning app!`);
-    location.reload();
+
+    publishPublishedContent().then(published => {
+      if (published) {
+        alert(`✅ Chapter "${chapter.title}" published and sent to publish server!\n\nVersion: ${new_version}`);
+      } else {
+        alert(`✅ Chapter "${chapter.title}" published locally.\n\nTip: run the publish server or export published data if you want the repo-backed published content to update.`);
+      }
+      location.reload();
+    });
   }
 }
 

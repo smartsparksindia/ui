@@ -230,25 +230,43 @@ const year = state.year || 6;
 const subject = state.subject || 'Science';
 
 // Attempt to load published JSON files from repo; otherwise fall back to localStorage
-let allChapters = getStore('ss_chapters');
-let allFlashcards = getStore('ss_flashcards');
+let allChapters = {};
+let allFlashcards = {};
+const PUBLISHED_BASE_PATHS = ['data/published', './data/published', '/data/published'];
 
-async function loadPublishedIfPresent() {
-  try {
-    const [chapRes, fcRes] = await Promise.all([
-      fetch('/data/published/chapters.json').catch(() => null),
-      fetch('/data/published/flashcards.json').catch(() => null)
-    ]);
-    if (chapRes && chapRes.ok) allChapters = await chapRes.json();
-    if (fcRes && fcRes.ok) allFlashcards = await fcRes.json();
-  } catch (e) {
-    console.warn('Published data not present; using localStorage');
+async function fetchPublishedFile(filename) {
+  for (const base of PUBLISHED_BASE_PATHS) {
+    try {
+      const res = await fetch(`${base}/${filename}`);
+      if (res.ok) return await res.json();
+    } catch (e) {
+      // ignore and try next path
+    }
+  }
+  return null;
+}
+
+async function loadDataStores() {
+  // Try published files first
+  const [chapData, fcData] = await Promise.all([
+    fetchPublishedFile('chapters.json'),
+    fetchPublishedFile('flashcards.json')
+  ]);
+
+  if (chapData !== null && fcData !== null) {
+    console.log('✅ Loaded published data from data/published/');
+    allChapters = Array.isArray(chapData) ? chapData.reduce((acc, ch) => ({ ...acc, [ch.chapter_id]: ch }), {}) : chapData;
+    allFlashcards = Array.isArray(fcData) ? fcData.reduce((acc, fc) => ({ ...acc, [fc.flashcard_id]: fc }), {}) : fcData;
+  } else {
+    console.log('⚠️ Published data not found, using localStorage');
+    allChapters = getStore('ss_chapters');
+    allFlashcards = getStore('ss_flashcards');
   }
 }
 
 let flashcards = [];
 async function initFlashcards() {
-  await loadPublishedIfPresent();
+  await loadDataStores();
   const publishedChapterIds = new Set(
     Object.values(allChapters)
       .filter(ch => ch.subject === subject && ch.class === year && ch.status === 'published')

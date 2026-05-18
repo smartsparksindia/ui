@@ -646,19 +646,22 @@ const colorMap = {
 };
 
 // =========================
-// SUBJECTS
+// SUBJECTS - Load published data first, then render
 // =========================
 
-const subjects = [
-  'Science',
-  'Maths',
-  'English',
-  'Social Science'
-];
+async function renderSubjects() {
+  await initPublishedData();
 
-const grid = document.getElementById('subjects-grid');
+  const subjects = [
+    'Science',
+    'Maths',
+    'English',
+    'Social Science'
+  ];
 
-subjects.forEach(subject => {
+  const grid = document.getElementById('subjects-grid');
+
+  subjects.forEach(subject => {
 
   const meta = colorMap[subject];
 
@@ -773,6 +776,10 @@ subjects.forEach(subject => {
   grid.appendChild(card);
 
 });
+}
+
+// Initialize page with published data
+renderSubjects();
 
 // =========================
 // SCORE
@@ -780,13 +787,40 @@ subjects.forEach(subject => {
 
 document.getElementById('total-score').textContent = getTotalScore();
 
+// Load published data FIRST, fall back to localStorage
+let publishedChapters = {};
+const PUBLISHED_BASE_PATHS = ['data/published', './data/published', '/data/published'];
+
+async function fetchPublishedFile(filename) {
+  for (const base of PUBLISHED_BASE_PATHS) {
+    try {
+      const res = await fetch(`${base}/${filename}`);
+      if (res.ok) return await res.json();
+    } catch (e) {
+      // ignore and try next path
+    }
+  }
+  return null;
+}
+
+async function initPublishedData() {
+  const chapData = await fetchPublishedFile('chapters.json');
+  if (chapData !== null) {
+    console.log('✅ Loaded published data from data/published/');
+    publishedChapters = Array.isArray(chapData) ? chapData.reduce((acc, ch) => ({ ...acc, [ch.chapter_id]: ch }), {}) : chapData;
+  } else {
+    console.log('⚠️ Published data not found, using localStorage');
+    publishedChapters = getStore('ss_chapters');
+  }
+}
+
 // =========================
 // HELPERS
 // =========================
 
 function getChaptersForYearSubject(year, subject){
 
-  const chapters = getStore('ss_chapters');
+  const chapters = Object.keys(publishedChapters).length > 0 ? publishedChapters : getStore('ss_chapters');
 
   return Object.values(chapters).filter(ch =>
 

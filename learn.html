@@ -185,23 +185,42 @@ let revisionViewed = false;  // Track if user viewed flashcards before quiz
 // INITIALIZATION
 // ─────────────────────────────────────────────────────────────────
 
-// Published store caches (optional)
-let publishedChapters = null;
-let publishedFlashcards = null;
-let publishedQuestions = null;
+// Published store caches - load from data/published/ first, fall back to localStorage
+let publishedChapters = {};
+let publishedFlashcards = {};
+let publishedQuestions = {};
+const PUBLISHED_BASE_PATHS = ['data/published', './data/published', '/data/published'];
+
+async function fetchPublishedFile(filename) {
+  for (const base of PUBLISHED_BASE_PATHS) {
+    try {
+      const res = await fetch(`${base}/${filename}`);
+      if (res.ok) return await res.json();
+    } catch (e) {
+      // ignore and try next path
+    }
+  }
+  return null;
+}
 
 async function loadPublishedStores() {
-  try {
-    const [chapRes, fcRes, qRes] = await Promise.all([
-      fetch('/data/published/chapters.json').catch(() => null),
-      fetch('/data/published/flashcards.json').catch(() => null),
-      fetch('/data/published/questions.json').catch(() => null)
-    ]);
-    if (chapRes && chapRes.ok) publishedChapters = await chapRes.json();
-    if (fcRes && fcRes.ok) publishedFlashcards = await fcRes.json();
-    if (qRes && qRes.ok) publishedQuestions = await qRes.json();
-  } catch (e) {
-    // fallback to null -> use localStorage
+  // Try published files first
+  const [chapData, fcData, qData] = await Promise.all([
+    fetchPublishedFile('chapters.json'),
+    fetchPublishedFile('flashcards.json'),
+    fetchPublishedFile('questions.json')
+  ]);
+
+  if (chapData !== null && fcData !== null && qData !== null) {
+    console.log('✅ Loaded published data from data/published/');
+    publishedChapters = Array.isArray(chapData) ? chapData.reduce((acc, ch) => ({ ...acc, [ch.chapter_id]: ch }), {}) : chapData;
+    publishedFlashcards = Array.isArray(fcData) ? fcData.reduce((acc, fc) => ({ ...acc, [fc.flashcard_id]: fc }), {}) : fcData;
+    publishedQuestions = Array.isArray(qData) ? qData.reduce((acc, q) => ({ ...acc, [q.question_id]: q }), {}) : qData;
+  } else {
+    console.log('⚠️ Published data not found, using localStorage');
+    publishedChapters = getStore('ss_chapters');
+    publishedFlashcards = getStore('ss_flashcards');
+    publishedQuestions = getStore('ss_question_bank');
   }
 }
 
@@ -472,35 +491,18 @@ function renderResults() {
 // ─────────────────────────────────────────────────────────────────
 
 function getChapterFlashcards(cId) {
-  // If published data loaded, use that
-  if (publishedChapters || publishedFlashcards) {
-    const ch = (publishedChapters || getStore('ss_chapters')).find(ch => ch.chapter_id === cId);
-    if (!ch) return [];
-    const flashIds = ch.flashcard_ids || [];
-    const allF = publishedFlashcards || Object.values(getStore('ss_flashcards'));
-    return flashIds.map(fid => allF.find(f => f.flashcard_id === fid)).filter(Boolean);
-  }
-
-  const ch = getFromStore('ss_chapters', cId);
+  const ch = publishedChapters[cId] || getFromStore('ss_chapters', cId);
   if (!ch) return [];
   return (ch.flashcard_ids || [])
-    .map(fId => getFromStore('ss_flashcards', fId))
+    .map(fId => publishedFlashcards[fId] || getFromStore('ss_flashcards', fId))
     .filter(Boolean);
 }
 
 function getChapterQuestions(cId) {
-  if (publishedChapters || publishedQuestions) {
-    const ch = (publishedChapters || getStore('ss_chapters')).find(ch => ch.chapter_id === cId);
-    if (!ch) return [];
-    const qIds = ch.question_ids || [];
-    const allQ = publishedQuestions || Object.values(getStore('ss_question_bank'));
-    return qIds.map(qid => allQ.find(q => q.question_id === qid)).filter(Boolean);
-  }
-
-  const ch = getFromStore('ss_chapters', cId);
+  const ch = publishedChapters[cId] || getFromStore('ss_chapters', cId);
   if (!ch) return [];
   return (ch.question_ids || [])
-    .map(qId => getFromStore('ss_question_bank', qId))
+    .map(qId => publishedQuestions[qId] || getFromStore('ss_question_bank', qId))
     .filter(Boolean);
 }
 

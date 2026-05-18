@@ -242,24 +242,46 @@ document.getElementById('bc-year').textContent = `Class ${year}`;
 document.getElementById('bc-subject').textContent = subject;
 document.getElementById('total-score').textContent = getTotalScore();
 
-// Load published data from `data/published/*.json` if available, otherwise fall back to localStorage
-let allFlashcards = getStore('ss_flashcards');
-let allQuestions = getStore('ss_question_bank');
-let allChapters = getStore('ss_chapters');
+// Load published data from `data/published/*.json` FIRST, fall back to localStorage
+let allFlashcards = {};
+let allQuestions = {};
+let allChapters = {};
+const PUBLISHED_BASE_PATHS = ['data/published', './data/published', '/data/published'];
 
-async function loadPublishedStoresIfAvailable() {
-  try {
-    const [chapRes, fcRes, qRes] = await Promise.all([
-      fetch('/data/published/chapters.json').catch(() => null),
-      fetch('/data/published/flashcards.json').catch(() => null),
-      fetch('/data/published/questions.json').catch(() => null)
-    ]);
+async function fetchPublishedFile(filename) {
+  for (const base of PUBLISHED_BASE_PATHS) {
+    try {
+      const res = await fetch(`${base}/${filename}`);
+      if (res.ok) {
+        return await res.json();
+      }
+    } catch (e) {
+      // ignore and try next path
+    }
+  }
+  return null;
+}
 
-    if (chapRes && chapRes.ok) allChapters = await chapRes.json();
-    if (fcRes && fcRes.ok) allFlashcards = await fcRes.json();
-    if (qRes && qRes.ok) allQuestions = await qRes.json();
-  } catch (e) {
-    console.warn('Published data not available, using localStorage fallback');
+async function loadDataStores() {
+  // Try published files first
+  const [chapData, fcData, qData] = await Promise.all([
+    fetchPublishedFile('chapters.json'),
+    fetchPublishedFile('flashcards.json'),
+    fetchPublishedFile('questions.json')
+  ]);
+
+  // If published files exist, use them exclusively
+  if (chapData !== null && fcData !== null && qData !== null) {
+    console.log('✅ Loaded published data from data/published/');
+    allChapters = Array.isArray(chapData) ? chapData.reduce((acc, ch) => ({ ...acc, [ch.chapter_id]: ch }), {}) : chapData;
+    allFlashcards = Array.isArray(fcData) ? fcData.reduce((acc, fc) => ({ ...acc, [fc.flashcard_id]: fc }), {}) : fcData;
+    allQuestions = Array.isArray(qData) ? qData.reduce((acc, q) => ({ ...acc, [q.question_id]: q }), {}) : qData;
+  } else {
+    // Fall back to localStorage
+    console.log('⚠️ Published data not found, using localStorage');
+    allChapters = getStore('ss_chapters');
+    allFlashcards = getStore('ss_flashcards');
+    allQuestions = getStore('ss_question_bank');
   }
 }
 
@@ -455,7 +477,7 @@ function renderChapters() {
 
 // Initial render (load published stores first if present)
 (async function initPublished() {
-  await loadPublishedStoresIfAvailable();
+  await loadDataStores();
   renderChapters();
 })();
 
