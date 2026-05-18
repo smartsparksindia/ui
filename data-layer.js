@@ -111,7 +111,7 @@ function addFlashcardToChapter(chapter_id, term, definition, chapter_num = null,
   const chapter = getFromStore(STORE.CHAPTERS, chapter_id);
   if (!chapter) return null;
   
-  const flashcard_id = `fc_${chapter_id}_${Date.now()}`;
+  const flashcard_id = `fc_${chapter_id}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   const flashcard = {
     flashcard_id,
     chapter_id,
@@ -189,7 +189,7 @@ function getAllChapters(class_no, subject, onlyPublished = true) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function createQuestion(class_no, subject, subject_area, topic, question_text, options, correct_option_index, explanation, chapter_num = null, unit_num = null, unit_name = null) {
-  const question_id = `q_${subject.toLowerCase()}_${Date.now()}`;
+  const question_id = `q_${subject.toLowerCase()}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   const question = {
     question_id,
     class: class_no,
