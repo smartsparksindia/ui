@@ -46,6 +46,13 @@ function getFromStore(key, id) {
   return getStore(key)[id];
 }
 
+function deleteFromStore(key, id) {
+  const store = getStore(key);
+  delete store[id];
+  setStore(key, store);
+  return true;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // CHAPTER MANAGEMENT (Versioned)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -74,6 +81,30 @@ function createChapter(class_no, subject, subject_area, title, description, chap
     approved_by: null
   };
   return addToStore(STORE.CHAPTERS, chapter_id, chapter);
+}
+
+function deleteChapter(chapter_id) {
+  const chapter = getFromStore(STORE.CHAPTERS, chapter_id);
+  if (!chapter) return false;
+  
+  // Delete all flashcards linked to this chapter
+  if (chapter.flashcard_ids && chapter.flashcard_ids.length > 0) {
+    chapter.flashcard_ids.forEach(flashcard_id => {
+      deleteFromStore(STORE.FLASHCARDS, flashcard_id);
+    });
+  }
+  
+  // Delete all questions linked to this chapter
+  if (chapter.question_ids && chapter.question_ids.length > 0) {
+    chapter.question_ids.forEach(question_id => {
+      deleteFromStore(STORE.QUESTION_BANK, question_id);
+    });
+  }
+  
+  // Delete the chapter itself
+  deleteFromStore(STORE.CHAPTERS, chapter_id);
+  
+  return true;
 }
 
 function addFlashcardToChapter(chapter_id, term, definition, chapter_num = null, unit_num = null, image_url = null, subject_area = null, unit_name = null) {
