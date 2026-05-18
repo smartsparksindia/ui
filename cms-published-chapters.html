@@ -300,6 +300,7 @@ th {
     <div class="cms-main-inner">
       <div class="cms-topbar">
         <h1 class="cms-title">Edit Published Chapters</h1>
+        <div id="export-container" style="margin-left:auto"></div>
       </div>
 
       <div class="cms-section">
@@ -346,6 +347,10 @@ console.log('Published chapters:', published); // DEBUG
 
 // RENDER CHAPTERS
 const tbody = document.getElementById('chapters-tbody');
+const exportBtnContainer = document.getElementById('export-container');
+if (exportBtnContainer) {
+  exportBtnContainer.innerHTML = `<button class="btn btn-export" onclick="exportPublishedData()">⬇️ Export Published Data</button>`;
+}
 if (published.length === 0) {
   tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No published chapters yet</td></tr>';
 } else {
@@ -395,6 +400,52 @@ function performDeleteChapter(id) {
       alert('❌ Error deleting chapter');
     }
   }
+}
+
+function exportPublishedData() {
+  const chapters = getStore('ss_chapters');
+  const flashcards = getStore('ss_flashcards');
+  const questions = getStore('ss_question_bank');
+
+  const published = Object.values(chapters).filter(ch => ch.status === 'published');
+  const payload = {
+    exported_at: new Date().toISOString(),
+    chapters: published,
+    flashcards: Object.values(flashcards).filter(fc => published.some(pc => pc.chapter_id === fc.chapter_id)),
+    questions: Object.values(questions).filter(q => published.some(pc => pc.chapter_id === q.used_in_chapters?.[0]?.chapter_id || q.chapter_id))
+  };
+
+  // Try sending to local publish server (auto-commit) first
+  const PUBLISH_ENDPOINT = window.PUBLISH_ENDPOINT || 'http://localhost:4000/publish';
+  const PUBLISH_SECRET = window.PUBLISH_SECRET || null;
+
+  fetch(PUBLISH_ENDPOINT, {
+    method: 'POST',
+    headers: Object.assign({ 'Content-Type': 'application/json' }, PUBLISH_SECRET ? { 'X-PUBLISH-SECRET': PUBLISH_SECRET } : {}),
+    body: JSON.stringify(payload)
+  }).then(r => r.json()).then(j => {
+    if (j && j.ok) {
+      alert('✅ Published and auto-committed to repository via publish server.');
+    } else {
+      alert('⚠️ Publish server responded: ' + (j && j.error ? j.error : JSON.stringify(j)) + '\nFalling back to local download.');
+      downloadFallback(payload);
+    }
+  }).catch(err => {
+    console.warn('Publish server error, falling back to download:', err);
+    downloadFallback(payload);
+  });
+}
+
+function downloadFallback(payload) {
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `smartspark-published-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
 
 function logout() {

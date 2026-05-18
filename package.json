@@ -5,6 +5,7 @@
   "main": "index.html",
   "scripts": {
     "start": "http-server -p 5500",
+    "publish-server": "node server/publish-server.js",
     "test": "cypress run",
     "test:open": "cypress open",
     "test:headless": "cypress run --headless",
@@ -31,6 +32,11 @@
   "devDependencies": {
     "cypress": "^13.6.0",
     "http-server": "^14.1.1"
+  }
+  ,
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
   }
 }
 

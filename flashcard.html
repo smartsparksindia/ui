@@ -229,23 +229,39 @@ const state = getState();
 const year = state.year || 6;
 const subject = state.subject || 'Science';
 
-// Get published chapters for filtering
-const allChapters = getStore('ss_chapters');
-const publishedChapterIds = new Set(
-  Object.values(allChapters)
-    .filter(ch => ch.subject === subject && ch.class === year && ch.status === 'published')
-    .map(ch => ch.chapter_id)
-);
+// Attempt to load published JSON files from repo; otherwise fall back to localStorage
+let allChapters = getStore('ss_chapters');
+let allFlashcards = getStore('ss_flashcards');
 
-// Get flashcards filtered by subject, class, chapter, unit, and published status
-const allFlashcards = getStore('ss_flashcards');
-const flashcards = Object.values(allFlashcards).filter(fc => 
-  fc.chapter === chapterNum && 
-  fc.unit === unitNum && 
-  fc.subject === subject && 
-  fc.class === year &&
-  publishedChapterIds.has(fc.chapter_id)
-);
+async function loadPublishedIfPresent() {
+  try {
+    const [chapRes, fcRes] = await Promise.all([
+      fetch('/data/published/chapters.json').catch(() => null),
+      fetch('/data/published/flashcards.json').catch(() => null)
+    ]);
+    if (chapRes && chapRes.ok) allChapters = await chapRes.json();
+    if (fcRes && fcRes.ok) allFlashcards = await fcRes.json();
+  } catch (e) {
+    console.warn('Published data not present; using localStorage');
+  }
+}
+
+let flashcards = [];
+async function initFlashcards() {
+  await loadPublishedIfPresent();
+  const publishedChapterIds = new Set(
+    Object.values(allChapters)
+      .filter(ch => ch.subject === subject && ch.class === year && ch.status === 'published')
+      .map(ch => ch.chapter_id)
+  );
+  flashcards = Object.values(allFlashcards).filter(fc => 
+    fc.chapter === chapterNum && 
+    fc.unit === unitNum && 
+    fc.subject === subject && 
+    fc.class === year &&
+    publishedChapterIds.has(fc.chapter_id)
+  );
+}
 
 document.getElementById('bc-unit').textContent = `Chapter ${chapterNum} - Unit ${unitNum}`;
 document.getElementById('card-count').textContent = flashcards.length;
@@ -322,7 +338,13 @@ function getState() {
   catch { return {}; }
 }
 
-renderFlashcard();
+(async function init() {
+  await initFlashcards();
+  document.getElementById('bc-unit').textContent = `Chapter ${chapterNum} - Unit ${unitNum}`;
+  document.getElementById('card-count').textContent = flashcards.length;
+  document.getElementById('total-count').textContent = flashcards.length;
+  renderFlashcard();
+})();
 </script>
 </body>
 </html>

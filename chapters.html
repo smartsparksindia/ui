@@ -242,28 +242,29 @@ document.getElementById('bc-year').textContent = `Class ${year}`;
 document.getElementById('bc-subject').textContent = subject;
 document.getElementById('total-score').textContent = getTotalScore();
 
-// Get all flashcards and questions
-const allFlashcards = getStore('ss_flashcards');
-const allQuestions = getStore('ss_question_bank');
-const allChapters = getStore('ss_chapters');
-const publishedChapterIds = new Set(
-  Object.values(allChapters)
-    .filter(ch => ch.subject === subject && ch.class === year && ch.status === 'published')
-    .map(ch => ch.chapter_id)
-);
-// Build chapter title map for student view
-const chapterTitleMap = {};
-Object.values(allChapters)
-  .filter(ch => ch.subject === subject && ch.class === year && ch.status === 'published')
-  .forEach(ch => {
-    if (ch.chapter !== undefined && ch.chapter !== null) {
-      chapterTitleMap[String(ch.chapter)] = ch.title;
-    }
-  });
+// Load published data from `data/published/*.json` if available, otherwise fall back to localStorage
+let allFlashcards = getStore('ss_flashcards');
+let allQuestions = getStore('ss_question_bank');
+let allChapters = getStore('ss_chapters');
+
+async function loadPublishedStoresIfAvailable() {
+  try {
+    const [chapRes, fcRes, qRes] = await Promise.all([
+      fetch('/data/published/chapters.json').catch(() => null),
+      fetch('/data/published/flashcards.json').catch(() => null),
+      fetch('/data/published/questions.json').catch(() => null)
+    ]);
+
+    if (chapRes && chapRes.ok) allChapters = await chapRes.json();
+    if (fcRes && fcRes.ok) allFlashcards = await fcRes.json();
+    if (qRes && qRes.ok) allQuestions = await qRes.json();
+  } catch (e) {
+    console.warn('Published data not available, using localStorage fallback');
+  }
+}
 
 function getChapterTitle(chapterNum, areaName) {
   const key = String(chapterNum);
-  // Look for chapter that matches subject, year, chapter number, AND subject_area
   const chapter = Object.values(allChapters).find(ch => 
     ch.subject === subject && 
     ch.class === year && 
@@ -273,13 +274,7 @@ function getChapterTitle(chapterNum, areaName) {
   return chapter ? chapter.title : null;
 }
 
-// DEBUG: Log flashcard data structure
-console.log('DEBUG - First flashcard:', Object.values(allFlashcards)[0]);
-console.log('DEBUG - First question:', Object.values(allQuestions)[0]);
-console.log('DEBUG - Total flashcards:', Object.keys(allFlashcards).length);
-console.log('DEBUG - Total questions:', Object.keys(allQuestions).length);
-console.log('DEBUG - Published chapters for student view:', publishedChapterIds);
-console.log('DEBUG - Chapter title map:', chapterTitleMap);
+// DEBUG will log after published stores are loaded
 
 function renderChapters() {
   // Group by subject_area > chapter > unit for selected subject
@@ -458,8 +453,11 @@ function renderChapters() {
   }
 }
 
-// Initial render
-renderChapters();
+// Initial render (load published stores first if present)
+(async function initPublished() {
+  await loadPublishedStoresIfAvailable();
+  renderChapters();
+})();
 
 function getState() {
   try { return JSON.parse(sessionStorage.getItem('ss_state')) || {}; }

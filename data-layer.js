@@ -20,6 +20,14 @@ const STORE = {
   CONFIG: 'ss_config'
 };
 
+// Toggle demo data creation in dev setups. Set to `true` to auto-create demo accounts/content.
+// WARNING: demo content writes to localStorage and is intended for local development only.
+const ENABLE_DEMO_ACCOUNTS = false;
+const ENABLE_DEMO_CONTENT = false;
+// Enable syncing published content to a central server (set true and run the server)
+const ENABLE_REMOTE_SYNC = false;
+const REMOTE_API_BASE = 'http://localhost:4000/api';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // GENERIC STORAGE HELPERS
 // ─────────────────────────────────────────────────────────────────────────────
@@ -33,6 +41,14 @@ function getStore(key) {
 
 function setStore(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
+  // Try to propagate to remote store (non-blocking)
+  if (ENABLE_REMOTE_SYNC) {
+    try {
+      remotePutStore(key, data).catch(e => console.warn('Remote sync failed:', e));
+    } catch (e) {
+      console.warn('Remote sync initiation failed:', e);
+    }
+  }
 }
 
 function addToStore(key, id, item) {
@@ -40,6 +56,31 @@ function addToStore(key, id, item) {
   store[id] = item;
   setStore(key, store);
   return item;
+}
+
+// Remote helpers (best-effort, non-blocking)
+async function remotePutStore(key, data) {
+  try {
+    const url = `${REMOTE_API_BASE}/${key}`;
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function remoteGetStore(key) {
+  try {
+    const url = `${REMOTE_API_BASE}/${key}`;
+    const res = await fetch(url, { method: 'GET' });
+    if (!res.ok) throw new Error('Remote fetch failed');
+    return await res.json();
+  } catch (e) {
+    throw e;
+  }
 }
 
 function getFromStore(key, id) {
@@ -856,6 +897,10 @@ function initializeSystemWithDemoContent() {
   console.log('✅ Demo content created:', demoChapters.length, 'chapters');
 }
 
-// Initialize on load
-initializeSystemWithDemoAccounts();
-initializeSystemWithDemoContent();
+// Initialize on load (only when explicitly enabled via toggles above)
+if (typeof ENABLE_DEMO_ACCOUNTS !== 'undefined' && ENABLE_DEMO_ACCOUNTS) {
+  initializeSystemWithDemoAccounts();
+}
+if (typeof ENABLE_DEMO_CONTENT !== 'undefined' && ENABLE_DEMO_CONTENT) {
+  initializeSystemWithDemoContent();
+}

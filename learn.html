@@ -185,7 +185,27 @@ let revisionViewed = false;  // Track if user viewed flashcards before quiz
 // INITIALIZATION
 // ─────────────────────────────────────────────────────────────────
 
-function init() {
+// Published store caches (optional)
+let publishedChapters = null;
+let publishedFlashcards = null;
+let publishedQuestions = null;
+
+async function loadPublishedStores() {
+  try {
+    const [chapRes, fcRes, qRes] = await Promise.all([
+      fetch('/data/published/chapters.json').catch(() => null),
+      fetch('/data/published/flashcards.json').catch(() => null),
+      fetch('/data/published/questions.json').catch(() => null)
+    ]);
+    if (chapRes && chapRes.ok) publishedChapters = await chapRes.json();
+    if (fcRes && fcRes.ok) publishedFlashcards = await fcRes.json();
+    if (qRes && qRes.ok) publishedQuestions = await qRes.json();
+  } catch (e) {
+    // fallback to null -> use localStorage
+  }
+}
+
+async function init() {
   // Initialize user progress if it doesn't exist
   const currentUser = getCurrentUser();
   if (currentUser) {
@@ -197,6 +217,8 @@ function init() {
     }
   }
   
+  // Try published stores first
+  await loadPublishedStores();
   flashcards = getChapterFlashcards(chapterId);
   questions = getChapterQuestions(chapterId);
   totalQuestions = questions.length;
@@ -450,6 +472,15 @@ function renderResults() {
 // ─────────────────────────────────────────────────────────────────
 
 function getChapterFlashcards(cId) {
+  // If published data loaded, use that
+  if (publishedChapters || publishedFlashcards) {
+    const ch = (publishedChapters || getStore('ss_chapters')).find(ch => ch.chapter_id === cId);
+    if (!ch) return [];
+    const flashIds = ch.flashcard_ids || [];
+    const allF = publishedFlashcards || Object.values(getStore('ss_flashcards'));
+    return flashIds.map(fid => allF.find(f => f.flashcard_id === fid)).filter(Boolean);
+  }
+
   const ch = getFromStore('ss_chapters', cId);
   if (!ch) return [];
   return (ch.flashcard_ids || [])
@@ -458,6 +489,14 @@ function getChapterFlashcards(cId) {
 }
 
 function getChapterQuestions(cId) {
+  if (publishedChapters || publishedQuestions) {
+    const ch = (publishedChapters || getStore('ss_chapters')).find(ch => ch.chapter_id === cId);
+    if (!ch) return [];
+    const qIds = ch.question_ids || [];
+    const allQ = publishedQuestions || Object.values(getStore('ss_question_bank'));
+    return qIds.map(qid => allQ.find(q => q.question_id === qid)).filter(Boolean);
+  }
+
   const ch = getFromStore('ss_chapters', cId);
   if (!ch) return [];
   return (ch.question_ids || [])
