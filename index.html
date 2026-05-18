@@ -255,7 +255,7 @@ footer p { color: rgba(255,255,255,0.45); font-size: 0.88rem; font-weight: 600; 
 <script src="data-layer.js"></script>
 <script>
 // On page load
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   const user = getCurrentUser();
   
   // Update total score
@@ -266,11 +266,22 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
   
-  // Update stats
-  const chapters = getStore('ss_chapters');
-  const questions = getStore('ss_question_bank');
+  const [chapData, qData] = await Promise.all([
+    fetchPublishedFile('chapters.json'),
+    fetchPublishedFile('questions.json')
+  ]);
+
+  let chapters = getStore('ss_chapters');
+  let questions = getStore('ss_question_bank');
+
+  if (chapData !== null) {
+    chapters = Array.isArray(chapData) ? chapData.reduce((acc, ch) => ({ ...acc, [ch.chapter_id]: ch }), {}) : chapData;
+  }
+  if (qData !== null) {
+    questions = Array.isArray(qData) ? qData.reduce((acc, q) => ({ ...acc, [q.question_id]: q }), {}) : qData;
+  }
+
   const publishedCount = Object.values(chapters).filter(ch => ch.status === 'published').length;
-  
   document.getElementById('stat-ch').textContent = publishedCount;
   document.getElementById('stat-q').textContent = Object.keys(questions).length;
 });
@@ -285,6 +296,20 @@ window.addEventListener('storage', () => {
     }
   }
 });
+
+const PUBLISHED_BASE_PATHS = ['data/published', './data/published', '/data/published'];
+
+async function fetchPublishedFile(filename) {
+  for (const base of PUBLISHED_BASE_PATHS) {
+    try {
+      const res = await fetch(`${base}/${filename}`);
+      if (res.ok) return await res.json();
+    } catch (e) {
+      // ignore and try next path
+    }
+  }
+  return null;
+}
 
 function selectYear(year) {
   setState({ year, subject: null, chapter: null });

@@ -649,6 +649,32 @@ const colorMap = {
 // SUBJECTS - Load published data first, then render
 // =========================
 
+let publishedChapters = {};
+const PUBLISHED_BASE_PATHS = ['data/published', './data/published', '/data/published'];
+
+async function fetchPublishedFile(filename) {
+  for (const base of PUBLISHED_BASE_PATHS) {
+    try {
+      const res = await fetch(`${base}/${filename}`);
+      if (res.ok) return await res.json();
+    } catch (e) {
+      // ignore and try next path
+    }
+  }
+  return null;
+}
+
+async function initPublishedData() {
+  const chapData = await fetchPublishedFile('chapters.json');
+  if (chapData !== null) {
+    console.log('✅ Loaded published data from data/published/');
+    publishedChapters = Array.isArray(chapData) ? chapData.reduce((acc, ch) => ({ ...acc, [ch.chapter_id]: ch }), {}) : chapData;
+  } else {
+    console.log('⚠️ Published data not found, using localStorage');
+    publishedChapters = getStore('ss_chapters');
+  }
+}
+
 async function renderSubjects() {
   await initPublishedData();
 
@@ -778,9 +804,6 @@ async function renderSubjects() {
 });
 }
 
-// Initialize page with published data
-renderSubjects();
-
 // =========================
 // SCORE
 // =========================
@@ -813,6 +836,11 @@ async function initPublishedData() {
     publishedChapters = getStore('ss_chapters');
   }
 }
+
+(async function initPage() {
+  await initPublishedData();
+  renderSubjects();
+})();
 
 // =========================
 // HELPERS

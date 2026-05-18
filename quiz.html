@@ -216,18 +216,40 @@ const urlParams = new URLSearchParams(window.location.search);
 const chapterNum = parseInt(urlParams.get('chapter'));
 const unitNum = parseInt(urlParams.get('unit'));
 
-// Get all questions and filter by chapter/unit
-const allQuestions = getStore('ss_question_bank');
-const state = getState();
-const year = state.year || 6;
-const subject = state.subject || 'Science';
+const PUBLISHED_BASE_PATHS = ['data/published', './data/published', '/data/published'];
 
-// Get questions for this chapter/unit
-// Questions are divided into units by index (5 per unit)
-const relevantQuestions = Object.values(allQuestions).filter(q => q.class === year && q.subject === subject);
+async function fetchPublishedFile(filename) {
+  for (const base of PUBLISHED_BASE_PATHS) {
+    try {
+      const res = await fetch(`${base}/${filename}`);
+      if (res.ok) return await res.json();
+    } catch (e) {
+      // ignore and try next path
+    }
+  }
+  return null;
+}
 
-// Filter by chapter (extract from topic)
-const chapterQuestions = relevantQuestions.filter(q => {
+let allQuestions = {};
+let state = getState();
+let year = state.year || 6;
+let subject = state.subject || 'Science';
+let questions = [];
+
+async function initQuiz() {
+  const qData = await fetchPublishedFile('questions.json');
+  if (qData !== null) {
+    allQuestions = Array.isArray(qData) ? qData.reduce((acc, q) => ({ ...acc, [q.question_id]: q }), {}) : qData;
+  } else {
+    allQuestions = getStore('ss_question_bank');
+  }
+
+  state = getState();
+  year = state.year || 6;
+  subject = state.subject || 'Science';
+
+  const relevantQuestions = Object.values(allQuestions).filter(q => q.class === year && q.subject === subject);
+  const chapterQuestions = relevantQuestions.filter(q => {
   if (q.chapter) return q.chapter === chapterNum;
   if (q.topic && q.topic.includes('Chapter')) {
     const match = q.topic.match(/Chapter\s+(\d+)/i);
@@ -238,7 +260,7 @@ const chapterQuestions = relevantQuestions.filter(q => {
 
 // Divide questions into units (5 questions per unit)
 const questionsPerUnit = 5;
-const questions = [];
+questions = [];
 chapterQuestions.forEach((q, idx) => {
   const qUnitNum = Math.floor(idx / questionsPerUnit) + 1;
   if (qUnitNum === unitNum) {
@@ -252,6 +274,11 @@ let currentQuestion = 0;
 let sessionScore = 0;
 let answers = {};
 let scoredQuestions = {}; // Track which questions have been scored this attempt
+
+renderQuestion();
+}
+
+initQuiz();
 
 function renderQuestion() {
   const container = document.getElementById('quiz-container');

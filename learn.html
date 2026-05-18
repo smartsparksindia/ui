@@ -163,14 +163,7 @@ if (!user || !chapterId) {
   window.location.href = 'chapters.html';
 }
 
-let chapter = getFromStore('ss_chapters', chapterId);
-
-// Check if chapter exists
-if (!chapter) {
-  console.error('Chapter not found:', chapterId);
-  alert('Failed to load chapter. Please go back and select again.');
-  window.location.href = 'chapters.html';
-}
+let chapter;
 
 let flashcards = [];
 let questions = [];
@@ -238,11 +231,20 @@ async function init() {
   
   // Try published stores first
   await loadPublishedStores();
+  chapter = publishedChapters[chapterId] || getFromStore('ss_chapters', chapterId);
+
+  if (!chapter) {
+    console.error('Chapter not found:', chapterId);
+    alert('Failed to load chapter. Please go back and select again.');
+    window.location.href = 'chapters.html';
+    return;
+  }
+
   flashcards = getChapterFlashcards(chapterId);
   questions = getChapterQuestions(chapterId);
   totalQuestions = questions.length;
   
-  console.log('Learn.html init:', { chapterId, chapter: chapter?.title, flashcards: flashcards.length, questions: questions.length });
+  console.log('Learn.html init:', { chapterId, chapter: chapter.title, flashcards: flashcards.length, questions: questions.length });
   
   document.getElementById('chapter-title').textContent = chapter.title;
   document.getElementById('target').textContent = totalQuestions * 20;  // 20 pts per question
