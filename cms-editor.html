@@ -362,6 +362,7 @@ textarea {
             <input type="file" id="flashcards-csv-file" accept=".csv" style="display:none;" onchange="importFlashcardsCSV(event)">
             <span class="btn btn-add" style="display:inline-block;">📤 Upload CSV</span>
           </label>
+          <button type="button" class="btn btn-secondary" onclick="viewLogs()" style="background:white;border:2px solid #F0EBE0;color:var(--purple);">📋 View Logs</button>
         </div>
         
         <div id="flashcards-csv-status" style="font-size:0.85rem;color:var(--text-muted);"></div>
@@ -436,6 +437,27 @@ let isCreatingNewVersion = false;
 let currentChapterId = null;
 let flashcardsData = [];
 let questionsData = [];
+
+// ============================================
+// PERSISTENT LOGGING SYSTEM
+// ============================================
+let importLogs = [];
+
+function addLog(message, type = 'info') {
+  const timestamp = new Date().toLocaleTimeString();
+  const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message}`;
+  importLogs.push(logEntry);
+  console.log(logEntry);
+  // Save to localStorage for later inspection
+  localStorage.setItem('cms_import_logs', JSON.stringify(importLogs));
+}
+
+function viewLogs() {
+  const logs = JSON.parse(localStorage.getItem('cms_import_logs')) || [];
+  console.log('=== IMPORT LOGS ===');
+  logs.forEach(log => console.log(log));
+  alert('Check browser console (F12) for detailed import logs! Last 20 entries:\n\n' + logs.slice(-20).join('\n'));
+}
 
 // ============================================
 // FLASHCARD FUNCTIONS
@@ -550,20 +572,31 @@ function importFlashcardsCSV(event) {
   const reader = new FileReader();
   reader.onload = (e) => {
     try {
+      addLog(`Starting flashcard import from file: ${file.name}`, 'info');
       const csv = e.target.result;
-      const lines = csv.trim().split('\n');
-      const headers = parseCSVLine(lines[0]);
+      
+      // Parse CSV properly (handles multi-line quoted fields)
+      const rows = parseCSV(csv);
+      addLog(`Total rows parsed: ${rows.length} (including header)`, 'info');
+      
+      if (rows.length === 0) {
+        addLog('CSV is empty', 'error');
+        alert('❌ CSV is empty');
+        return;
+      }
+      
+      const headers = rows[0];
+      addLog(`Headers found: ${headers.join(', ')}`, 'info');
       
       if (!headers.includes('term') || !headers.includes('definition')) {
+        addLog('CSV validation failed: missing term or definition column', 'error');
         alert('❌ CSV must have columns: term, definition');
         return;
       }
       
       let imported = 0;
-      for (let i = 1; i < lines.length; i++) {
-        if (!lines[i].trim()) continue;
-        
-        const values = parseCSVLine(lines[i]);
+      for (let i = 1; i < rows.length; i++) {
+        const values = rows[i];
         const termIdx = headers.indexOf('term');
         const defIdx = headers.indexOf('definition');
         
@@ -574,7 +607,7 @@ function importFlashcardsCSV(event) {
         definition = definition.replace(/\\n/g, '\n');
         
         if (!term.trim()) {
-          console.warn('Skipping invalid row (missing term):', i);
+          addLog(`Row ${i + 1}: Skipped (missing term). Values: ${JSON.stringify(values.slice(0, 2))}`, 'warn');
           continue;
         }
         
@@ -583,14 +616,17 @@ function importFlashcardsCSV(event) {
           term: term.trim(),
           definition: definition.trim()
         });
+        addLog(`Row ${i + 1}: ✅ Imported - term: "${term.substring(0, 50)}..."`, 'success');
         imported++;
       }
       
       renderFlashcards();
+      addLog(`Flashcard import complete: ${imported} imported, total in array: ${flashcardsData.length}`, 'success');
       document.getElementById('flashcards-csv-status').innerHTML = `✅ Imported ${imported} flashcard${imported !== 1 ? 's' : ''}!`;
       document.getElementById('flashcards-csv-file').value = '';
       setTimeout(() => { document.getElementById('flashcards-csv-status').innerHTML = ''; }, 3000);
     } catch (error) {
+      addLog(`CSV import error: ${error.message}`, 'error');
       alert('❌ Error reading CSV: ' + error.message);
       console.error(error);
     }
@@ -627,6 +663,59 @@ function parseCSVLine(line) {
   return result;
 }
 
+// Proper CSV parser that handles multi-line quoted fields
+function parseCSV(csvContent) {
+  const rows = [];
+  let currentRow = [];
+  let currentField = '';
+  let insideQuotes = false;
+  
+  for (let i = 0; i < csvContent.length; i++) {
+    const char = csvContent[i];
+    const nextChar = csvContent[i + 1];
+    
+    if (char === '"') {
+      if (insideQuotes && nextChar === '"') {
+        // Escaped quote
+        currentField += '"';
+        i++;
+      } else {
+        // Toggle quote state
+        insideQuotes = !insideQuotes;
+      }
+    } else if (char === ',' && !insideQuotes) {
+      // Field separator
+      currentRow.push(currentField.trim());
+      currentField = '';
+    } else if ((char === '\n' || char === '\r') && !insideQuotes) {
+      // Row separator (only if not inside quotes)
+      if (char === '\r' && nextChar === '\n') {
+        i++; // Skip \r\n
+      }
+      if (currentField || currentRow.length > 0) {
+        currentRow.push(currentField.trim());
+        if (currentRow.some(f => f.length > 0)) { // Only add non-empty rows
+          rows.push(currentRow);
+        }
+        currentRow = [];
+        currentField = '';
+      }
+    } else {
+      currentField += char;
+    }
+  }
+  
+  // Add last field and row
+  if (currentField || currentRow.length > 0) {
+    currentRow.push(currentField.trim());
+    if (currentRow.some(f => f.length > 0)) {
+      rows.push(currentRow);
+    }
+  }
+  
+  return rows;
+}
+
 function downloadCSVTemplate() {
   const csv = `question,option1,option2,option3,option4,correct,explanation
 What is H2O?,Water,Oxygen,Hydrogen,Salt,1,H2O is water molecule
@@ -648,18 +737,32 @@ function importCSV(event) {
   const reader = new FileReader();
   reader.onload = (e) => {
     try {
+      addLog(`Starting question import from file: ${file.name}`, 'info');
       const csv = e.target.result;
-      const lines = csv.trim().split('\n');
-      const headers = parseCSVLine(lines[0]);
+      
+      // Parse CSV properly (handles multi-line quoted fields)
+      const rows = parseCSV(csv);
+      addLog(`Total rows parsed: ${rows.length} (including header)`, 'info');
+      
+      if (rows.length === 0) {
+        addLog('CSV is empty', 'error');
+        alert('❌ CSV is empty');
+        return;
+      }
+      
+      const headers = rows[0];
+      addLog(`Headers found: ${headers.join(', ')}`, 'info');
+      
       const required = ['question', 'option1', 'option2', 'option3', 'option4', 'correct', 'explanation'];
       if (!required.every(h => headers.includes(h))) {
+        addLog(`CSV validation failed: missing columns. Required: ${required.join(', ')}`, 'error');
         alert('❌ CSV must have columns: ' + required.join(', '));
         return;
       }
       let imported = 0;
-      for (let i = 1; i < lines.length; i++) {
-        if (!lines[i].trim()) continue;
-        const values = parseCSVLine(lines[i]);
+      for (let i = 1; i < rows.length; i++) {
+        const values = rows[i];
+        addLog(`Row ${i + 1}: Parsed values count: ${values.length}, headers count: ${headers.length}`, 'debug');
         
         const qIdx = headers.indexOf('question');
         const opt1Idx = headers.indexOf('option1');
@@ -678,17 +781,20 @@ function importCSV(event) {
         };
         
         if (!question.question.trim() || question.options.some(o => !o.trim())) {
-          console.warn('Skipping invalid row:', i);
+          addLog(`Row ${i + 1}: Skipped (invalid). Q:"${question.question.substring(0, 30)}", Opts: ${JSON.stringify(question.options.slice(0, 2))}...`, 'warn');
           continue;
         }
         questionsData.push(question);
+        addLog(`Row ${i + 1}: ✅ Imported - "${question.question.substring(0, 50)}..."`, 'success');
         imported++;
       }
       renderQuestions();
+      addLog(`Question import complete: ${imported} imported, total in array: ${questionsData.length}`, 'success');
       document.getElementById('csv-status').innerHTML = `✅ Imported ${imported} question${imported !== 1 ? 's' : ''}!`;
       document.getElementById('csv-file').value = '';
       setTimeout(() => { document.getElementById('csv-status').innerHTML = ''; }, 3000);
     } catch (error) {
+      addLog(`CSV import error: ${error.message}`, 'error');
       alert('❌ Error reading CSV: ' + error.message);
       console.error(error);
     }
@@ -738,8 +844,7 @@ document.getElementById('editor-form').addEventListener('submit', (e) => {
 
   document.getElementById('editor-form').style.display = 'none';
   document.getElementById('success-alert').style.display = 'block';
-  document.getElementById('success-alert').innerHTML = '✅ Chapter saved! Awaiting admin approval...';
-  setTimeout(() => { window.location.href = 'cms-dashboard.html'; }, 2000);
+  document.getElementById('success-alert').innerHTML = '✅ Chapter saved! Awaiting admin approval...<br><br><button onclick="window.location.href=\'cms-dashboard.html\'" style="padding:0.8rem 1.5rem;background:var(--purple);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:800;">Go to Dashboard</button>';
 });
 
 // ============================================
