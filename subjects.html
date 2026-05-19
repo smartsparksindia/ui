@@ -158,10 +158,10 @@ nav{
 }
 
 /* =========================
-   SUBJECTS
+   SECTION & SUBJECTS GRID
 ========================= */
 
-.subjects-wrap{
+.section{
   max-width:950px;
   margin:0 auto;
   padding:0 2rem 2rem;
@@ -246,7 +246,13 @@ nav{
   margin-bottom:0.35rem;
 }
 
-.s-count{
+.s-label{
+  font-size:0.85rem;
+  color:var(--text-muted);
+  margin-bottom:1rem;
+}
+
+.chapter-count{
   font-size:0.85rem;
   font-weight:700;
   color:var(--text-muted);
@@ -268,134 +274,10 @@ nav{
   transition:width 0.6s;
 }
 
-.unit-performance {
-  margin-top: 0.8rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.unit-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.7rem;
-  background: rgba(0,0,0,0.05);
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-.unit-badge.attempted {
-  background: #E8F5E9;
-  color: #2E7D32;
-}
-
-.unit-badge.aced {
-  background: #FFF8E1;
-  color: #F57F17;
-}
-
-.unit-badge.score {
-  background: rgba(0,0,0,0.08);
-  color: var(--text);
-}
-
-.coming-soon{
-  margin-top:1rem;
-
-  background:rgba(255,255,255,0.7);
-
-  padding:0.65rem;
-  border-radius:14px;
-
-  font-size:0.78rem;
+.done-text{
+  margin-top:0.8rem;
+  font-size:0.75rem;
   font-weight:700;
-  color:var(--text-muted);
-}
-
-/* =========================
-  Quiz SECTION
-========================= */
-
-/* QUIZ CARD MATCHES SUBJECT CARD WIDTH SYSTEM */
-.quiz-card{
-  width: 100%;
-  background: linear-gradient(135deg,#6C63FF,#4A42D4);
-  color: white;
-
-  padding: 2rem;
-  border-radius: 28px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 2rem;
-
-  box-shadow: 0 16px 40px rgba(108,99,255,0.25);
-  box-sizing: border-box;
-}
-
-/* LEFT CONTENT */
-.quiz-left{
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-}
-
-/* ICON */
-.quiz-icon{
-  font-size: 2.8rem;
-}
-
-/* TEXT */
-.quiz-content h2{
-  font-family: 'Fredoka One', cursive;
-  margin-bottom: 0.3rem;
-}
-
-.quiz-content p{
-  opacity: 0.9;
-  font-size: 0.9rem;
-}
-
-/* TAGS */
-.quiz-features{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 10px;
-}
-
-.quiz-features span{
-  background: rgba(255,255,255,0.15);
-  padding: 0.4rem 0.8rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-}
-
-/* BUTTON */
-.quiz-btn{
-  background: white;
-  color: #4A42D4;
-  padding: 1rem 1.4rem;
-  border-radius: 18px;
-  font-weight: 800;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-/* MOBILE */
-@media(max-width:768px){
-  .quiz-card{
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .quiz-left{
-    flex-direction: column;
-  }
 }
 
 /* =========================
@@ -422,27 +304,6 @@ footer p{
    MOBILE
 ========================= */
 
-@media(max-width:768px){
-
-  .revision-card,
-  .quiz-card{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
-  .revision-left,
-  .quiz-left{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
-  .revision-btn,
-  .quiz-btn{
-    width:100%;
-    text-align:center;
-  }
-}
-
 @media(max-width:600px){
 
   nav{
@@ -453,27 +314,12 @@ footer p{
     grid-template-columns:repeat(2,1fr);
   }
 
-  .subjects-wrap,
-  .revision-wrap,
-  .quiz-wrap{
+  .section{
     padding:0 1rem;
   }
 
   .breadcrumb{
     padding:1.2rem 1rem 0;
-  }
-
-  .revision-content h2,
-  .quiz-content h2{
-    font-size:1.7rem;
-  }
-
-  .revision-icon,
-  .quiz-icon{
-    width:72px;
-    height:72px;
-    min-width:72px;
-    font-size:2.3rem;
   }
 }
 </style>
@@ -531,55 +377,105 @@ footer p{
 </div>
 
 <!-- SUBJECTS -->
-<div class="subjects-wrap">
-
-  <div class="subjects-grid" id="subjects-grid"></div>
-
-</div>
-
-<!-- QUICK PREP QUIZ -->
-<div class="subjects-wrap">
-
-  <div class="quiz-card">
-
-    <div class="quiz-left">
-
-      <div class="quiz-icon">
-        🧠
+<div class="section">
+  <div class="subjects-grid">
+    <!-- SCIENCE -->
+    <a
+      class="subject-card s-science"
+      href="chapters.html"
+      onclick="selectSubject(event,'Science')"
+    >
+      <span class="s-icon">🔬</span>
+      <div class="s-name">Science</div>
+      <div class="s-label">
+        Discover Nature
       </div>
-
-      <div class="quiz-content">
-
-        <div class="quiz-badge">
-          Exam Sprint
-        </div>
-
-        <h2>
-          Exam Time Quick Prep Quiz
-        </h2>
-
-        <p>
-          Take fast-paced quizzes before exams with timed MCQs,
-          streak rewards, instant scoring, and rapid-fire practice.
-        </p>
-
-        <div class="quiz-features">
-          <span>⏱️ Timed</span>
-          <span>🔥 Fast-paced quiz</span>
-          <span>🎯 Instant Score</span>
-          <span>🏆 Rewards</span>
-        </div>
-
+      <div class="chapter-count" id="count-science">
+        0 Chapters
       </div>
-
-    </div>
-
-    <a href="quick-prep.html" class="quiz-btn">
-      Play Quiz ⚔️
+      <div class="s-progress">
+        <div
+          class="s-progress-fill"
+          id="progress-science"
+          style="width:0%;background:#1D9E75;"
+        ></div>
+      </div>
+      <div class="done-text" id="done-science" style="color:#1D9E75;">
+      </div>
     </a>
-
+    <!-- SOCIAL -->
+    <a
+      class="subject-card s-social"
+      href="chapters.html"
+      onclick="selectSubject(event,'Social Science')"
+    >
+      <span class="s-icon">🌍</span>
+      <div class="s-name">Social Science</div>
+      <div class="s-label">
+        Explore the World
+      </div>
+      <div class="chapter-count" id="count-social">
+        0 Chapters
+      </div>
+      <div class="s-progress">
+        <div
+          class="s-progress-fill"
+          id="progress-social"
+          style="width:0%;background:#BA7517;"
+        ></div>
+      </div>
+      <div class="done-text" id="done-social" style="color:#BA7517;">
+      </div>
+    </a>
+    <!-- MATHS -->
+    <a
+      class="subject-card s-maths"
+      href="chapters.html"
+      onclick="selectSubject(event,'Maths')"
+    >
+      <span class="s-icon">🔢</span>
+      <div class="s-name">Maths</div>
+      <div class="s-label">
+        Sharpen Logic
+      </div>
+      <div class="chapter-count" id="count-maths">
+        0 Chapters
+      </div>
+      <div class="s-progress">
+        <div
+          class="s-progress-fill"
+          id="progress-maths"
+          style="width:0%;background:#7F77DD;"
+        ></div>
+      </div>
+      <div class="done-text" id="done-maths" style="color:#7F77DD;">
+      </div>
+    </a>
+    <!-- ENGLISH -->
+    <a
+      class="subject-card s-english"
+      href="chapters.html"
+      onclick="selectSubject(event,'English')"
+    >
+      <span class="s-icon">📚</span>
+      <div class="s-name">English</div>
+      <div class="s-label">
+        Improve Language
+      </div>
+      <div class="chapter-count" id="count-english">
+        0 Chapters
+      </div>
+      <div class="s-progress">
+        <div
+          class="s-progress-fill"
+          id="progress-english"
+          style="width:0%;background:#D4537E;"
+        ></div>
+      </div>
+      <div class="done-text" id="done-english" style="color:#D4537E;">
+      </div>
+    </a>
   </div>
-
 </div>
 
 <!-- FOOTER -->
@@ -600,303 +496,157 @@ footer p{
 <script>
 
 // =========================
-// STATE
+// STATE HELPERS
 // =========================
 
-// NOTE: getState() will be called inside renderSubjects() to get fresh year value
-
-// =========================
-// UPDATE UI
-// =========================
-
-// This will be updated inside renderSubjects() after we get the fresh year
-
-// =========================
-// SUBJECT META
-// =========================
-
-const colorMap = {
-
-  'Science': {
-    icon:'🔬',
-    color:'#1D9E75',
-    cls:'s-science'
-  },
-
-  'Maths': {
-    icon:'🔢',
-    color:'#7F77DD',
-    cls:'s-maths'
-  },
-
-  'English': {
-    icon:'📚',
-    color:'#D4537E',
-    cls:'s-english'
-  },
-
-  'Social Science': {
-    icon:'🌍',
-    color:'#BA7517',
-    cls:'s-social'
-  }
-
-};
-
-// =========================
-// SUBJECTS - Load published data first, then render
-// =========================
-
-let publishedChapters = {};
-const PUBLISHED_BASE_PATHS = ['data/published', './data/published', '/data/published'];
-
-async function fetchPublishedFile(filename) {
-  for (const base of PUBLISHED_BASE_PATHS) {
-    try {
-      const res = await fetch(`${base}/${filename}`);
-      if (res.ok) return await res.json();
-    } catch (e) {
-      // ignore and try next path
-    }
-  }
-  return null;
-}
-
-async function initPublishedData() {
-  const chapData = await fetchPublishedFile('chapters.json');
-  if (chapData !== null) {
-    console.log('✅ Loaded published data from data/published/');
-    publishedChapters = Array.isArray(chapData) ? chapData.reduce((acc, ch) => ({ ...acc, [ch.chapter_id]: ch }), {}) : chapData;
-  } else {
-    console.log('⚠️ Published data not found, using localStorage');
-    publishedChapters = getStore('ss_chapters');
-  }
-}
-
-async function renderSubjects() {
-  await initPublishedData();
-  
-  // Get fresh year from state EVERY time renderSubjects is called
-  const freshState = getState();
-  const year = freshState.year || 6;
-  
-  // Update UI with fresh year
-  document.getElementById('bc-year').textContent = `Class ${year}`;
-  document.getElementById('badge').textContent = `Class ${year}`;
-
-  const subjects = [
-    'Science',
-    'Maths',
-    'English',
-    'Social Science'
-  ];
-
-  const grid = document.getElementById('subjects-grid');
-
-  subjects.forEach(subject => {
-
-  const meta = colorMap[subject];
-
-  const chapters = getChaptersForYearSubject(year, subject);
-
-  let done = 0;
-  let pct = 0;
-  let unitPerformance = [];
-
-  if(chapters.length > 0){
-
-    const user = getCurrentUser();
-
-    if(user){
-
-      const progress = getUserProgress(user.user_id);
-
-      if(progress){
-
-        done = chapters.filter(ch => {
-
-          const cp = progress.chapters_progress[ch.chapter_id];
-
-          return cp && cp.status === 'completed';
-
-        }).length;
-
-        pct = Math.round((done / chapters.length) * 100);
-        
-        // Collect unit performance data
-        Object.entries(progress.chapters_progress || {}).forEach(([unitKey, unitData]) => {
-          if (unitData.points_earned > 0 || unitData.accuracy_pct > 0) {
-            const accuracy = unitData.accuracy_pct || 0;
-            unitPerformance.push({
-              key: unitKey,
-              accuracy: accuracy,
-              aced: accuracy >= 80
-            });
-          }
-        });
-      }
-    }
-  }
-
-  const card = document.createElement('a');
-
-  card.href = 'chapters.html';
-
-  card.className = `subject-card ${meta.cls}`;
-
-  let html = `
-    <span class="s-icon">${meta.icon}</span>
-
-    <div class="s-name">
-      ${subject}
-    </div>
-  `;
-
-  if(chapters.length > 0){
-
-    html += `
-      <div class="s-count">
-        ${chapters.length} chapter${chapters.length !== 1 ? 's' : ''}
-      </div>
-
-      <div class="s-progress">
-        <div
-          class="s-progress-fill"
-          style="
-            background:${meta.color};
-            width:${pct}%;
-          "
-        ></div>
-      </div>
-    `;
-    
-    // Add unit performance indicators
-    if (unitPerformance.length > 0) {
-      html += `<div class="unit-performance">`;
-      unitPerformance.forEach(unit => {
-        if (unit.aced) {
-          html += `<div class="unit-badge aced">👑 ${unit.accuracy}%</div>`;
-        } else {
-          html += `<div class="unit-badge attempted">✅ ${unit.accuracy}%</div>`;
-        }
-      });
-      html += `</div>`;
-    }
-
-  } else {
-
-    html += `
-      <div class="s-count">
-        Coming Soon
-      </div>
-
-      <div class="coming-soon">
-        🚧 New missions unlocking soon!
-      </div>
-    `;
-  }
-
-  card.innerHTML = html;
-
-  card.onclick = () => {
-    setState({
-      year: year,  // ← Preserve the year!
-      subject: subject.trim()
-    });
-    window.location.href = 'chapters.html';
-  };
-
-  grid.appendChild(card);
-
-});
-}
-
-// =========================
-// SCORE
-// =========================
-
-document.getElementById('total-score').textContent = getTotalScore();
-
-// Load published data FIRST, fall back to localStorage
-let publishedChapters = {};
-const PUBLISHED_BASE_PATHS = ['data/published', './data/published', '/data/published'];
-
-async function fetchPublishedFile(filename) {
-  for (const base of PUBLISHED_BASE_PATHS) {
-    try {
-      const res = await fetch(`${base}/${filename}`);
-      if (res.ok) return await res.json();
-    } catch (e) {
-      // ignore and try next path
-    }
-  }
-  return null;
-}
-
-async function initPublishedData() {
-  const chapData = await fetchPublishedFile('chapters.json');
-  if (chapData !== null) {
-    console.log('✅ Loaded published data from data/published/');
-    publishedChapters = Array.isArray(chapData) ? chapData.reduce((acc, ch) => ({ ...acc, [ch.chapter_id]: ch }), {}) : chapData;
-  } else {
-    console.log('⚠️ Published data not found, using localStorage');
-    publishedChapters = getStore('ss_chapters');
-  }
-}
-
-(async function initPage() {
-  await initPublishedData();
-  renderSubjects();
-})();
-
-// =========================
-// HELPERS
-// =========================
-
-function getChaptersForYearSubject(year, subject){
-
-  const chapters = Object.keys(publishedChapters).length > 0 ? publishedChapters : getStore('ss_chapters');
-
-  return Object.values(chapters).filter(ch =>
-
-    ch.class === parseInt(year) &&
-    ch.subject === subject &&
-    ch.status === 'published'
-
-  );
-}
-
-function getTotalScore(){
-
-  const user = getCurrentUser();
-
-  if(!user) return 0;
-
-  const progress = getUserProgress(user.user_id);
-
-  return progress?.total_points || 0;
-}
-
-function getState(){
-
-  try{
+function getState() {
+  try {
     return JSON.parse(sessionStorage.getItem('ss_state')) || {};
   } catch {
     return {};
   }
 }
 
-function setState(patch){
-
+function setState(patch) {
   const s = {
     ...getState(),
     ...patch
   };
-
   sessionStorage.setItem('ss_state', JSON.stringify(s));
-
+  console.log('setState called, new state:', s);
   return s;
 }
+
+// =========================
+// GET YEAR FROM STATE
+// =========================
+
+const state = getState();
+const year = state.year || 6;
+
+console.log('DEBUG subjects.html - Year from state:', year);
+
+// Update UI with correct year
+document.getElementById('bc-year').textContent = `Class ${year}`;
+document.getElementById('badge').textContent = `Class ${year}`;
+
+// =========================
+// LOAD DATA
+// =========================
+
+let allChapters = {};
+
+function loadData() {
+  // For now, load from localStorage (Phase 1 fallback)
+  // Phase 2 files can be added later
+  allChapters = getStore('ss_chapters');
+  console.log('Loaded chapters from localStorage:', Object.keys(allChapters).length, 'total');
+}
+
+// =========================
+// RENDER SUBJECT CARDS
+// =========================
+
+function renderSubjects() {
+  loadData();
+  
+  const subjects = [
+    { name: 'Science', id: 'science' },
+    { name: 'Maths', id: 'maths' },
+    { name: 'English', id: 'english' },
+    { name: 'Social Science', id: 'social' }
+  ];
+  
+  subjects.forEach(subject => {
+    // Count chapters for THIS YEAR + subject
+    const chapters = Object.values(allChapters).filter(ch =>
+      ch.class === parseInt(year) &&
+      ch.subject === subject.name &&
+      ch.status === 'published'
+    );
+    
+    const count = chapters.length;
+    const countText = count === 0 ? 'No Chapters' : `${count} Chapter${count !== 1 ? 's' : ''}`;
+    
+    console.log(`Subject: ${subject.name}, Year: ${year}, Chapters: ${count}`);
+    
+    // Update chapter count
+    document.getElementById(`count-${subject.id}`).textContent = countText;
+    
+    // Calculate progress if user logged in
+    const user = getCurrentUser();
+    if (user && count > 0) {
+      const progress = getUserProgress(user.user_id);
+      if (progress) {
+        const completed = chapters.filter(ch => {
+          const cp = progress.chapters_progress[ch.chapter_id];
+          return cp && cp.status === 'completed';
+        }).length;
+        
+        const pct = Math.round((completed / count) * 100);
+        document.getElementById(`progress-${subject.id}`).style.width = pct + '%';
+        
+        if (completed > 0) {
+          document.getElementById(`done-${subject.id}`).textContent = `${completed}/${count} Completed`;
+        }
+      }
+    }
+  });
+}
+
+// =========================
+// SELECT SUBJECT - PRESERVE YEAR!
+// =========================
+
+function selectSubject(event, subject) {
+  event.preventDefault();
+  
+  // Get current state
+  const currentState = getState();
+  console.log('Before selectSubject - state:', currentState);
+  
+  // Set subject while PRESERVING year
+  setState({
+    year: currentState.year || year,  // ← Keep the year!
+    subject: subject.trim()
+  });
+  
+  console.log('After selectSubject - state:', getState());
+  
+  // Navigate to chapters
+  window.location.href = 'chapters.html';
+}
+
+// =========================
+// SCORE
+// =========================
+
+function getTotalScore() {
+  const user = getCurrentUser();
+  if (!user) return 0;
+  const progress = getUserProgress(user.user_id);
+  return progress?.total_points || 0;
+}
+
+document.getElementById('total-score').textContent = getTotalScore();
+
+// =========================
+// HELPERS
+// =========================
+
+function getStore(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key)) || {};
+  } catch {
+    return {};
+  }
+}
+
+// =========================
+// INITIALIZE
+// =========================
+
+renderSubjects();
 
 </script>
 
