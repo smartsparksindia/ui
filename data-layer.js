@@ -737,173 +737,173 @@ function initializeSystemWithDemoAccounts() {
 // DEMO CONTENT INITIALIZATION
 // ─────────────────────────────────────────────────────────────────────────────
 
-function initializeSystemWithDemoContent() {
-  const config = getStore(STORE.CONFIG);
+// function initializeSystemWithDemoContent() {
+//   const config = getStore(STORE.CONFIG);
   
-  // Only create demo content once
-  if (config.demo_content_created) {
-    return;
-  }
+//   // Only create demo content once
+//   if (config.demo_content_created) {
+//     return;
+//   }
   
-  console.log('Creating demo chapters, questions, and flashcards...');
+//   console.log('Creating demo chapters, questions, and flashcards...');
   
-  const demoChapters = [
-    { class: 6, subject: 'Maths', subject_area: 'Arithmetic', title: 'Chapter 1: Numbers and Operations', desc: 'Learn about numbers, place value, and basic arithmetic operations' },
-    { class: 6, subject: 'Maths', subject_area: 'Arithmetic', title: 'Chapter 2: Fractions and Decimals', desc: 'Understand fractions, decimals, and their applications' },
-    { class: 6, subject: 'Science', subject_area: 'Biology', title: 'Chapter 1: Living World', desc: 'Explore living organisms and their characteristics' },
-    { class: 6, subject: 'Science', subject_area: 'Biology', title: 'Chapter 2: Human Body', desc: 'Learn about human anatomy and body systems' },
-    { class: 6, subject: 'English', subject_area: 'Literature', title: 'Chapter 1: Reading Comprehension', desc: 'Improve reading skills and comprehension' },
-    { class: 6, subject: 'Social Science', subject_area: 'Geography', title: 'Chapter 1: The Earth', desc: 'Learn about our planet and its geography' },
-    { class: 7, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 1: Integers', desc: 'Understand positive and negative integers' },
-    { class: 7, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 2: Fractions', desc: 'Master fractions and rational numbers' },
-    { class: 7, subject: 'Science', subject_area: 'Physics', title: 'Chapter 1: Motion and Forces', desc: 'Learn about motion, speed, and forces' },
-    { class: 7, subject: 'Science', subject_area: 'Physics', title: 'Chapter 2: Heat and Energy', desc: 'Understand temperature, heat transfer, and energy' },
-    { class: 7, subject: 'English', subject_area: 'Literature', title: 'Chapter 1: Poetry Appreciation', desc: 'Explore poems and literary devices' },
-    { class: 7, subject: 'Social Science', subject_area: 'History', title: 'Chapter 1: Ancient India', desc: 'Learn about early Indian civilizations' },
-    { class: 8, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 1: Rational Numbers', desc: 'Understand rational numbers and operations' },
-    { class: 8, subject: 'Maths', subject_area: 'Geometry', title: 'Chapter 2: Squares and Square Roots', desc: 'Master squares, cubes, and roots' },
-    { class: 8, subject: 'Science', subject_area: 'Chemistry', title: 'Chapter 1: Matter in Our Surroundings', desc: 'Learn about states of matter and properties' },
-    { class: 8, subject: 'Science', subject_area: 'Biology', title: 'Chapter 2: Cell Structure and Function', desc: 'Understand cells and living organisms' },
-    { class: 8, subject: 'English', subject_area: 'Literature', title: 'Chapter 1: Prose and Drama', desc: 'Study prose pieces and dramatic works' },
-    { class: 8, subject: 'Social Science', subject_area: 'History', title: 'Chapter 1: Medieval India', desc: 'Explore medieval Indian history' },
-    { class: 9, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 1: Number Systems', desc: 'Deep dive into number systems and real numbers' },
-    { class: 9, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 2: Polynomials', desc: 'Master polynomial expressions and factorization' },
-    { class: 9, subject: 'Science', subject_area: 'Chemistry', title: 'Chapter 1: Matter in Our Surroundings', desc: 'Advanced concepts of matter and properties' },
-    { class: 9, subject: 'Science', subject_area: 'Chemistry', title: 'Chapter 2: Atoms and Molecules', desc: 'Understand atomic structure and bonding' },
-    { class: 9, subject: 'English', subject_area: 'Literature', title: 'Chapter 1: Fiction and Literature', desc: 'Analyze literary texts and narrative techniques' },
-    { class: 9, subject: 'Social Science', subject_area: 'History', title: 'Chapter 1: India and the World', desc: 'Explore India in global context' },
-    { class: 10, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 1: Real Numbers', desc: 'Master real number systems and properties' },
-    { class: 10, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 2: Polynomials and Division', desc: 'Advanced polynomial operations and theorems' },
-    { class: 10, subject: 'Science', subject_area: 'Chemistry', title: 'Chapter 1: Chemical Reactions', desc: 'Understand chemical reactions and equations' },
-    { class: 10, subject: 'Science', subject_area: 'Chemistry', title: 'Chapter 2: Periodic Table', desc: 'Master periodic table and element properties' },
-    { class: 10, subject: 'English', subject_area: 'Literature', title: 'Chapter 1: Board Exam Preparation', desc: 'Prepare for board exams with comprehensive content' },
-    { class: 10, subject: 'Social Science', subject_area: 'History', title: 'Chapter 1: Modern India', desc: 'Study modern Indian history and governance' }
-  ];
+//   const demoChapters = [
+//     { class: 6, subject: 'Maths', subject_area: 'Arithmetic', title: 'Chapter 1: Numbers and Operations', desc: 'Learn about numbers, place value, and basic arithmetic operations' },
+//     { class: 6, subject: 'Maths', subject_area: 'Arithmetic', title: 'Chapter 2: Fractions and Decimals', desc: 'Understand fractions, decimals, and their applications' },
+//     { class: 6, subject: 'Science', subject_area: 'Biology', title: 'Chapter 1: Living World', desc: 'Explore living organisms and their characteristics' },
+//     { class: 6, subject: 'Science', subject_area: 'Biology', title: 'Chapter 2: Human Body', desc: 'Learn about human anatomy and body systems' },
+//     { class: 6, subject: 'English', subject_area: 'Literature', title: 'Chapter 1: Reading Comprehension', desc: 'Improve reading skills and comprehension' },
+//     { class: 6, subject: 'Social Science', subject_area: 'Geography', title: 'Chapter 1: The Earth', desc: 'Learn about our planet and its geography' },
+//     { class: 7, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 1: Integers', desc: 'Understand positive and negative integers' },
+//     { class: 7, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 2: Fractions', desc: 'Master fractions and rational numbers' },
+//     { class: 7, subject: 'Science', subject_area: 'Physics', title: 'Chapter 1: Motion and Forces', desc: 'Learn about motion, speed, and forces' },
+//     { class: 7, subject: 'Science', subject_area: 'Physics', title: 'Chapter 2: Heat and Energy', desc: 'Understand temperature, heat transfer, and energy' },
+//     { class: 7, subject: 'English', subject_area: 'Literature', title: 'Chapter 1: Poetry Appreciation', desc: 'Explore poems and literary devices' },
+//     { class: 7, subject: 'Social Science', subject_area: 'History', title: 'Chapter 1: Ancient India', desc: 'Learn about early Indian civilizations' },
+//     { class: 8, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 1: Rational Numbers', desc: 'Understand rational numbers and operations' },
+//     { class: 8, subject: 'Maths', subject_area: 'Geometry', title: 'Chapter 2: Squares and Square Roots', desc: 'Master squares, cubes, and roots' },
+//     { class: 8, subject: 'Science', subject_area: 'Chemistry', title: 'Chapter 1: Matter in Our Surroundings', desc: 'Learn about states of matter and properties' },
+//     { class: 8, subject: 'Science', subject_area: 'Biology', title: 'Chapter 2: Cell Structure and Function', desc: 'Understand cells and living organisms' },
+//     { class: 8, subject: 'English', subject_area: 'Literature', title: 'Chapter 1: Prose and Drama', desc: 'Study prose pieces and dramatic works' },
+//     { class: 8, subject: 'Social Science', subject_area: 'History', title: 'Chapter 1: Medieval India', desc: 'Explore medieval Indian history' },
+//     { class: 9, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 1: Number Systems', desc: 'Deep dive into number systems and real numbers' },
+//     { class: 9, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 2: Polynomials', desc: 'Master polynomial expressions and factorization' },
+//     { class: 9, subject: 'Science', subject_area: 'Chemistry', title: 'Chapter 1: Matter in Our Surroundings', desc: 'Advanced concepts of matter and properties' },
+//     { class: 9, subject: 'Science', subject_area: 'Chemistry', title: 'Chapter 2: Atoms and Molecules', desc: 'Understand atomic structure and bonding' },
+//     { class: 9, subject: 'English', subject_area: 'Literature', title: 'Chapter 1: Fiction and Literature', desc: 'Analyze literary texts and narrative techniques' },
+//     { class: 9, subject: 'Social Science', subject_area: 'History', title: 'Chapter 1: India and the World', desc: 'Explore India in global context' },
+//     { class: 10, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 1: Real Numbers', desc: 'Master real number systems and properties' },
+//     { class: 10, subject: 'Maths', subject_area: 'Algebra', title: 'Chapter 2: Polynomials and Division', desc: 'Advanced polynomial operations and theorems' },
+//     { class: 10, subject: 'Science', subject_area: 'Chemistry', title: 'Chapter 1: Chemical Reactions', desc: 'Understand chemical reactions and equations' },
+//     { class: 10, subject: 'Science', subject_area: 'Chemistry', title: 'Chapter 2: Periodic Table', desc: 'Master periodic table and element properties' },
+//     { class: 10, subject: 'English', subject_area: 'Literature', title: 'Chapter 1: Board Exam Preparation', desc: 'Prepare for board exams with comprehensive content' },
+//     { class: 10, subject: 'Social Science', subject_area: 'History', title: 'Chapter 1: Modern India', desc: 'Study modern Indian history and governance' }
+//   ];
   
-  const chapters = getStore(STORE.CHAPTERS);
-  const questionBank = getStore(STORE.QUESTION_BANK);
-  const flashcards = getStore(STORE.FLASHCARDS);
+//   const chapters = getStore(STORE.CHAPTERS);
+//   const questionBank = getStore(STORE.QUESTION_BANK);
+//   const flashcards = getStore(STORE.FLASHCARDS);
   
-  demoChapters.forEach((demoChap, idx) => {
-    const chapter_id = `ch_${demoChap.class}_${demoChap.subject.toLowerCase()}_${idx}`;
+//   demoChapters.forEach((demoChap, idx) => {
+//     const chapter_id = `ch_${demoChap.class}_${demoChap.subject.toLowerCase()}_${idx}`;
     
-    // Create chapter in draft status first
-    const chapter = {
-      chapter_id,
-      class: demoChap.class,
-      subject: demoChap.subject,
-      subject_area: demoChap.subject_area,
-      title: demoChap.title,
-      description: demoChap.desc,
-      learning_objectives: [],
-      estimated_time_minutes: 45,
-      current_version: 0,
-      versions: [],
-      status: 'draft',
-      created_by: 'admin_demo_001',
-      created_at: new Date().toISOString(),
-      submitted_at: null,
-      approved_at: null,
-      approved_by: null,
-      question_ids: [],
-      flashcard_ids: []
-    };
+//     // Create chapter in draft status first
+//     const chapter = {
+//       chapter_id,
+//       class: demoChap.class,
+//       subject: demoChap.subject,
+//       subject_area: demoChap.subject_area,
+//       title: demoChap.title,
+//       description: demoChap.desc,
+//       learning_objectives: [],
+//       estimated_time_minutes: 45,
+//       current_version: 0,
+//       versions: [],
+//       status: 'draft',
+//       created_by: 'admin_demo_001',
+//       created_at: new Date().toISOString(),
+//       submitted_at: null,
+//       approved_at: null,
+//       approved_by: null,
+//       question_ids: [],
+//       flashcard_ids: []
+//     };
     
-    chapters[chapter_id] = chapter;
+//     chapters[chapter_id] = chapter;
     
-    // Create 5 sample questions for this chapter
-    for (let q = 0; q < 5; q++) {
-      const question_id = `q_${chapter_id}_${q}`;
-      const question = {
-        question_id,
-        class: demoChap.class,
-        subject: demoChap.subject,
-        subject_area: demoChap.subject_area,
-        topic: demoChap.title,
-        chapter: (idx % 10) + 1,
-        unit: (idx % 5) + 1,
-        difficulty: ['easy', 'medium', 'hard'][q % 3],
-        question_text: `Sample Question ${q + 1} for ${demoChap.title}`,
-        options: ['Option A', 'Option B', 'Option C', 'Option D'],
-        correct_option_index: q % 4,
-        explanation: `This is the correct answer because...`,
-        image_url: null,
-        tags: [],
-        status: 'published',
-        version: 1,
-        created_by: 'admin_demo_001',
-        created_at: new Date().toISOString(),
-        used_in_chapters: [{ chapter_id, version: 1 }],
-        analytics: {
-          total_attempts: 0,
-          correct_count: 0,
-          accuracy_pct: 0
-        }
-      };
+//     // Create 5 sample questions for this chapter
+//     for (let q = 0; q < 5; q++) {
+//       const question_id = `q_${chapter_id}_${q}`;
+//       const question = {
+//         question_id,
+//         class: demoChap.class,
+//         subject: demoChap.subject,
+//         subject_area: demoChap.subject_area,
+//         topic: demoChap.title,
+//         chapter: (idx % 10) + 1,
+//         unit: (idx % 5) + 1,
+//         difficulty: ['easy', 'medium', 'hard'][q % 3],
+//         question_text: `Sample Question ${q + 1} for ${demoChap.title}`,
+//         options: ['Option A', 'Option B', 'Option C', 'Option D'],
+//         correct_option_index: q % 4,
+//         explanation: `This is the correct answer because...`,
+//         image_url: null,
+//         tags: [],
+//         status: 'published',
+//         version: 1,
+//         created_by: 'admin_demo_001',
+//         created_at: new Date().toISOString(),
+//         used_in_chapters: [{ chapter_id, version: 1 }],
+//         analytics: {
+//           total_attempts: 0,
+//           correct_count: 0,
+//           accuracy_pct: 0
+//         }
+//       };
       
-      questionBank[question_id] = question;
-      chapter.question_ids.push(question_id);
-    }
+//       questionBank[question_id] = question;
+//       chapter.question_ids.push(question_id);
+//     }
     
-    // Create 3 sample flashcards for this chapter
-    for (let f = 0; f < 3; f++) {
-      const flashcard_id = `fc_${chapter_id}_${f}`;
-      const flashcard = {
-        flashcard_id,
-        chapter_id,
-        class: demoChap.class,
-        subject: demoChap.subject,
-        subject_area: demoChap.subject_area,
-        chapter: (idx % 10) + 1,
-        unit: (idx % 5) + 1,
-        version: 1,
-        term: `Term ${f + 1}`,
-        definition: `Definition for term ${f + 1}`,
-        image_url: null,
-        created_by: 'admin_demo_001',
-        created_at: new Date().toISOString()
-      };
+//     // Create 3 sample flashcards for this chapter
+//     for (let f = 0; f < 3; f++) {
+//       const flashcard_id = `fc_${chapter_id}_${f}`;
+//       const flashcard = {
+//         flashcard_id,
+//         chapter_id,
+//         class: demoChap.class,
+//         subject: demoChap.subject,
+//         subject_area: demoChap.subject_area,
+//         chapter: (idx % 10) + 1,
+//         unit: (idx % 5) + 1,
+//         version: 1,
+//         term: `Term ${f + 1}`,
+//         definition: `Definition for term ${f + 1}`,
+//         image_url: null,
+//         created_by: 'admin_demo_001',
+//         created_at: new Date().toISOString()
+//       };
       
-      flashcards[flashcard_id] = flashcard;
-      chapter.flashcard_ids.push(flashcard_id);
-    }
+//       flashcards[flashcard_id] = flashcard;
+//       chapter.flashcard_ids.push(flashcard_id);
+//     }
     
-    // Publish the chapter
-    chapter.status = 'published';
-    chapter.current_version = 1;
-    chapter.approved_at = new Date().toISOString();
-    chapter.approved_by = 'admin_demo_001';
-    chapter.versions.push({
-      version: 1,
-      status: 'published',
-      published_at: new Date().toISOString(),
-      created_by: 'admin_demo_001',
-      approved_by: 'admin_demo_001',
-      flashcard_ids: [...chapter.flashcard_ids],
-      question_ids: [...chapter.question_ids],
-      content_hash: generateHash(chapter)
-    });
-  });
+//     // Publish the chapter
+//     chapter.status = 'published';
+//     chapter.current_version = 1;
+//     chapter.approved_at = new Date().toISOString();
+//     chapter.approved_by = 'admin_demo_001';
+//     chapter.versions.push({
+//       version: 1,
+//       status: 'published',
+//       published_at: new Date().toISOString(),
+//       created_by: 'admin_demo_001',
+//       approved_by: 'admin_demo_001',
+//       flashcard_ids: [...chapter.flashcard_ids],
+//       question_ids: [...chapter.question_ids],
+//       content_hash: generateHash(chapter)
+//     });
+//   });
   
-  // Save all data
-  setStore(STORE.CHAPTERS, chapters);
-  setStore(STORE.QUESTION_BANK, questionBank);
-  setStore(STORE.FLASHCARDS, flashcards);
+//   // Save all data
+//   setStore(STORE.CHAPTERS, chapters);
+//   setStore(STORE.QUESTION_BANK, questionBank);
+//   setStore(STORE.FLASHCARDS, flashcards);
   
-  // Mark config as initialized
-  config.demo_content_created = true;
-  setStore(STORE.CONFIG, config);
+//   // Mark config as initialized
+//   config.demo_content_created = true;
+//   setStore(STORE.CONFIG, config);
   
-  console.log('✅ Demo content created:', demoChapters.length, 'chapters');
-}
+//   console.log('✅ Demo content created:', demoChapters.length, 'chapters');
+// }
 
-// Initialize on load (only when explicitly enabled via toggles above)
-if (typeof ENABLE_DEMO_ACCOUNTS !== 'undefined' && ENABLE_DEMO_ACCOUNTS) {
-  initializeSystemWithDemoAccounts();
-}
-if (typeof ENABLE_DEMO_CONTENT !== 'undefined' && ENABLE_DEMO_CONTENT) {
-  initializeSystemWithDemoContent();
-}
+// // Initialize on load (only when explicitly enabled via toggles above)
+// if (typeof ENABLE_DEMO_ACCOUNTS !== 'undefined' && ENABLE_DEMO_ACCOUNTS) {
+//   initializeSystemWithDemoAccounts();
+// }
+// if (typeof ENABLE_DEMO_CONTENT !== 'undefined' && ENABLE_DEMO_CONTENT) {
+//   initializeSystemWithDemoContent();
+// }
 // ═════════════════════════════════════════════════════════════════════════════
 // PHASE 2 - EXPORT FUNCTIONS (NEW - NO CHANGES TO EXISTING CODE ABOVE)
 // ═════════════════════════════════════════════════════════════════════════════
