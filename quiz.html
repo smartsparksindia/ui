@@ -237,11 +237,77 @@ let subject = state.subject || 'Science';
 let questions = [];
 
 async function initQuiz() {
-  const qData = await fetchPublishedFile('questions.json');
-  if (qData !== null) {
-    allQuestions = Array.isArray(qData) ? qData.reduce((acc, q) => ({ ...acc, [q.question_id]: q }), {}) : qData;
-  } else {
-    allQuestions = getStore('ss_question_bank');
+  // PHASE 2: Try fetching from new nested JSON structure first
+  // Format: /content/year-{Y}/{subject}/ contains {subject_area}.json files
+  
+  const safeSubject = subject.toLowerCase().replace(/\s+/g, '-');
+  const phase2URL = `/content/year-${year}/${safeSubject}/`;
+  
+  const possibleSubjectAreas = [
+    'history', 'geography', 'civics', 'economics',
+    'physics', 'chemistry', 'biology', 'science',
+    'maths', 'mathematics', 'english', 'hindi',
+    'social-science', 'social'
+  ];
+  
+  let loadedAnyFile = false;
+  allQuestions = {};
+  
+  try {
+    for (const area of possibleSubjectAreas) {
+      try {
+        const fileURL = `${phase2URL}${area}.json`;
+        const response = await fetch(fileURL);
+        
+        if (response.ok) {
+          const nestedData = await response.json();
+          console.log(`✅ Loaded Phase 2 file for quiz: ${fileURL}`);
+          
+          // Transform nested structure for each file
+          nestedData.chapters.forEach(chapter => {
+            chapter.units.forEach(unit => {
+              unit.questions.forEach(q => {
+                allQuestions[q.question_id] = {
+                  question_id: q.question_id,
+                  class: year,
+                  subject: nestedData.subject,
+                  subject_area: nestedData.subject_area,
+                  chapter: chapter.chapter_num,
+                  unit: unit.unit_num,
+                  unit_name: unit.unit_name,
+                  topic: chapter.chapter_name,
+                  question_text: q.question_text,
+                  options: q.options,
+                  correct_option_index: q.correct_option_index,
+                  explanation: q.explanation,
+                  difficulty: q.difficulty || 'medium',
+                  status: 'published'
+                };
+              });
+            });
+          });
+          loadedAnyFile = true;
+        }
+      } catch (e) {
+        // File doesn't exist, try next one
+        continue;
+      }
+    }
+    
+    if (loadedAnyFile) {
+      console.log('✅ Successfully loaded all Phase 2 subject_area files for quiz');
+    } else {
+      throw new Error('No Phase 2 files found');
+    }
+  } catch (e) {
+    console.log('ℹ️ Phase 2 files not found, trying Phase 1...');
+    // Fall back to Phase 1 or localStorage
+    const qData = await fetchPublishedFile('questions.json');
+    if (qData !== null) {
+      allQuestions = Array.isArray(qData) ? qData.reduce((acc, q) => ({ ...acc, [q.question_id]: q }), {}) : qData;
+    } else {
+      allQuestions = getStore('ss_question_bank');
+    }
   }
 
   state = getState();

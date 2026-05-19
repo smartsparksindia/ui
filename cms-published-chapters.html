@@ -309,8 +309,8 @@ th {
           <table>
             <thead>
               <tr>
-                <th>Chapter</th>
-                <th>Subject</th>
+                <th>Year • Subject • Area</th>
+                <th>Chapters</th>
                 <th>Status</th>
                 <th>Published</th>
                 <th>Actions</th>
@@ -345,34 +345,161 @@ function getAllPublishedChapters() {
 const published = getAllPublishedChapters();
 console.log('Published chapters:', published); // DEBUG
 
-// RENDER CHAPTERS
+// GROUP DATA BY YEAR → SUBJECT → SUBJECT_AREA
+function groupChaptersByYearSubject(chapters) {
+  const grouped = {};
+  
+  chapters.forEach(ch => {
+    const year = ch.class;
+    const subject = ch.subject;
+    const subjectArea = ch.subject_area;
+    
+    if (!grouped[year]) grouped[year] = {};
+    if (!grouped[year][subject]) grouped[year][subject] = {};
+    if (!grouped[year][subject][subjectArea]) grouped[year][subject][subjectArea] = [];
+    
+    grouped[year][subject][subjectArea].push(ch);
+  });
+  
+  return grouped;
+}
+
+// RENDER GROUPED VIEW
 const tbody = document.getElementById('chapters-tbody');
 const exportBtnContainer = document.getElementById('export-container');
-if (exportBtnContainer) {
-  exportBtnContainer.innerHTML = `<button class="btn btn-export" onclick="exportPublishedData()">⬇️ Export Published Data</button>`;
-}
+
 if (published.length === 0) {
   tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No published chapters yet</td></tr>';
 } else {
-  tbody.innerHTML = published.map(ch => `
-    <tr class="chapter-row">
-      <td>
-        <div class="chapter-title">${ch.title}</div>
-        <div class="chapter-meta">Class ${ch.class}</div>
-      </td>
-      <td>${ch.subject}</td>
-      <td><span class="status-badge status-published">Published</span></td>
-      <td>${new Date(ch.approved_at).toLocaleDateString()}</td>
-      <td>
-        <button class="btn btn-sm btn-edit" onclick="editChapter('${ch.chapter_id}')">Edit</button>
-        <button class="btn btn-sm btn-unpublish" onclick="unpublishChapter('${ch.chapter_id}')">Unpublish</button>
-        <button class="btn btn-sm btn-delete" onclick="performDeleteChapter('${ch.chapter_id}')">Delete</button>
-      </td>
-    </tr>
-  `).join('');
+  const grouped = groupChaptersByYearSubject(published);
+  let html = '';
+  
+  // Iterate by Year
+  const years = Object.keys(grouped).sort((a, b) => parseInt(a) - parseInt(b));
+  
+  years.forEach(year => {
+    const subjects = grouped[year];
+    const subjectNames = Object.keys(subjects).sort();
+    
+    subjectNames.forEach(subject => {
+      const subjectAreas = subjects[subject];
+      const areaNames = Object.keys(subjectAreas).sort();
+      
+      areaNames.forEach(subjectArea => {
+        const chapters = subjectAreas[subjectArea];
+        const safeExport = subjectArea.toLowerCase().replace(/\s+/g, '-');
+        
+        html += `
+          <tr class="chapter-row">
+            <td>
+              <div class="chapter-title">Class ${year} • ${subject}</div>
+              <div class="chapter-meta">${subjectArea} (${chapters.length} chapter${chapters.length !== 1 ? 's' : ''})</div>
+            </td>
+            <td>${chapters.length} chapter${chapters.length !== 1 ? 's' : ''}</td>
+            <td><span class="status-badge status-published">Published</span></td>
+            <td>${new Date(chapters[0].approved_at).toLocaleDateString()}</td>
+            <td>
+              <button class="btn btn-sm btn-edit" onclick="viewSubjectChapters(${year}, '${subject}', '${subjectArea}')">📋 View</button>
+              <button class="btn btn-sm btn-primary" onclick="performPhase2Export(${year}, '${subject}', '${subjectArea}')">⬇️ Export</button>
+            </td>
+          </tr>
+        `;
+      });
+    });
+  });
+  
+  tbody.innerHTML = html;
+}
+
+// Hide old export button - Phase 2 export is per subject_area
+if (exportBtnContainer) {
+  exportBtnContainer.innerHTML = '';
 }
 
 // FUNCTIONS
+
+// Phase 2: View chapters for a specific year/subject/area (for drill-down)
+function viewSubjectChapters(year, subject, subjectArea) {
+  const chapters = getStore('ss_chapters');
+  const relevant = Object.values(chapters).filter(ch => 
+    ch.class === year && 
+    ch.subject === subject && 
+    ch.subject_area === subjectArea && 
+    ch.status === 'published'
+  );
+  
+  if (relevant.length === 0) {
+    alert('No chapters found');
+    return;
+  }
+  
+  // Show modal with chapters and individual export options
+  let html = `
+    <div style="background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); max-width: 700px; margin: 2rem auto;">
+      <h2 style="margin-bottom: 1rem; font-family: 'Fredoka One', cursive;">📖 Chapters: ${subject} - ${subjectArea}</h2>
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background: #FAFAF8;">
+            <th style="padding: 0.8rem; text-align: left; border-bottom: 2px solid #F0EBE0;">Chapter</th>
+            <th style="padding: 0.8rem; text-align: left; border-bottom: 2px solid #F0EBE0;">Units</th>
+            <th style="padding: 0.8rem; text-align: left; border-bottom: 2px solid #F0EBE0;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+  
+  relevant.forEach(ch => {
+    const unitCount = ch.flashcard_ids ? [...new Set(ch.flashcard_ids.map(id => {
+      const fc = getFromStore('ss_flashcards', id);
+      return fc ? fc.unit : 1;
+    }))].length : 0;
+    
+    html += `
+      <tr style="border-bottom: 1px solid #F0EBE0;">
+        <td style="padding: 0.8rem; font-weight: 700;">${ch.title}</td>
+        <td style="padding: 0.8rem; color: #888780;">${unitCount} unit${unitCount !== 1 ? 's' : ''}</td>
+        <td style="padding: 0.8rem;">
+          <button class="btn btn-sm btn-edit" onclick="editChapter('${ch.chapter_id}'); closeModal();" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;">Edit</button>
+          <button class="btn btn-sm btn-delete" onclick="if(confirm('Delete permanently?')) { performDeleteChapter('${ch.chapter_id}'); closeModal(); }" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; background: #EF5350; color: white;">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+  
+  html += `
+        </tbody>
+      </table>
+      <div style="margin-top: 1.5rem; text-align: right;">
+        <button class="btn btn-primary" onclick="performPhase2Export(${year}, '${subject}', '${subjectArea}'); closeModal();" style="background: linear-gradient(135deg, #7F77DD, #968DFF); color: white;">⬇️ Export All (${relevant.length})</button>
+        <button onclick="closeModal()" style="margin-left: 0.5rem; padding: 0.8rem 1.5rem; border: none; border-radius: 12px; background: #F0EBE0; cursor: pointer; font-weight: 800;">Close</button>
+      </div>
+    </div>
+  `;
+  
+  showModal(html);
+}
+
+function showModal(content) {
+  let modal = document.getElementById('action-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'action-modal';
+    modal.style.cssText = `
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
+      z-index: 1000;
+    `;
+    document.body.appendChild(modal);
+  }
+  modal.innerHTML = content;
+  modal.style.display = 'flex';
+}
+
+function closeModal() {
+  const modal = document.getElementById('action-modal');
+  if (modal) modal.style.display = 'none';
+}
+
 function editChapter(id) {
   // Open cms-editor.html with editVersion parameter (creates new version)
   window.location.href = `cms-editor.html?editVersion=${id}`;
@@ -402,50 +529,11 @@ function performDeleteChapter(id) {
   }
 }
 
+// DEPRECATED: Old single export function - replaced by Phase 2 per-subject exports
+// Kept for backward compatibility
 function exportPublishedData() {
-  const chapters = getStore('ss_chapters');
-  const flashcards = getStore('ss_flashcards');
-  const questions = getStore('ss_question_bank');
-
-  const published = Object.values(chapters).filter(ch => ch.status === 'published');
-  const payload = {
-    exported_at: new Date().toISOString(),
-    chapters: published,
-    flashcards: Object.values(flashcards).filter(fc => published.some(pc => pc.chapter_id === fc.chapter_id)),
-    questions: Object.values(questions).filter(q => published.some(pc => pc.chapter_id === q.used_in_chapters?.[0]?.chapter_id || q.chapter_id))
-  };
-
-  // Try sending to local publish server (auto-commit) first
-  const PUBLISH_ENDPOINT = window.PUBLISH_ENDPOINT || 'http://localhost:4000/publish';
-  const PUBLISH_SECRET = window.PUBLISH_SECRET || null;
-
-  fetch(PUBLISH_ENDPOINT, {
-    method: 'POST',
-    headers: Object.assign({ 'Content-Type': 'application/json' }, PUBLISH_SECRET ? { 'X-PUBLISH-SECRET': PUBLISH_SECRET } : {}),
-    body: JSON.stringify(payload)
-  }).then(r => r.json()).then(j => {
-    if (j && j.ok) {
-      alert('✅ Published and auto-committed to repository via publish server.');
-    } else {
-      alert('⚠️ Publish server responded: ' + (j && j.error ? j.error : JSON.stringify(j)) + '\nFalling back to local download.');
-      downloadFallback(payload);
-    }
-  }).catch(err => {
-    console.warn('Publish server error, falling back to download:', err);
-    downloadFallback(payload);
-  });
-}
-
-function downloadFallback(payload) {
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `smartspark-published-${new Date().toISOString().slice(0,10)}.json`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
+  alert('⚠️ Old export disabled. Use the new Phase 2 export buttons (grouped by Year → Subject → Area)');
+  return;
 }
 
 function logout() {

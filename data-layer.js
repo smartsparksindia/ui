@@ -1098,24 +1098,28 @@ function performPhase2Export(year, subject, subject_area) {
   }
   
   const version = getNextVersion(subject_area);
+  const safeSubject = subject.toLowerCase().replace(/\s+/g, '-');
   const safeSubjectArea = subject_area.toLowerCase().replace(/\s+/g, '-');
-  const baseFilename = `year-${year}-${subject.toLowerCase().replace(/\s+/g, '-')}-${safeSubjectArea}`;
   
-  downloadJSON(jsonData, `${baseFilename}.json`);
-  downloadJSON(jsonData, `${baseFilename}-v${version}.json`);
+  // MAIN FILE: Just the subject_area name (e.g., history.json)
+  downloadJSON(jsonData, `${safeSubjectArea}.json`);
   
+  // VERSION BACKUP: Includes version (e.g., history-v1.json)
+  downloadJSON(jsonData, `${safeSubjectArea}-v${version}.json`);
+  
+  // CSV BACKUPS: Include subject_area in filename (e.g., history-flashcards.csv)
   const flashcardsCSV = generateFlashcardsCSV(year, subject, subject_area);
   if (flashcardsCSV) {
-    downloadCSV(flashcardsCSV, `${baseFilename}-flashcards.csv`);
+    downloadCSV(flashcardsCSV, `${safeSubjectArea}-flashcards.csv`);
   }
   
   const questionsCSV = generateQuestionsCSV(year, subject, subject_area);
   if (questionsCSV) {
-    downloadCSV(questionsCSV, `${baseFilename}-questions.csv`);
+    downloadCSV(questionsCSV, `${safeSubjectArea}-questions.csv`);
   }
   
   const key = `exported_version_${safeSubjectArea}`;
   localStorage.setItem(key, version.toString());
   
-  alert(`✅ Exported successfully!\nVersion: ${version}\n\nFiles downloaded:\n- ${baseFilename}.json\n- ${baseFilename}-v${version}.json\n- Flashcards & Questions CSVs\n\nManually add to git and push.`);
+  alert(`✅ Exported successfully!\nVersion: ${version}\n\nFiles downloaded:\n- ${safeSubjectArea}.json (main)\n- ${safeSubjectArea}-v${version}.json (backup)\n- ${safeSubjectArea}-flashcards.csv\n- ${safeSubjectArea}-questions.csv\n\nPlace in: content/year-${year}/${safeSubject}/\nThen commit to git.`);
 }

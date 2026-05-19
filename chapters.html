@@ -263,26 +263,135 @@ async function fetchPublishedFile(filename) {
 }
 
 async function loadDataStores() {
-  // Try published files first
+  // PHASE 2: Try fetching from new nested JSON structure first
+  // Format: /content/year-{Y}/{subject}/ contains {subject_area}.json files
+  
+  const safeSubject = subject.toLowerCase().replace(/\s+/g, '-');
+  const phase2URL = `/content/year-${year}/${safeSubject}/`;
+  
+  // Try to load all common subject_area files
+  const possibleSubjectAreas = [
+    'history', 'geography', 'civics', 'economics',
+    'physics', 'chemistry', 'biology', 'science',
+    'maths', 'mathematics', 'english', 'hindi',
+    'social-science', 'social'
+  ];
+  
+  let loadedAnyFile = false;
+  
+  try {
+    for (const area of possibleSubjectAreas) {
+      try {
+        const fileURL = `${phase2URL}${area}.json`;
+        const response = await fetch(fileURL);
+        
+        if (response.ok) {
+          const nestedData = await response.json();
+          console.log(`✅ Loaded Phase 2 file: ${fileURL}`);
+          transformNestedData(nestedData);
+          loadedAnyFile = true;
+        }
+      } catch (e) {
+        // File doesn't exist, try next one
+        continue;
+      }
+    }
+    
+    if (loadedAnyFile) {
+      console.log('✅ Successfully loaded all Phase 2 subject_area files');
+      return;
+    } else {
+      console.log('ℹ️ No Phase 2 files found in folder, checking localStorage...');
+    }
+  } catch (e) {
+    console.log('ℹ️ Phase 2 folder not accessible, checking localStorage...');
+  }
+  
+  // Try published files (old Phase 1 format)
   const [chapData, fcData, qData] = await Promise.all([
     fetchPublishedFile('chapters.json'),
     fetchPublishedFile('flashcards.json'),
     fetchPublishedFile('questions.json')
   ]);
 
-  // If published files exist, use them exclusively
   if (chapData !== null && fcData !== null && qData !== null) {
-    console.log('✅ Loaded published data from data/published/');
+    console.log('✅ Loaded Phase 1 published data from data/published/');
     allChapters = Array.isArray(chapData) ? chapData.reduce((acc, ch) => ({ ...acc, [ch.chapter_id]: ch }), {}) : chapData;
     allFlashcards = Array.isArray(fcData) ? fcData.reduce((acc, fc) => ({ ...acc, [fc.flashcard_id]: fc }), {}) : fcData;
     allQuestions = Array.isArray(qData) ? qData.reduce((acc, q) => ({ ...acc, [q.question_id]: q }), {}) : qData;
   } else {
     // Fall back to localStorage
-    console.log('⚠️ Published data not found, using localStorage');
+    console.log('⚠️ No published data found, using localStorage');
     allChapters = getStore('ss_chapters');
     allFlashcards = getStore('ss_flashcards');
     allQuestions = getStore('ss_question_bank');
   }
+}
+
+function transformNestedData(nestedData) {
+  // Transform nested Phase 2 format into flat format for rendering
+  allChapters = {};
+  allFlashcards = {};
+  allQuestions = {};
+  
+  nestedData.chapters.forEach(chapter => {
+    const chapterId = `ch_${year}_${nestedData.subject}_${chapter.chapter_num}_${Date.now()}`;
+    
+    allChapters[chapterId] = {
+      chapter_id: chapterId,
+      class: year,
+      subject: nestedData.subject,
+      subject_area: nestedData.subject_area,
+      chapter: chapter.chapter_num,
+      title: chapter.chapter_name,
+      status: 'published'
+    };
+    
+    chapter.units.forEach(unit => {
+      // Flashcards
+      unit.flashcards.forEach(fc => {
+        const fcId = fc.flashcard_id;
+        allFlashcards[fcId] = {
+          flashcard_id: fcId,
+          chapter_id: chapterId,
+          class: year,
+          subject: nestedData.subject,
+          subject_area: nestedData.subject_area,
+          chapter: chapter.chapter_num,
+          unit: unit.unit_num,
+          unit_name: unit.unit_name,
+          term: fc.term,
+          definition: fc.definition,
+          image_url: fc.image_url,
+          status: 'published'
+        };
+      });
+      
+      // Questions
+      unit.questions.forEach(q => {
+        const qId = q.question_id;
+        allQuestions[qId] = {
+          question_id: qId,
+          class: year,
+          subject: nestedData.subject,
+          subject_area: nestedData.subject_area,
+          chapter: chapter.chapter_num,
+          unit: unit.unit_num,
+          unit_name: unit.unit_name,
+          topic: chapter.chapter_name,
+          question_text: q.question_text,
+          options: q.options,
+          correct_option_index: q.correct_option_index,
+          explanation: q.explanation,
+          difficulty: q.difficulty || 'medium',
+          status: 'published',
+          used_in_chapters: [{ chapter_id: chapterId, version: 1 }]
+        };
+      });
+    });
+  });
+  
+  console.log('✅ Nested data transformed - ready for rendering');
 }
 
 function getChapterTitle(chapterNum, areaName) {
