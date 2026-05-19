@@ -603,15 +603,13 @@ footer p{
 // STATE
 // =========================
 
-const state = getState();
-const year = state.year || 6;
+// NOTE: getState() will be called inside renderSubjects() to get fresh year value
 
 // =========================
 // UPDATE UI
 // =========================
 
-document.getElementById('bc-year').textContent = `Class ${year}`;
-document.getElementById('badge').textContent = `Class ${year}`;
+// This will be updated inside renderSubjects() after we get the fresh year
 
 // =========================
 // SUBJECT META
@@ -677,6 +675,14 @@ async function initPublishedData() {
 
 async function renderSubjects() {
   await initPublishedData();
+  
+  // Get fresh year from state EVERY time renderSubjects is called
+  const freshState = getState();
+  const year = freshState.year || 6;
+  
+  // Update UI with fresh year
+  document.getElementById('bc-year').textContent = `Class ${year}`;
+  document.getElementById('badge').textContent = `Class ${year}`;
 
   const subjects = [
     'Science',

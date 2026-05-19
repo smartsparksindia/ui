@@ -1,0 +1,212 @@
+{
+  "year": 10,
+  "subject": "Social Science",
+  "subject_area": "History",
+  "last_updated": "2026-05-19T07:12:21.358Z",
+  "chapters": [
+    {
+      "chapter_num": 1,
+      "chapter_name": "Events and Processes",
+      "units": [
+        {
+          "unit_num": 1,
+          "unit_name": "Rise of Nationalism in Europe",
+          "flashcards": [
+            {
+              "flashcard_id": "fc_ch_10_social science_1779116572304_1779116572305_tj0y2qpxu",
+              "term": "French Revolution",
+              "definition": "Started in 1789\nIntroduced nationalism in France\nPromoted liberty equality and fraternity",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779116572304_1779116572305_p90trfor9",
+              "term": "Nationalism",
+              "definition": "Feeling of collective identity among people\nEncourages unity and loyalty toward the nation",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779116572304_1779116572305_zft0h2ny8",
+              "term": "Napoleonic Code",
+              "definition": "Introduced by Napoleon Bonaparte\nEstablished equality before law\nAbolished feudal privileges",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779116572304_1779116572306_kysu8xtxr",
+              "term": "Tricolour Flag",
+              "definition": "National flag of France\nSymbol of the French nation after the revolution",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779116572304_1779116572306_pi497nc5v",
+              "term": "Liberty Equality Fraternity",
+              "definition": "Main slogan of the French Revolution\nRepresented democratic ideals",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779116572304_1779116572306_9a4sjf3ru",
+              "term": "Feudal Privileges",
+              "definition": "Special rights enjoyed by nobles and clergy\nAbolished during the French Revolution",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779116572304_1779116572306_vwqgkocdm",
+              "term": "Middle Class",
+              "definition": "Strong supporters of nationalism\nWanted constitutional government and equal rights",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779116572304_1779116572306_ehlrhoj1m",
+              "term": "Absolute Monarchy",
+              "definition": "System where the king had unlimited power\nChallenged during the French Revolution",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779116572304_1779116572306_6hiylz3u3",
+              "term": "Nation State",
+              "definition": "State where people share common identity language and culture",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779116572304_1779116572307_anlqtdql8",
+              "term": "Napoleon Bonaparte",
+              "definition": "French ruler who spread nationalism across Europe",
+              "image_url": null
+            }
+          ],
+          "questions": [
+            {
+              "question_id": "q_social science_1779116572307_jmy9uroo5",
+              "question_text": "Which event started nationalism in France",
+              "options": [
+                "Russian Revolution",
+                "American Civil War",
+                "Industrial Revolution",
+                "French Revolution"
+              ],
+              "correct_option_index": 3,
+              "explanation": "The French Revolution introduced ideas of liberty equality and fraternity",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779116572307_11j2iyrxz",
+              "question_text": "Which slogan became famous during the French Revolution",
+              "options": [
+                "Liberty Equality Fraternity",
+                "Blood and Iron",
+                "Workers of the World",
+                "Peace Land Bread"
+              ],
+              "correct_option_index": 0,
+              "explanation": "Liberty Equality Fraternity became the key slogan of the revolution",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779116572307_p4s1vu7s2",
+              "question_text": "Who introduced the Napoleonic Code",
+              "options": [
+                "Napoleon Bonaparte",
+                "Otto von Bismarck",
+                "Giuseppe Mazzini",
+                "Garibaldi"
+              ],
+              "correct_option_index": 0,
+              "explanation": "Napoleon introduced the Napoleonic Code across Europe",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779116572308_0s1betksl",
+              "question_text": "What was the main aim of nationalism in France",
+              "options": [
+                "Increase trade only",
+                "Support monarchy",
+                "Create a united nation",
+                "Expand colonies"
+              ],
+              "correct_option_index": 2,
+              "explanation": "Nationalism aimed to unite people under one nation",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779116572308_fgekhxvmf",
+              "question_text": "Which flag became the symbol of France",
+              "options": [
+                "White flag",
+                "Blue cross flag",
+                "Red flag",
+                "Tricolour flag"
+              ],
+              "correct_option_index": 3,
+              "explanation": "The tricolour flag became the national symbol of France",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779116572308_ttkgjt2rd",
+              "question_text": "What did the French Revolution remove",
+              "options": [
+                "Trade routes",
+                "Printing press",
+                "Feudal privileges",
+                "Factories"
+              ],
+              "correct_option_index": 2,
+              "explanation": "The revolution abolished feudal privileges",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779116572308_h1pd2v3f0",
+              "question_text": "Which idea spread through Europe after Napoleon",
+              "options": [
+                "Socialism",
+                "Communism",
+                "Nationalism",
+                "Capitalism"
+              ],
+              "correct_option_index": 2,
+              "explanation": "Napoleon spread nationalist ideas across Europe",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779116572309_wipw0rwwx",
+              "question_text": "What type of government was challenged in France",
+              "options": [
+                "Absolute monarchy",
+                "Colonial rule",
+                "Military rule",
+                "Dictatorship"
+              ],
+              "correct_option_index": 0,
+              "explanation": "The revolution challenged the absolute monarchy",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779116572309_dzee77m3s",
+              "question_text": "Which document protected equality before law",
+              "options": [
+                "Treaty of Vienna",
+                "Napoleonic Code",
+                "Charter Act",
+                "Magna Carta"
+              ],
+              "correct_option_index": 1,
+              "explanation": "The Napoleonic Code promoted equality before law",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779116572309_0t0lpjmq7",
+              "question_text": "Which class supported nationalism strongly",
+              "options": [
+                "War prisoners",
+                "Slave class",
+                "Middle class",
+                "Nomadic tribes"
+              ],
+              "correct_option_index": 2,
+              "explanation": "The middle class strongly supported nationalism",
+              "difficulty": "medium"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
