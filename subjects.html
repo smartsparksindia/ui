@@ -794,6 +794,7 @@ async function renderSubjects() {
 
   card.onclick = () => {
     setState({
+      year: year,  // ← Preserve the year!
       subject: subject.trim()
     });
     window.location.href = 'chapters.html';
