@@ -248,9 +248,10 @@ let allQuestions = {};
 let allChapters = {};
 
 async function loadDataStores() {
-  // PHASE 2 ONLY: Load from /content/year-{Y}/{subject}/
+  // PHASE 2 ONLY: Load from /UI/content/year-{Y}/{subject}/
+  // Hardcoded /UI/ prefix for GitHub Pages
   const safeSubject = subject.toLowerCase().replace(/\s+/g, '-');
-  const phase2URL = `/content/year-${year}/${safeSubject}/`;
+  const phase2URL = `/UI/content/year-${year}/${safeSubject}/`;
   
   const possibleSubjectAreas = [
     'history', 'geography', 'civics', 'economics',
@@ -259,7 +260,13 @@ async function loadDataStores() {
     'social-science', 'social'
   ];
   
+  // Reset data stores before loading
+  allChapters = {};
+  allFlashcards = {};
+  allQuestions = {};
+  
   let loadedAnyFile = false;
+  const loadedAreas = [];
   
   try {
     for (const area of possibleSubjectAreas) {
@@ -270,27 +277,35 @@ async function loadDataStores() {
         if (response.ok) {
           const nestedData = await response.json();
           console.log(`✅ Loaded: ${fileURL}`);
-          transformNestedData(nestedData);
+          transformNestedData(nestedData, false);  // false = accumulate, don't reset
+          loadedAreas.push(area);
           loadedAnyFile = true;
         }
       } catch (e) {
+        // File doesn't exist, try next one
         continue;
       }
     }
     
-    if (!loadedAnyFile) {
-      console.log('⚠️ No content found in /content/year-' + year + '/' + safeSubject + '/');
+    if (loadedAnyFile) {
+      console.log(`✅ Auto-discovered ${loadedAreas.length} subject areas:`, loadedAreas);
+    } else {
+      console.log('⚠️ No content found in /UI/content/year-' + year + '/' + safeSubject + '/');
     }
   } catch (e) {
     console.error('Error loading content:', e);
   }
 }
 
-function transformNestedData(nestedData) {
+function transformNestedData(nestedData, shouldReset = true) {
   // Transform nested Phase 2 format into flat format for rendering
-  allChapters = {};
-  allFlashcards = {};
-  allQuestions = {};
+  // If shouldReset=true, clear previous data (backward compatibility)
+  // If shouldReset=false, accumulate data from multiple files
+  if (shouldReset) {
+    allChapters = {};
+    allFlashcards = {};
+    allQuestions = {};
+  }
   
   nestedData.chapters.forEach(chapter => {
     const chapterId = `ch_${year}_${nestedData.subject}_${chapter.chapter_num}_${Date.now()}`;

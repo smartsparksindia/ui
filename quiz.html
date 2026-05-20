@@ -225,9 +225,10 @@ let subject = state.subject || 'Science';
 let questions = [];
 
 async function initQuiz() {
-  // PHASE 2 ONLY: Load from /content/year-{Y}/{subject}/
+  // PHASE 2 ONLY: Load from /UI/content/year-{Y}/{subject}/
+  // Hardcoded /UI/ prefix for GitHub Pages
   const safeSubject = subject.toLowerCase().replace(/\s+/g, '-');
-  const phase2URL = `/content/year-${year}/${safeSubject}/`;
+  const phase2URL = `/UI/content/year-${year}/${safeSubject}/`;
   
   const possibleSubjectAreas = [
     'history', 'geography', 'civics', 'economics',
@@ -236,8 +237,10 @@ async function initQuiz() {
     'social-science', 'social'
   ];
   
-  let loadedAnyFile = false;
+  // Reset before loading
   allQuestions = {};
+  let loadedAnyFile = false;
+  const loadedAreas = [];
   
   try {
     for (const area of possibleSubjectAreas) {
@@ -249,7 +252,7 @@ async function initQuiz() {
           const nestedData = await response.json();
           console.log(`✅ Loaded: ${fileURL}`);
           
-          // Transform nested structure for each file
+          // Transform nested structure - accumulate
           nestedData.chapters.forEach(chapter => {
             chapter.units.forEach(unit => {
               unit.questions.forEach(q => {
@@ -272,6 +275,8 @@ async function initQuiz() {
               });
             });
           });
+          
+          loadedAreas.push(area);
           loadedAnyFile = true;
         }
       } catch (e) {
@@ -279,8 +284,10 @@ async function initQuiz() {
       }
     }
     
-    if (!loadedAnyFile) {
-      console.log('⚠️ No content found in /content/year-' + year + '/' + safeSubject + '/');
+    if (loadedAnyFile) {
+      console.log(`✅ Auto-discovered ${loadedAreas.length} subject areas:`, loadedAreas);
+    } else {
+      console.log('⚠️ No content found in /UI/content/year-' + year + '/' + safeSubject + '/');
     }
   } catch (e) {
     console.error('Error loading content:', e);
