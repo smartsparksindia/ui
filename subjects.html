@@ -537,10 +537,11 @@ document.getElementById('badge').textContent = `Class ${year}`;
 let allChapters = {};
 
 function loadData() {
-  // For now, load from localStorage (Phase 1 fallback)
-  // Phase 2 files can be added later
-  allChapters = getStore('ss_chapters');
-  console.log('Loaded chapters from localStorage:', Object.keys(allChapters).length, 'total');
+  // Phase 2 ONLY - load from /content/year-{Y}/{subject}/
+  // For now, just show placeholders (0 Chapters) until files are created
+  // TODO: Add Phase 2 loading logic here when needed
+  allChapters = {};
+  console.log('Subjects page showing placeholders (waiting for /content/ files)');
 }
 
 // =========================
@@ -629,18 +630,6 @@ function getTotalScore() {
 }
 
 document.getElementById('total-score').textContent = getTotalScore();
-
-// =========================
-// HELPERS
-// =========================
-
-function getStore(key) {
-  try {
-    return JSON.parse(localStorage.getItem(key)) || {};
-  } catch {
-    return {};
-  }
-}
 
 // =========================
 // INITIALIZE

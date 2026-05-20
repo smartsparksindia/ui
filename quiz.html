@@ -216,19 +216,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const chapterNum = parseInt(urlParams.get('chapter'));
 const unitNum = parseInt(urlParams.get('unit'));
 
-const PUBLISHED_BASE_PATHS = ['data/published', './data/published', '/data/published'];
-
-async function fetchPublishedFile(filename) {
-  for (const base of PUBLISHED_BASE_PATHS) {
-    try {
-      const res = await fetch(`${base}/${filename}`);
-      if (res.ok) return await res.json();
-    } catch (e) {
-      // ignore and try next path
-    }
-  }
-  return null;
-}
+// Load from /content/ folder only
 
 let allQuestions = {};
 let state = getState();
@@ -237,9 +225,7 @@ let subject = state.subject || 'Science';
 let questions = [];
 
 async function initQuiz() {
-  // PHASE 2: Try fetching from new nested JSON structure first
-  // Format: /content/year-{Y}/{subject}/ contains {subject_area}.json files
-  
+  // PHASE 2 ONLY: Load from /content/year-{Y}/{subject}/
   const safeSubject = subject.toLowerCase().replace(/\s+/g, '-');
   const phase2URL = `/content/year-${year}/${safeSubject}/`;
   
@@ -261,7 +247,7 @@ async function initQuiz() {
         
         if (response.ok) {
           const nestedData = await response.json();
-          console.log(`✅ Loaded Phase 2 file for quiz: ${fileURL}`);
+          console.log(`✅ Loaded: ${fileURL}`);
           
           // Transform nested structure for each file
           nestedData.chapters.forEach(chapter => {
@@ -289,25 +275,15 @@ async function initQuiz() {
           loadedAnyFile = true;
         }
       } catch (e) {
-        // File doesn't exist, try next one
         continue;
       }
     }
     
-    if (loadedAnyFile) {
-      console.log('✅ Successfully loaded all Phase 2 subject_area files for quiz');
-    } else {
-      throw new Error('No Phase 2 files found');
+    if (!loadedAnyFile) {
+      console.log('⚠️ No content found in /content/year-' + year + '/' + safeSubject + '/');
     }
   } catch (e) {
-    console.log('ℹ️ Phase 2 files not found, trying Phase 1...');
-    // Fall back to Phase 1 or localStorage
-    const qData = await fetchPublishedFile('questions.json');
-    if (qData !== null) {
-      allQuestions = Array.isArray(qData) ? qData.reduce((acc, q) => ({ ...acc, [q.question_id]: q }), {}) : qData;
-    } else {
-      allQuestions = getStore('ss_question_bank');
-    }
+    console.error('Error loading content:', e);
   }
 
   state = getState();

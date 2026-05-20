@@ -232,24 +232,10 @@ const subject = state.subject || 'Science';
 // Attempt to load published JSON files from repo; otherwise fall back to localStorage
 let allChapters = {};
 let allFlashcards = {};
-const PUBLISHED_BASE_PATHS = ['data/published', './data/published', '/data/published'];
-
-async function fetchPublishedFile(filename) {
-  for (const base of PUBLISHED_BASE_PATHS) {
-    try {
-      const res = await fetch(`${base}/${filename}`);
-      if (res.ok) return await res.json();
-    } catch (e) {
-      // ignore and try next path
-    }
-  }
-  return null;
-}
+// Load from /content/ folder only
 
 async function loadDataStores() {
-  // PHASE 2: Try fetching from new nested JSON format first
-  // Format: /content/year-{Y}/{subject}/ contains {subject_area}.json files
-  
+  // PHASE 2 ONLY: Load from /content/year-{Y}/{subject}/
   const safeSubject = subject.toLowerCase().replace(/\s+/g, '-');
   const phase2URL = `/content/year-${year}/${safeSubject}/`;
   
@@ -272,7 +258,7 @@ async function loadDataStores() {
         
         if (response.ok) {
           const nestedData = await response.json();
-          console.log(`✅ Loaded Phase 2 file for flashcards: ${fileURL}`);
+          console.log(`✅ Loaded: ${fileURL}`);
           
           // Transform nested structure for each file
           nestedData.chapters.forEach(chapter => {
@@ -309,33 +295,15 @@ async function loadDataStores() {
           loadedAnyFile = true;
         }
       } catch (e) {
-        // File doesn't exist, try next one
         continue;
       }
     }
     
-    if (loadedAnyFile) {
-      console.log('✅ Successfully loaded all Phase 2 subject_area files for flashcards');
-    } else {
-      throw new Error('No Phase 2 files found');
+    if (!loadedAnyFile) {
+      console.log('⚠️ No content found in /content/year-' + year + '/' + safeSubject + '/');
     }
   } catch (e) {
-    console.log('ℹ️ Phase 2 files not found, trying Phase 1...');
-    // Fall back to Phase 1 or localStorage
-    const [chapData, fcData] = await Promise.all([
-      fetchPublishedFile('chapters.json'),
-      fetchPublishedFile('flashcards.json')
-    ]);
-
-    if (chapData !== null && fcData !== null) {
-      console.log('✅ Loaded Phase 1 published data');
-      allChapters = Array.isArray(chapData) ? chapData.reduce((acc, ch) => ({ ...acc, [ch.chapter_id]: ch }), {}) : chapData;
-      allFlashcards = Array.isArray(fcData) ? fcData.reduce((acc, fc) => ({ ...acc, [fc.flashcard_id]: fc }), {}) : fcData;
-    } else {
-      console.log('⚠️ Using localStorage');
-      allChapters = getStore('ss_chapters');
-      allFlashcards = getStore('ss_flashcards');
-    }
+    console.error('Error loading content:', e);
   }
 }
 

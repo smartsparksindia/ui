@@ -242,34 +242,16 @@ document.getElementById('bc-year').textContent = `Class ${year}`;
 document.getElementById('bc-subject').textContent = subject;
 document.getElementById('total-score').textContent = getTotalScore();
 
-// Load published data from `data/published/*.json` FIRST, fall back to localStorage
+// Load from /content/ folder only
 let allFlashcards = {};
 let allQuestions = {};
 let allChapters = {};
-const PUBLISHED_BASE_PATHS = ['data/published', './data/published', '/data/published'];
-
-async function fetchPublishedFile(filename) {
-  for (const base of PUBLISHED_BASE_PATHS) {
-    try {
-      const res = await fetch(`${base}/${filename}`);
-      if (res.ok) {
-        return await res.json();
-      }
-    } catch (e) {
-      // ignore and try next path
-    }
-  }
-  return null;
-}
 
 async function loadDataStores() {
-  // PHASE 2: Try fetching from new nested JSON structure first
-  // Format: /content/year-{Y}/{subject}/ contains {subject_area}.json files
-  
+  // PHASE 2 ONLY: Load from /content/year-{Y}/{subject}/
   const safeSubject = subject.toLowerCase().replace(/\s+/g, '-');
   const phase2URL = `/content/year-${year}/${safeSubject}/`;
   
-  // Try to load all common subject_area files
   const possibleSubjectAreas = [
     'history', 'geography', 'civics', 'economics',
     'physics', 'chemistry', 'biology', 'science',
@@ -287,44 +269,20 @@ async function loadDataStores() {
         
         if (response.ok) {
           const nestedData = await response.json();
-          console.log(`✅ Loaded Phase 2 file: ${fileURL}`);
+          console.log(`✅ Loaded: ${fileURL}`);
           transformNestedData(nestedData);
           loadedAnyFile = true;
         }
       } catch (e) {
-        // File doesn't exist, try next one
         continue;
       }
     }
     
-    if (loadedAnyFile) {
-      console.log('✅ Successfully loaded all Phase 2 subject_area files');
-      return;
-    } else {
-      console.log('ℹ️ No Phase 2 files found in folder, checking localStorage...');
+    if (!loadedAnyFile) {
+      console.log('⚠️ No content found in /content/year-' + year + '/' + safeSubject + '/');
     }
   } catch (e) {
-    console.log('ℹ️ Phase 2 folder not accessible, checking localStorage...');
-  }
-  
-  // Try published files (old Phase 1 format)
-  const [chapData, fcData, qData] = await Promise.all([
-    fetchPublishedFile('chapters.json'),
-    fetchPublishedFile('flashcards.json'),
-    fetchPublishedFile('questions.json')
-  ]);
-
-  if (chapData !== null && fcData !== null && qData !== null) {
-    console.log('✅ Loaded Phase 1 published data from data/published/');
-    allChapters = Array.isArray(chapData) ? chapData.reduce((acc, ch) => ({ ...acc, [ch.chapter_id]: ch }), {}) : chapData;
-    allFlashcards = Array.isArray(fcData) ? fcData.reduce((acc, fc) => ({ ...acc, [fc.flashcard_id]: fc }), {}) : fcData;
-    allQuestions = Array.isArray(qData) ? qData.reduce((acc, q) => ({ ...acc, [q.question_id]: q }), {}) : qData;
-  } else {
-    // Fall back to localStorage
-    console.log('⚠️ No published data found, using localStorage');
-    allChapters = getStore('ss_chapters');
-    allFlashcards = getStore('ss_flashcards');
-    allQuestions = getStore('ss_question_bank');
+    console.error('Error loading content:', e);
   }
 }
 
