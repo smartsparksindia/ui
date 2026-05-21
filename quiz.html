@@ -216,9 +216,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const chapterNum = parseInt(urlParams.get('chapter'));
 const unitNum = parseInt(urlParams.get('unit'));
 
-// Load from /content/ folder only
-
-let allQuestions = {};
+// Get state
 let state = getState();
 let year = state.year || 6;
 let subject = state.subject || 'Science';
@@ -348,7 +346,10 @@ function renderQuestion() {
   
   if (questions.length === 0) {
     container.innerHTML = '<div class="empty-state"><h3>No questions</h3><p>Check back later for content!</p></div>';
-    document.querySelector('.controls').style.display = 'none';
+    const controls = document.querySelector('.controls');
+    if (controls) {
+      controls.style.display = 'none';
+    }
     return;
   }
 
@@ -359,7 +360,10 @@ function renderQuestion() {
 
   const q = questions[currentQuestion];
   const progress = ((currentQuestion + 1) / questions.length) * 100;
-  document.getElementById('progress-fill').style.width = progress + '%';
+  const progressFill = document.getElementById('progress-fill');
+  if (progressFill) {
+    progressFill.style.width = progress + '%';
+  }
 
   container.innerHTML = `
     <div class="question-card">
