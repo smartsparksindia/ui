@@ -531,25 +531,99 @@ document.getElementById('bc-year').textContent = `Class ${year}`;
 document.getElementById('badge').textContent = `Class ${year}`;
 
 // =========================
-// LOAD DATA
+// LOAD DATA - With 3-Day Cache
 // =========================
 
 let allChapters = {};
 
-function loadData() {
-  // Phase 2 ONLY - load from /content/year-{Y}/{subject}/
-  // For now, just show placeholders (0 Chapters) until files are created
-  // TODO: Add Phase 2 loading logic here when needed
-  allChapters = {};
-  console.log('Subjects page showing placeholders (waiting for /content/ files)');
+async function loadData() {
+  // Phase 2: Load from /UI/content/year-{Y}/{subject}/
+  // For EACH subject, load all subject_area files and count chapters
+  
+  const subjects = [
+    { name: 'Science', id: 'science' },
+    { name: 'Maths', id: 'maths' },
+    { name: 'English', id: 'english' },
+    { name: 'Social Science', id: 'social' }
+  ];
+  
+  for (const subject of subjects) {
+    // Check cache first
+    const cacheKey = `cache_y${year}_${subject.name.toLowerCase().replace(/\s+/g, '-')}`;
+    let cachedData = getCacheData(cacheKey);
+    
+    if (cachedData) {
+      // Use cached data
+      Object.assign(allChapters, cachedData);
+      console.log(`✅ Used cached data for ${subject.name}`);
+      continue;
+    }
+    
+    // Cache miss - load from JSON
+    const safeSubject = subject.name.toLowerCase().replace(/\s+/g, '-');
+    const phase2URL = `/UI/content/year-${year}/${safeSubject}/`;
+    
+    const possibleSubjectAreas = [
+      'history', 'geography', 'civics', 'economics',
+      'physics', 'chemistry', 'biology', 'science',
+      'maths', 'mathematics', 'english', 'hindi',
+      'social-science', 'social'
+    ];
+    
+    let subjectData = {};
+    let loadedAnyFile = false;
+    
+    try {
+      for (const area of possibleSubjectAreas) {
+        try {
+          const fileURL = `${phase2URL}${area}.json`;
+          const response = await fetch(fileURL);
+          
+          if (response.ok) {
+            const nestedData = await response.json();
+            console.log(`✅ Loaded: ${fileURL}`);
+            
+            // Transform and accumulate chapters
+            nestedData.chapters.forEach(chapter => {
+              const chapterId = `ch_${year}_${nestedData.subject}_${chapter.chapter_num}`;
+              subjectData[chapterId] = {
+                chapter_id: chapterId,
+                class: year,
+                subject: nestedData.subject,
+                subject_area: nestedData.subject_area,
+                chapter: chapter.chapter_num,
+                title: chapter.chapter_name,
+                status: 'published'
+              };
+            });
+            
+            loadedAnyFile = true;
+          }
+        } catch (e) {
+          continue;
+        }
+      }
+      
+      // Cache the data if we loaded anything
+      if (loadedAnyFile) {
+        setCacheData(cacheKey, subjectData);
+        Object.assign(allChapters, subjectData);
+        console.log(`✅ Cached and loaded ${Object.keys(subjectData).length} chapters for ${subject.name}`);
+      } else {
+        console.log(`ℹ️ No files found for ${subject.name}`);
+      }
+    } catch (e) {
+      console.error(`Error loading ${subject.name}:`, e);
+    }
+  }
 }
 
 // =========================
 // RENDER SUBJECT CARDS
 // =========================
 
-function renderSubjects() {
-  loadData();
+async function renderSubjects() {
+  await loadData();
   
   const subjects = [
     { name: 'Science', id: 'science' },
@@ -574,11 +648,11 @@ function renderSubjects() {
     // Update chapter count
     document.getElementById(`count-${subject.id}`).textContent = countText;
     
-    // Calculate progress if user logged in
+    // Calculate progress from user progress data
     const user = getCurrentUser();
     if (user && count > 0) {
       const progress = getUserProgress(user.user_id);
-      if (progress) {
+      if (progress && progress.chapters_progress) {
         const completed = chapters.filter(ch => {
           const cp = progress.chapters_progress[ch.chapter_id];
           return cp && cp.status === 'completed';
@@ -591,6 +665,9 @@ function renderSubjects() {
           document.getElementById(`done-${subject.id}`).textContent = `${completed}/${count} Completed`;
         }
       }
+    } else if (count > 0) {
+      // No user logged in yet - show 0% progress
+      document.getElementById(`done-${subject.id}`).textContent = `0/${count} Completed`;
     }
   });
 }
@@ -635,7 +712,9 @@ document.getElementById('total-score').textContent = getTotalScore();
 // INITIALIZE
 // =========================
 
-renderSubjects();
+(async function() {
+  await renderSubjects();
+})();
 
 </script>
 

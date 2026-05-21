@@ -222,7 +222,14 @@ let allQuestions = {};
 let state = getState();
 let year = state.year || 6;
 let subject = state.subject || 'Science';
+
+// Initialize variables OUTSIDE async function to prevent race conditions
+let allQuestions = {};
 let questions = [];
+let currentQuestion = 0;
+let sessionScore = 0;
+let answers = {};
+let scoredQuestions = {}; // Track which questions have been scored this attempt
 
 async function initQuiz() {
   // PHASE 2 ONLY: Load from /UI/content/year-{Y}/{subject}/
@@ -319,15 +326,22 @@ chapterQuestions.forEach((q, idx) => {
 
 document.getElementById('bc-unit').textContent = `Chapter ${chapterNum} - Unit ${unitNum}`;
 
-let currentQuestion = 0;
-let sessionScore = 0;
-let answers = {};
-let scoredQuestions = {}; // Track which questions have been scored this attempt
+// Filter questions for this chapter only
+questions = Object.values(allQuestions).filter(q =>
+  q.chapter === chapterNum &&
+  q.class === year &&
+  q.subject === subject
+);
 
-renderQuestion();
+console.log(`Filtered ${questions.length} questions for Chapter ${chapterNum}`);
 }
 
-initQuiz();
+// Initialize quiz - MUST complete before rendering
+(async function() {
+  await initQuiz();
+  // Only render AFTER initQuiz completes and questions are populated
+  renderQuestion();
+})();
 
 function renderQuestion() {
   const container = document.getElementById('quiz-container');

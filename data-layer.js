@@ -1128,3 +1128,72 @@ function performPhase2Export(year, subject, subject_area) {
   
   alert(`✅ Exported successfully!\nVersion: ${version}\n\nFiles downloaded:\n- ${safeSubjectArea}.json (main)\n- ${safeSubjectArea}-v${version}.json (backup)\n- ${safeSubjectArea}-flashcards.csv\n- ${safeSubjectArea}-questions.csv\n\nPlace in: content/year-${year}/${safeSubject}/\nThen commit to git.`);
 }
+
+// ═════════════════════════════════════════════════════════════════════════════
+// PHASE 2 CACHE SYSTEM - 3 Day Expiry
+// ═════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Cache loaded content data (chapters, flashcards, questions) for 3 days
+ * Format: cache_y{year}_{subject}
+ * Example: cache_y10_social-science
+ */
+function setCacheData(cacheKey, data) {
+  const cacheEntry = {
+    data: data,
+    timestamp: Date.now(),
+    expiryDays: 3
+  };
+  localStorage.setItem(cacheKey, JSON.stringify(cacheEntry));
+  console.log(`✅ Cached: ${cacheKey}`);
+}
+
+/**
+ * Retrieve cached data if still valid (within 3 days)
+ * Returns null if cache doesn't exist or has expired
+ */
+function getCacheData(cacheKey) {
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    if (!cached) {
+      console.log(`ℹ️ Cache miss: ${cacheKey}`);
+      return null;
+    }
+    
+    const entry = JSON.parse(cached);
+    const ageInDays = (Date.now() - entry.timestamp) / (1000 * 60 * 60 * 24);
+    
+    if (ageInDays > entry.expiryDays) {
+      console.log(`⏰ Cache expired (${ageInDays.toFixed(1)} days): ${cacheKey}`);
+      localStorage.removeItem(cacheKey);
+      return null;
+    }
+    
+    console.log(`✅ Cache hit: ${cacheKey} (${ageInDays.toFixed(1)} days old)`);
+    return entry.data;
+  } catch (e) {
+    console.error(`Error reading cache ${cacheKey}:`, e);
+    return null;
+  }
+}
+
+/**
+ * Clear cache for a specific key
+ */
+function clearCacheData(cacheKey) {
+  localStorage.removeItem(cacheKey);
+  console.log(`🗑️ Cleared cache: ${cacheKey}`);
+}
+
+/**
+ * Clear ALL Phase 2 caches
+ */
+function clearAllCaches() {
+  const keys = Object.keys(localStorage);
+  keys.forEach(key => {
+    if (key.startsWith('cache_y')) {
+      localStorage.removeItem(key);
+    }
+  });
+  console.log('🗑️ Cleared all Phase 2 caches');
+}

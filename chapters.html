@@ -249,8 +249,22 @@ let allChapters = {};
 
 async function loadDataStores() {
   // PHASE 2 ONLY: Load from /UI/content/year-{Y}/{subject}/
-  // Hardcoded /UI/ prefix for GitHub Pages
+  // With 3-day cache for speed
+  
   const safeSubject = subject.toLowerCase().replace(/\s+/g, '-');
+  const cacheKey = `cache_y${year}_${safeSubject}`;
+  
+  // Check cache first
+  const cachedData = getCacheData(cacheKey);
+  if (cachedData) {
+    console.log(`✅ Using cached data for ${subject}`);
+    allChapters = cachedData.chapters;
+    allFlashcards = cachedData.flashcards;
+    allQuestions = cachedData.questions;
+    return;
+  }
+  
+  // Cache miss - load from JSON
   const phase2URL = `/UI/content/year-${year}/${safeSubject}/`;
   
   const possibleSubjectAreas = [
@@ -289,6 +303,14 @@ async function loadDataStores() {
     
     if (loadedAnyFile) {
       console.log(`✅ Auto-discovered ${loadedAreas.length} subject areas:`, loadedAreas);
+      
+      // Cache the data for 3 days
+      const dataToCache = {
+        chapters: allChapters,
+        flashcards: allFlashcards,
+        questions: allQuestions
+      };
+      setCacheData(cacheKey, dataToCache);
     } else {
       console.log('⚠️ No content found in /UI/content/year-' + year + '/' + safeSubject + '/');
     }
