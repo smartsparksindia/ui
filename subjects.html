@@ -554,7 +554,7 @@ async function loadData() {
     
     if (cachedData) {
       // Use cached data
-      Object.assign(allChapters, cachedData);
+      Object.assign(allChapters, cachedData.chapters);
       console.log(`✅ Used cached data for ${subject.name}`);
       continue;
     }
