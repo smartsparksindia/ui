@@ -1142,7 +1142,7 @@ function setCacheData(cacheKey, data) {
   const cacheEntry = {
     data: data,
     timestamp: Date.now(),
-    expiryDays: 3
+    expiryDays: 0.25
   };
   localStorage.setItem(cacheKey, JSON.stringify(cacheEntry));
   console.log(`✅ Cached: ${cacheKey}`);
