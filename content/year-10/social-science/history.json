@@ -2,7 +2,7 @@
   "year": 10,
   "subject": "Social Science",
   "subject_area": "History",
-  "last_updated": "2026-05-22T08:06:57.739Z",
+  "last_updated": "2026-05-22T12:24:51.506Z",
   "chapters": [
     {
       "chapter_num": 1,
@@ -406,6 +406,618 @@
               ],
               "correct_option_index": 1,
               "explanation": "Nationalism encouraged unity among people",
+              "difficulty": "medium"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapter_num": 1,
+      "chapter_name": "Events and Processes",
+      "units": [
+        {
+          "unit_num": 3,
+          "unit_name": "The Age of Revolutions: 1830-1848",
+          "flashcards": [
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446420507_1779446420508_j3khgm133",
+              "term": "Giuseppe Mazzini",
+              "definition": "Italian nationalist leader\nFounded Young Italy",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446420507_1779446420509_nqpu9d3bb",
+              "term": "Young Italy",
+              "definition": "Secret society formed by Mazzini\nPromoted Italian unification",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446420507_1779446420510_9w6wadt5q",
+              "term": "Frankfurt Parliament",
+              "definition": "Assembly of German liberals in 1848\nAttempted German unification",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446420507_1779446420510_so9n5uorq",
+              "term": "St Paul Church",
+              "definition": "Location where Frankfurt Parliament met",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446420507_1779446420510_tdquzg6o3",
+              "term": "Romanticism",
+              "definition": "Cultural movement promoting emotions and nationalism",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446420507_1779446420511_j2hj5jo8u",
+              "term": "Greek War of Independence",
+              "definition": "Greek struggle against Ottoman rule\nSupported by European nationalists",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446420507_1779446420512_mm3t0834l",
+              "term": "1848 Revolutions",
+              "definition": "Series of revolutions across Europe demanding constitutional government",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446420507_1779446420512_zb2f4mo1h",
+              "term": "Artists and Poets",
+              "definition": "Used culture literature and art to spread nationalism",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446420507_1779446420513_0kdf8s1om",
+              "term": "National Unity",
+              "definition": "Main goal of revolutionaries across Europe",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446420507_1779446420513_7n2lm40n1",
+              "term": "Failure of Frankfurt Parliament",
+              "definition": "Failed due to lack of support from monarchy and military",
+              "image_url": null
+            }
+          ],
+          "questions": [
+            {
+              "question_id": "q_social science_1779446420514_96b77sljx",
+              "question_text": "Which country fought for independence from Ottoman rule?",
+              "options": [
+                "Germany",
+                "Belgium",
+                "Greece",
+                "Portugal"
+              ],
+              "correct_option_index": 2,
+              "explanation": "Greece fought for independence from Ottoman rule",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446420515_mwflvnhfp",
+              "question_text": "Who was Giuseppe Mazzini?",
+              "options": [
+                "Italian nationalist",
+                "German emperor",
+                "French king",
+                "Russian poet"
+              ],
+              "correct_option_index": 0,
+              "explanation": "Mazzini was a famous Italian nationalist",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446420515_qaptxbltl",
+              "question_text": "What was the Frankfurt Parliament?",
+              "options": [
+                "Assembly of German liberals",
+                "French army council",
+                "Russian court",
+                "Italian senate"
+              ],
+              "correct_option_index": 0,
+              "explanation": "The Frankfurt Parliament was formed by German liberals",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446420516_c4g27xqf6",
+              "question_text": "Where was the Frankfurt Parliament held?",
+              "options": [
+                "St Paul Church",
+                "Versailles Palace",
+                "Winter Palace",
+                "Buckingham Palace"
+              ],
+              "correct_option_index": 0,
+              "explanation": "The parliament met at St Paul Church",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446420517_mat93fdt5",
+              "question_text": "What inspired nationalist feelings in Europe?",
+              "options": [
+                "Mercantilism",
+                "Romanticism",
+                "Industrialism",
+                "Colonialism"
+              ],
+              "correct_option_index": 1,
+              "explanation": "Romanticism inspired nationalist feelings",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446420517_l7brigguv",
+              "question_text": "Who used culture to promote nationalism?",
+              "options": [
+                "Merchants only",
+                "Artists and poets",
+                "Kings and queens",
+                "Factory owners"
+              ],
+              "correct_option_index": 1,
+              "explanation": "Artists and poets spread nationalist ideas",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446420519_wp50n8u3c",
+              "question_text": "Which year is linked with revolutions across Europe?",
+              "options": [
+                "1905",
+                "1815",
+                "1776",
+                "1848"
+              ],
+              "correct_option_index": 3,
+              "explanation": "Many revolutions took place in 1848",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446420520_fcc7rel0n",
+              "question_text": "What did Mazzini form?",
+              "options": [
+                "Holy Alliance",
+                "Young Italy",
+                "Red Shirts",
+                "League of Nations"
+              ],
+              "correct_option_index": 1,
+              "explanation": "Mazzini founded Young Italy",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446420520_wm6kev0w5",
+              "question_text": "Why did the Frankfurt Parliament fail?",
+              "options": [
+                "Lack of support from monarchy",
+                "Poor harvests",
+                "Trade decline",
+                "Foreign invasion"
+              ],
+              "correct_option_index": 0,
+              "explanation": "The parliament lacked support from monarchs",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446420523_5uimzdr5u",
+              "question_text": "Which idea united revolutionaries?",
+              "options": [
+                "National unity",
+                "Colonial trade",
+                "Religious conflict",
+                "Slavery"
+              ],
+              "correct_option_index": 0,
+              "explanation": "National unity was the main aim of revolutionaries",
+              "difficulty": "medium"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapter_num": 1,
+      "chapter_name": "Events and Processes",
+      "units": [
+        {
+          "unit_num": 4,
+          "unit_name": "The Making of Germany and Italy",
+          "flashcards": [
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446511513_1779446511513_wtooxu7k4",
+              "term": "Otto von Bismarck",
+              "definition": "Chief minister of Prussia\nLed German unification",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446511513_1779446511514_iabfmindv",
+              "term": "Blood and Iron",
+              "definition": "Policy used by Bismarck\nFocused on military strength and war",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446511513_1779446511514_6qb8ocsh5",
+              "term": "Prussia",
+              "definition": "State that led German unification",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446511513_1779446511514_lbez58x13",
+              "term": "German Empire",
+              "definition": "Unified German nation formed in 1871",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446511513_1779446511514_f6xq2iixa",
+              "term": "Versailles",
+              "definition": "Place where German Empire was proclaimed",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446511513_1779446511514_gj0k8cd0z",
+              "term": "Kaiser William I",
+              "definition": "First emperor of unified Germany",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446511513_1779446511515_43iq0ocw7",
+              "term": "Wars of Unification",
+              "definition": "Wars fought to unite German states under Prussia",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446511513_1779446511515_4hpvw8s3m",
+              "term": "Austria",
+              "definition": "Main rival of Prussia during German unification",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446511513_1779446511516_kkqtgempz",
+              "term": "1871",
+              "definition": "Year in which German Empire was formed",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779446511513_1779446511516_kch11sbjh",
+              "term": "German Nationalism",
+              "definition": "Movement supporting unification of German speaking people",
+              "image_url": null
+            }
+          ],
+          "questions": [
+            {
+              "question_id": "q_social science_1779446511517_63foxzfkh",
+              "question_text": "Which state led German unification",
+              "options": [
+                "Austria",
+                "Prussia",
+                "France",
+                "Spain"
+              ],
+              "correct_option_index": 1,
+              "explanation": "Prussia led the process of German unification",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446511517_fwq68fmhg",
+              "question_text": "Who was Otto von Bismarck",
+              "options": [
+                "Prussian chief minister",
+                "Russian emperor",
+                "French king",
+                "Italian general"
+              ],
+              "correct_option_index": 0,
+              "explanation": "Bismarck was the chief minister of Prussia",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446511518_agw1qcn80",
+              "question_text": "What policy did Bismarck follow",
+              "options": [
+                "Non Cooperation",
+                "Open Door",
+                "Divide and Rule",
+                "Blood and Iron"
+              ],
+              "correct_option_index": 3,
+              "explanation": "Bismarck used Blood and Iron policy",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446511519_267jppavn",
+              "question_text": "Which empire was formed in 1871",
+              "options": [
+                "Ottoman Empire",
+                "Roman Empire",
+                "German Empire",
+                "British Empire"
+              ],
+              "correct_option_index": 2,
+              "explanation": "The German Empire was formed in 1871",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446511519_mhkteueye",
+              "question_text": "Where was the German Empire proclaimed",
+              "options": [
+                "Vienna",
+                "Berlin",
+                "Versailles",
+                "Rome"
+              ],
+              "correct_option_index": 2,
+              "explanation": "The empire was proclaimed at Versailles",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446511520_9ypgl8g2h",
+              "question_text": "Which country defeated France in 1871",
+              "options": [
+                "Russia",
+                "Prussia",
+                "Italy",
+                "Spain"
+              ],
+              "correct_option_index": 1,
+              "explanation": "Prussia defeated France in 1871",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446511520_w0ah6mrt5",
+              "question_text": "Who became German Emperor in 1871",
+              "options": [
+                "Kaiser William I",
+                "Tsar Nicholas",
+                "Victor Emmanuel II",
+                "Napoleon III"
+              ],
+              "correct_option_index": 0,
+              "explanation": "Kaiser William I became emperor",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446511520_18rpix8sb",
+              "question_text": "What strengthened German unity",
+              "options": [
+                "Colonial loss",
+                "Wars of unification",
+                "Trade decline",
+                "Religious division"
+              ],
+              "correct_option_index": 1,
+              "explanation": "Wars helped unify Germany",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446511521_duoes441y",
+              "question_text": "Which rival state opposed Prussia",
+              "options": [
+                "Portugal",
+                "Belgium",
+                "Switzerland",
+                "Austria"
+              ],
+              "correct_option_index": 3,
+              "explanation": "Austria opposed Prussia during unification",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779446511521_h3664zn5h",
+              "question_text": "What was the main aim of Bismarck",
+              "options": [
+                "Expand Italy",
+                "Support Austria",
+                "Defend France",
+                "Unify Germany"
+              ],
+              "correct_option_index": 3,
+              "explanation": "Bismarck wanted to unify Germany",
+              "difficulty": "medium"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapter_num": 1,
+      "chapter_name": "Events and Processes",
+      "units": [
+        {
+          "unit_num": 5,
+          "unit_name": "Visualising the Nation",
+          "flashcards": [
+            {
+              "flashcard_id": "fc_ch_10_social science_1779447091234_1779447091234_7k7yib8ni",
+              "term": "Count Cavour",
+              "definition": "Chief minister of Sardinia Piedmont\nUsed diplomacy for Italian unification",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779447091234_1779447091235_318chbrav",
+              "term": "Garibaldi",
+              "definition": "Italian nationalist leader\nLed the Red Shirts",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779447091234_1779447091236_v13lhv1dg",
+              "term": "Red Shirts",
+              "definition": "Volunteer army led by Garibaldi",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779447091234_1779447091236_c279ddu3v",
+              "term": "Victor Emmanuel II",
+              "definition": "King of unified Italy",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779447091234_1779447091237_gqf7rz9dw",
+              "term": "Sardinia Piedmont",
+              "definition": "State that led Italian unification",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779447091234_1779447091237_bbkq4lynu",
+              "term": "Young Italy",
+              "definition": "Organisation founded by Mazzini to unite Italy",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779447091234_1779447091238_dhh7cvido",
+              "term": "1861",
+              "definition": "Year of Italian unification",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779447091234_1779447091238_wke7ax7kq",
+              "term": "Sicily",
+              "definition": "Region captured by Garibaldi during unification",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779447091234_1779447091239_9n4y5tviz",
+              "term": "Italian Nationalism",
+              "definition": "Movement supporting a united Italy",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779447091234_1779447091239_f32ztutmd",
+              "term": "Giuseppe Mazzini",
+              "definition": "Nationalist thinker who inspired Italian unification",
+              "image_url": null
+            }
+          ],
+          "questions": [
+            {
+              "question_id": "q_social science_1779447091240_igp5kwpgj",
+              "question_text": "Which region led Italian unification?",
+              "options": [
+                "Normandy",
+                "Bavaria",
+                "Sardinia Piedmont",
+                "Prussia"
+              ],
+              "correct_option_index": 2,
+              "explanation": "Sardinia Piedmont led Italian unification",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779447091241_51mtp2r4q",
+              "question_text": "Who was Count Cavour?",
+              "options": [
+                "Chief minister of Sardinia Piedmont",
+                "French king",
+                "Russian writer",
+                "German emperor"
+              ],
+              "correct_option_index": 0,
+              "explanation": "Cavour was the chief minister of Sardinia Piedmont",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779447091243_opcbrk19f",
+              "question_text": "Who led the Red Shirts?",
+              "options": [
+                "Mazzini",
+                "Napoleon",
+                "Garibaldi",
+                "Bismarck"
+              ],
+              "correct_option_index": 2,
+              "explanation": "Garibaldi led the Red Shirts",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779447091245_fk5e256b4",
+              "question_text": "Which ruler became king of unified Italy?",
+              "options": [
+                "Napoleon III",
+                "Victor Emmanuel II",
+                "William I",
+                "Alexander II"
+              ],
+              "correct_option_index": 1,
+              "explanation": "Victor Emmanuel II became king of unified Italy",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779447091246_ugtl9hbs0",
+              "question_text": "Who founded Young Italy?",
+              "options": [
+                "Cavour",
+                "Mazzini",
+                "Bismarck",
+                "Garibaldi"
+              ],
+              "correct_option_index": 1,
+              "explanation": "Mazzini founded Young Italy",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779447091247_6a7umpm0d",
+              "question_text": "What was the role of Garibaldi?",
+              "options": [
+                "Scientist",
+                "Poet",
+                "Military leader",
+                "Banker"
+              ],
+              "correct_option_index": 2,
+              "explanation": "Garibaldi was a military leader",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779447091248_4e3surdgs",
+              "question_text": "Which year marks Italian unification?",
+              "options": [
+                "1815",
+                "1871",
+                "1861",
+                "1848"
+              ],
+              "correct_option_index": 2,
+              "explanation": "Italy was unified in 1861",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779447091249_yi8tmef5l",
+              "question_text": "What was the aim of Italian nationalists?",
+              "options": [
+                "Russian empire",
+                "Unified Italy",
+                "French monarchy",
+                "Spanish colonies"
+              ],
+              "correct_option_index": 1,
+              "explanation": "Italian nationalists wanted a united Italy",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779447091250_k1pu0d1qd",
+              "question_text": "Which area was taken by Garibaldi?",
+              "options": [
+                "Vienna",
+                "Sicily",
+                "Poland",
+                "Prussia"
+              ],
+              "correct_option_index": 1,
+              "explanation": "Garibaldi captured Sicily",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779447091251_czfxbqjzw",
+              "question_text": "Who used diplomacy for Italian unification?",
+              "options": [
+                "Mazzini",
+                "Louis XVI",
+                "Garibaldi",
+                "Cavour"
+              ],
+              "correct_option_index": 3,
+              "explanation": "Cavour used diplomacy to unify Italy",
               "difficulty": "medium"
             }
           ]
