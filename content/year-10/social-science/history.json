@@ -2,7 +2,7 @@
   "year": 10,
   "subject": "Social Science",
   "subject_area": "History",
-  "last_updated": "2026-05-19T07:12:21.358Z",
+  "last_updated": "2026-05-22T08:06:57.739Z",
   "chapters": [
     {
       "chapter_num": 1,
@@ -202,6 +202,210 @@
               ],
               "correct_option_index": 2,
               "explanation": "The middle class strongly supported nationalism",
+              "difficulty": "medium"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapter_num": 1,
+      "chapter_name": "Events and Processes",
+      "units": [
+        {
+          "unit_num": 2,
+          "unit_name": "The Making of Nationalism in Europe",
+          "flashcards": [
+            {
+              "flashcard_id": "fc_ch_10_social science_1779437146947_1779437146948_zzr9vhm69",
+              "term": "Aristocracy",
+              "definition": "Wealthy landowning class in Europe\nHeld social and political power",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779437146947_1779437146948_nj608px0h",
+              "term": "Liberalism",
+              "definition": "Political ideology supporting freedom equality and constitutional government",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779437146947_1779437146949_rgnf9lwze",
+              "term": "Conservatism",
+              "definition": "Political ideology supporting traditional institutions and monarchy",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779437146947_1779437146949_tpf9z5lyk",
+              "term": "Zollverein",
+              "definition": "German customs union led by Prussia\nPromoted economic unity",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779437146947_1779437146949_k1050fv1f",
+              "term": "Middle Class Liberals",
+              "definition": "Supported nationalism and constitutional governments",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779437146947_1779437146949_9ihcb503z",
+              "term": "Kingdoms and Empires",
+              "definition": "Europe before unification was divided into many kingdoms and empires",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779437146947_1779437146950_dcgcurdyc",
+              "term": "Constitutional Government",
+              "definition": "Government limited by laws and constitution",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779437146947_1779437146950_3t92falq3",
+              "term": "Prussia",
+              "definition": "Powerful German state that later led German unification",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779437146947_1779437146950_txalp033m",
+              "term": "National Unity",
+              "definition": "Idea that people with common identity should live together as one nation",
+              "image_url": null
+            },
+            {
+              "flashcard_id": "fc_ch_10_social science_1779437146947_1779437146951_l5l0ya5lw",
+              "term": "Feudal System",
+              "definition": "Social system based on land ownership and privileges",
+              "image_url": null
+            }
+          ],
+          "questions": [
+            {
+              "question_id": "q_social science_1779437146951_90vte2454",
+              "question_text": "What was Europe divided into before unification ?",
+              "options": [
+                "Religious groups",
+                "Kingdoms and empires",
+                "Independent republics",
+                "Trade unions"
+              ],
+              "correct_option_index": 1,
+              "explanation": "Europe was divided into kingdoms and empires",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779437146952_36y7c9iz9",
+              "question_text": "Who were the aristocrats?",
+              "options": [
+                "Traders",
+                "Factory workers",
+                "Rich landowners",
+                "Peasants"
+              ],
+              "correct_option_index": 2,
+              "explanation": "Aristocrats were wealthy landowners",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779437146952_zzpt0o5bj",
+              "question_text": "What did liberalism support?",
+              "options": [
+                "Freedom and equality",
+                "Military dictatorship",
+                "Absolute monarchy",
+                "Religious control"
+              ],
+              "correct_option_index": 0,
+              "explanation": "Liberalism supported freedom and equality",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779437146953_fgvp3ra5x",
+              "question_text": "What did conservatism support?",
+              "options": [
+                "Workers unions",
+                "Colonial freedom",
+                "Revolutionary ideas",
+                "Traditional institutions"
+              ],
+              "correct_option_index": 3,
+              "explanation": "Conservatives wanted to preserve old traditions",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779437146954_t1zz8p4go",
+              "question_text": "What was Zollverein?",
+              "options": [
+                "Russian law",
+                "French parliament",
+                "Italian army",
+                "German customs union"
+              ],
+              "correct_option_index": 3,
+              "explanation": "Zollverein was a customs union in Germany",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779437146955_4zfjmuhki",
+              "question_text": "Which country led Zollverein?",
+              "options": [
+                "Prussia",
+                "France",
+                "Italy",
+                "Spain"
+              ],
+              "correct_option_index": 0,
+              "explanation": "Prussia played the leading role in Zollverein",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779437146956_od69tlf5j",
+              "question_text": "Which social group promoted liberal nationalism?",
+              "options": [
+                "Middle class",
+                "Kings",
+                "Serfs",
+                "Clergy"
+              ],
+              "correct_option_index": 0,
+              "explanation": "The middle class promoted liberal nationalism",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779437146956_gfudh9hr1",
+              "question_text": "What was the aim of liberals?",
+              "options": [
+                "Absolute monarchy",
+                "Military rule",
+                "Colonial expansion",
+                "Constitutional government"
+              ],
+              "correct_option_index": 3,
+              "explanation": "Liberals wanted constitutional governments",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779437146957_zy8rkqrub",
+              "question_text": "Who opposed revolutionary nationalism?",
+              "options": [
+                "Workers",
+                "Artists",
+                "Conservatives",
+                "Students"
+              ],
+              "correct_option_index": 2,
+              "explanation": "Conservatives opposed revolutionary nationalism",
+              "difficulty": "medium"
+            },
+            {
+              "question_id": "q_social science_1779437146958_vwbenpr0a",
+              "question_text": "What did nationalism encourage?",
+              "options": [
+                "Foreign rule",
+                "Unity among people",
+                "Feudal divisions",
+                "Slavery"
+              ],
+              "correct_option_index": 1,
+              "explanation": "Nationalism encouraged unity among people",
               "difficulty": "medium"
             }
           ]
