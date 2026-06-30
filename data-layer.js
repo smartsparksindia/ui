@@ -22,7 +22,7 @@ const STORE = {
 
 // Toggle demo data creation in dev setups. Set to `true` to auto-create demo accounts/content.
 // WARNING: demo content writes to localStorage and is intended for local development only.
-const ENABLE_DEMO_ACCOUNTS = false;
+const ENABLE_DEMO_ACCOUNTS = true;
 const ENABLE_DEMO_CONTENT = false;
 // Enable syncing published content to a central server (set true and run the server)
 const ENABLE_REMOTE_SYNC = false;
