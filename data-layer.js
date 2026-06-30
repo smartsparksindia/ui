@@ -903,9 +903,9 @@ function initializeSystemWithDemoAccounts() {
 // }
 
 // // Initialize on load (only when explicitly enabled via toggles above)
-// if (typeof ENABLE_DEMO_ACCOUNTS !== 'undefined' && ENABLE_DEMO_ACCOUNTS) {
-//   initializeSystemWithDemoAccounts();
-// }
+    if (typeof ENABLE_DEMO_ACCOUNTS !== 'undefined' && ENABLE_DEMO_ACCOUNTS) {
+      initializeSystemWithDemoAccounts();
+    }
 // if (typeof ENABLE_DEMO_CONTENT !== 'undefined' && ENABLE_DEMO_CONTENT) {
 //   initializeSystemWithDemoContent();
 // }
