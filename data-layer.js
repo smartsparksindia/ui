@@ -671,7 +671,7 @@ function initializeSystem() {
 // ─────────────────────────────────────────────────────────────────────────────
 // DEMO ACCOUNTS INITIALIZATION (COMMENTED OUT - Phase 2 clean migration)
 // ─────────────────────────────────────────────────────────────────────────────
-/*
+
 function initializeSystemWithDemoAccounts() {
   // Set default config
   const config = getStore(STORE.CONFIG);
@@ -736,7 +736,7 @@ function initializeSystemWithDemoAccounts() {
     console.log('Student: student@smartspark.in / student123');
   }
 }
-*/
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DEMO CONTENT INITIALIZATION
